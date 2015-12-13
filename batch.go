@@ -1,5 +1,7 @@
 package espapi
 
+import "encoding/json"
+
 type SubmissionBatchType string
 
 func BatchTypes() []string {
@@ -20,6 +22,10 @@ type SubmissionBatch struct {
 	AssignmentId          string `json:"assignment_id"`
 	BriefId               string `json:"brief_id"`
 	EventId               string `json:"event_id"`
+}
+
+func (s SubmissionBatch) Marshal() ([]byte, error) {
+	return json.MarshalIndent(s, "", "  ")
 }
 
 func (b *SubmissionBatch) TypeIsValid() bool {
