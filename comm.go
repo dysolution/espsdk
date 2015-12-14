@@ -39,6 +39,11 @@ func (client Client) PostRelease(r []byte) {
 	client.Call()
 }
 
+func (client Client) PostContribution(c []byte) {
+	fmt.Printf("%s\n", c)
+	client.Call()
+}
+
 func (c Client) Call() {
 	v := url.Values{}
 	v.Set("client_id", c.ApiKey)
