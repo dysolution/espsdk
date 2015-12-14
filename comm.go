@@ -2,8 +2,6 @@ package espapi
 
 import (
 	"crypto/tls"
-	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -27,20 +25,21 @@ type Credentials struct {
 
 type Client struct {
 	Credentials
+	UploadBucket string
 }
 
 func (client Client) PostBatch(b []byte) {
-	fmt.Printf("%s\n", b)
+	log.Infof("Received serialized batch: %s", b)
 	client.Call()
 }
 
 func (client Client) PostRelease(r []byte) {
-	fmt.Printf("%s\n", r)
+	log.Infof("Received serialized release: %s", r)
 	client.Call()
 }
 
 func (client Client) PostContribution(c []byte) {
-	fmt.Printf("%s\n", c)
+	log.Infof("Received serialized contribution: %s", c)
 	client.Call()
 }
 
@@ -65,11 +64,10 @@ func (c Client) Call() {
 	defer resp.Body.Close()
 
 	payload, err := ioutil.ReadAll(resp.Body)
-	log.Infof("%s", payload)
-
-	var record map[string]string
-	err = json.Unmarshal(payload, &record)
-	if errMsg := record["Error"]; errMsg != "" {
-		log.Errorf(errMsg)
+	log.Infof("HTTP %d", resp.StatusCode)
+	if resp.StatusCode != 200 {
+		log.Errorf("%s", payload)
+	} else {
+		log.Infof("%s", payload)
 	}
 }
