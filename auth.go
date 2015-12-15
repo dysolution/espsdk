@@ -14,10 +14,10 @@ const oauthEndpoint = "https://api.gettyimages.com/oauth2/token"
 func (c Client) GetToken() Token {
 	uri := oauthEndpoint
 	v := url.Values{}
-	v.Set("client_id", c.ApiKey)
-	v.Set("client_secret", c.ApiSecret)
-	v.Set("username", c.EspUsername)
-	v.Set("password", c.EspPassword)
+	v.Set("client_id", c.APIKey)
+	v.Set("client_secret", c.APISecret)
+	v.Set("username", c.ESPUsername)
+	v.Set("password", c.ESPPassword)
 	v.Set("grant_type", "password")
 
 	log.Debugf(uri)

@@ -13,16 +13,16 @@ import (
 
 const endpoint = "https://esp-sandbox.api.gettyimages.com/esp"
 
-type ApiClient interface {
+type APIClient interface {
 	PostBatch(SubmissionBatch) error
 	PostRelease(Release) error
 }
 
 type Credentials struct {
-	ApiKey      string
-	ApiSecret   string
-	EspUsername string
-	EspPassword string
+	APIKey      string
+	APISecret   string
+	ESPUsername string
+	ESPPassword string
 }
 
 type Client struct {
@@ -50,7 +50,7 @@ func (espClient Client) Post(o []byte, token Token, path string) ([]byte, error)
 	req, err := http.NewRequest("POST", uri, bytes.NewBuffer(o))
 	req.Header.Set("Authorization", fmt.Sprintf("Token token=%s", token))
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Api-Key", espClient.Credentials.ApiKey)
+	req.Header.Set("Api-Key", espClient.Credentials.APIKey)
 
 	resp, err := c.Do(req)
 	defer resp.Body.Close()
