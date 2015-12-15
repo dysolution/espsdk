@@ -1,7 +1,9 @@
 package espapi
 
 import (
+	"bytes"
 	"crypto/tls"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -9,7 +11,7 @@ import (
 	log "github.com/Sirupsen/logrus"
 )
 
-const endpoint = "https://esp-sandbox.api.gettyimages.com/esp/"
+const endpoint = "https://esp-sandbox.api.gettyimages.com/esp"
 
 type ApiClient interface {
 	PostBatch(SubmissionBatch) error
@@ -28,9 +30,38 @@ type Client struct {
 	UploadBucket string
 }
 
-func (client Client) PostBatch(b []byte) {
-	log.Infof("Received serialized batch: %s", b)
-	client.Call()
+type Token string
+
+func (espClient Client) Post(o []byte, token Token, path string) ([]byte, error) {
+	log.Debug("Received serialized object: %s", o)
+
+	v := url.Values{}
+	v.Set("Authorization", fmt.Sprintf("Token token=%s", token))
+	v.Set("Content-Type", "application/json")
+
+	uri := endpoint + path
+	log.Debug(uri)
+	log.Debug(v.Encode())
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+	c := &http.Client{Transport: tr}
+
+	req, err := http.NewRequest("POST", uri, bytes.NewBuffer(o))
+	req.Header.Set("Authorization", fmt.Sprintf("Token token=%s", token))
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Api-Key", espClient.Credentials.ApiKey)
+
+	resp, err := c.Do(req)
+	defer resp.Body.Close()
+	if err != nil {
+		log.Fatal(err)
+		return nil, err
+	}
+
+	payload, err := ioutil.ReadAll(resp.Body)
+	log.Infof("HTTP %s", resp.Status)
+	return payload, nil
 }
 
 func (client Client) PostRelease(r []byte) {
@@ -44,30 +75,4 @@ func (client Client) PostContribution(c []byte) {
 }
 
 func (c Client) Call() {
-	v := url.Values{}
-	v.Set("client_id", c.ApiKey)
-	v.Set("client_secret", c.ApiSecret)
-	v.Set("username", c.EspUsername)
-	v.Set("password", c.EspPassword)
-	v.Set("grant_type", "baz")
-	uri := endpoint + "submission/v1/submission_batches"
-	log.Infof(uri)
-	log.Info(v.Encode())
-	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-	}
-	client := &http.Client{Transport: tr}
-	resp, err := client.PostForm(uri, v)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer resp.Body.Close()
-
-	payload, err := ioutil.ReadAll(resp.Body)
-	log.Infof("HTTP %d", resp.StatusCode)
-	if resp.StatusCode != 200 {
-		log.Errorf("%s", payload)
-	} else {
-		log.Infof("%s", payload)
-	}
 }
