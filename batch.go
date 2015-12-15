@@ -4,16 +4,6 @@ import "encoding/json"
 
 type SubmissionBatchType string
 
-func BatchTypes() []string {
-	keys := make([]string, len(batchTypeIsValid))
-	i := 0
-	for k := range batchTypeIsValid {
-		keys[i] = k
-		i++
-	}
-	return keys
-}
-
 type SubmissionBatch struct {
 	SubmissionName        string `json:"submission_name"`
 	SubmissionType        string `json:"submission_type"`
@@ -34,6 +24,16 @@ func (b *SubmissionBatch) TypeIsValid() bool {
 
 func (b SubmissionBatch) NameIsValid() bool {
 	return len(b.SubmissionName) > 0
+}
+
+func BatchTypes() []string {
+	keys := make([]string, len(batchTypeIsValid))
+	i := 0
+	for k := range batchTypeIsValid {
+		keys[i] = k
+		i++
+	}
+	return keys
 }
 
 type ExtantSubmissionBatch struct {

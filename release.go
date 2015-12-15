@@ -5,6 +5,7 @@ import (
 )
 
 type Release struct {
+	SubmissionBatchId    string   `json:"submission_batch_id"`
 	FileName             string   `json:"file_name"`
 	FilePath             string   `json:"file_path"`
 	ExternalFileLocation string   `json:"external_file_location"`
@@ -16,4 +17,8 @@ type Release struct {
 
 func (r Release) Marshal() ([]byte, error) {
 	return json.MarshalIndent(r, "", "  ")
+}
+
+func ReleaseTypes() []string {
+	return []string{"Model", "Property"}
 }
