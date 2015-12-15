@@ -33,7 +33,7 @@ type Client struct {
 type Token string
 
 func (espClient Client) Post(o []byte, token Token, path string) ([]byte, error) {
-	log.Debug("Received serialized object: %s", o)
+	log.Debugf("Received serialized object: %s", o)
 
 	v := url.Values{}
 	v.Set("Authorization", fmt.Sprintf("Token token=%s", token))
