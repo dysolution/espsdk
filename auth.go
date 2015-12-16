@@ -11,7 +11,14 @@ import (
 
 const oauthEndpoint = "https://api.gettyimages.com/oauth2/token"
 
+func credentialsAreIncomplete(c Client) bool {
+	return len(c.APIKey) < 1 || len(c.APISecret) < 1 || len(c.ESPUsername) < 1 || len(c.ESPPassword) < 1
+}
+
 func (c Client) GetToken() Token {
+	if credentialsAreIncomplete(c) {
+		log.Fatal("Not all required credentials were supplied.")
+	}
 	uri := oauthEndpoint
 	v := url.Values{}
 	v.Set("client_id", c.APIKey)

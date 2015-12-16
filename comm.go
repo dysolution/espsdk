@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"net/url"
 
 	log "github.com/Sirupsen/logrus"
 )
@@ -32,25 +31,10 @@ type Client struct {
 
 type Token string
 
-func (espClient Client) Post(o []byte, token Token, path string) ([]byte, error) {
-	log.Debugf("Received serialized object: %s", o)
-
-	v := url.Values{}
-	v.Set("Authorization", fmt.Sprintf("Token token=%s", token))
-	v.Set("Content-Type", "application/json")
-
-	uri := endpoint + path
-	log.Debug(uri)
-	log.Debug(v.Encode())
-	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-	}
-	c := &http.Client{Transport: tr}
-
-	req, err := http.NewRequest("POST", uri, bytes.NewBuffer(o))
+func getJSON(c *http.Client, req *http.Request, token Token, apiKey string) ([]byte, error) {
 	req.Header.Set("Authorization", fmt.Sprintf("Token token=%s", token))
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Api-Key", espClient.Credentials.APIKey)
+	req.Header.Set("Api-Key", apiKey)
 
 	resp, err := c.Do(req)
 	defer resp.Body.Close()
@@ -60,7 +44,46 @@ func (espClient Client) Post(o []byte, token Token, path string) ([]byte, error)
 	}
 
 	payload, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatal(err)
+		return nil, err
+	}
 	log.Infof("HTTP %s", resp.Status)
+	return payload, nil
+}
+
+func (espClient Client) Get(path string, token Token) ([]byte, error) {
+	uri := endpoint + path
+	log.Debug(uri)
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+	c := &http.Client{Transport: tr}
+
+	req, err := http.NewRequest("GET", uri, nil)
+	payload, err := getJSON(c, req, token, espClient.Credentials.APIKey)
+	if err != nil {
+		log.Fatal(err)
+		return nil, err
+	}
+	return payload, nil
+}
+
+func (espClient Client) Post(o []byte, token Token, path string) ([]byte, error) {
+	log.Debugf("Received serialized object: %s", o)
+
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+	c := &http.Client{Transport: tr}
+
+	uri := endpoint + path
+	req, err := http.NewRequest("POST", uri, bytes.NewBuffer(o))
+	payload, err := getJSON(c, req, token, espClient.Credentials.APIKey)
+	if err != nil {
+		log.Fatal(err)
+		return nil, err
+	}
 	return payload, nil
 }
 
