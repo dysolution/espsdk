@@ -32,32 +32,13 @@ type Client struct {
 type Token string
 
 func (espClient Client) Get(path string, token Token) ([]byte, error) {
-	uri := endpoint + path
-	log.Debug(uri)
-	c := insecureClient()
-
-	req, err := http.NewRequest("GET", uri, nil)
-	payload, err := getJSON(c, req, token, espClient.Credentials.APIKey)
-	if err != nil {
-		log.Fatal(err)
-		return nil, err
-	}
-	return payload, nil
+	payload, err := espClient.request("GET", path, token, nil)
+	return payload, err
 }
 
 func (espClient Client) Post(o []byte, token Token, path string) ([]byte, error) {
-	log.Debugf("Received serialized object: %s", o)
-
-	c := insecureClient()
-
-	uri := endpoint + path
-	req, err := http.NewRequest("POST", uri, bytes.NewBuffer(o))
-	payload, err := getJSON(c, req, token, espClient.Credentials.APIKey)
-	if err != nil {
-		log.Fatal(err)
-		return nil, err
-	}
-	return payload, nil
+	payload, err := espClient.request("POST", path, token, o)
+	return payload, err
 }
 
 func (client Client) PostRelease(r []byte) {
@@ -101,4 +82,26 @@ func insecureClient() *http.Client {
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
 	return &http.Client{Transport: tr}
+}
+
+// request performs a request using the provided HTTP verb and returns
+// the response as a JSON payload. If the verb is POST, the optional
+// serialized object will become the body of the HTTP request.
+func (espClient Client) request(verb string, path string, token Token, object []byte) ([]byte, error) {
+	var body *bytes.Buffer
+	if verb == "POST" && object != nil {
+		log.Debugf("Received serialized object: %s", object)
+		body = bytes.NewBuffer(object)
+	}
+	uri := endpoint + path
+	log.Debug(uri)
+	c := insecureClient()
+
+	req, err := http.NewRequest(verb, uri, body)
+	payload, err := getJSON(c, req, token, espClient.Credentials.APIKey)
+	if err != nil {
+		log.Fatal(err)
+		return nil, err
+	}
+	return payload, nil
 }
