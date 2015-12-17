@@ -26,14 +26,25 @@ type Client struct {
 
 type Token string
 
-func (espClient Client) Get(path string, token Token) ([]byte, error) {
-	payload, err := espClient.request("GET", path, token, nil)
-	return payload, err
-}
+// request performs a request using the provided HTTP verb and returns
+// the response as a JSON payload. If the verb is POST, the optional
+// serialized object will become the body of the HTTP request.
+func (espClient Client) Request(verb string, path string, token Token, object []byte) ([]byte, error) {
+	uri := endpoint + path
+	log.Debug(uri)
 
-func (espClient Client) Post(o []byte, token Token, path string) ([]byte, error) {
-	payload, err := espClient.request("POST", path, token, o)
-	return payload, err
+	if verb == "POST" && object != nil {
+		log.Debugf("Received serialized object: %s", object)
+	}
+	req, err := http.NewRequest(verb, uri, bytes.NewBuffer(object))
+	c := insecureClient()
+
+	payload, err := getJSON(c, req, token, espClient.Credentials.APIKey)
+	if err != nil {
+		log.Fatal(err)
+		return nil, err
+	}
+	return payload, nil
 }
 
 // Private
@@ -59,30 +70,11 @@ func getJSON(c *http.Client, req *http.Request, token Token, apiKey string) ([]b
 	return payload, nil
 }
 
+// insecureClient returns an HTTP client that will not verify the validity
+// of an SSL certificate when performing a request.
 func insecureClient() *http.Client {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
 	return &http.Client{Transport: tr}
-}
-
-// request performs a request using the provided HTTP verb and returns
-// the response as a JSON payload. If the verb is POST, the optional
-// serialized object will become the body of the HTTP request.
-func (espClient Client) request(verb string, path string, token Token, object []byte) ([]byte, error) {
-	uri := endpoint + path
-	log.Debug(uri)
-
-	if verb == "POST" && object != nil {
-		log.Debugf("Received serialized object: %s", object)
-	}
-	req, err := http.NewRequest(verb, uri, bytes.NewBuffer(object))
-	c := insecureClient()
-
-	payload, err := getJSON(c, req, token, espClient.Credentials.APIKey)
-	if err != nil {
-		log.Fatal(err)
-		return nil, err
-	}
-	return payload, nil
 }
