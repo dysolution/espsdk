@@ -70,16 +70,15 @@ func insecureClient() *http.Client {
 // the response as a JSON payload. If the verb is POST, the optional
 // serialized object will become the body of the HTTP request.
 func (espClient Client) request(verb string, path string, token Token, object []byte) ([]byte, error) {
-	var body *bytes.Buffer
-	if verb == "POST" && object != nil {
-		log.Debugf("Received serialized object: %s", object)
-		body = bytes.NewBuffer(object)
-	}
 	uri := endpoint + path
 	log.Debug(uri)
+
+	if verb == "POST" && object != nil {
+		log.Debugf("Received serialized object: %s", object)
+	}
+	req, err := http.NewRequest(verb, uri, bytes.NewBuffer(object))
 	c := insecureClient()
 
-	req, err := http.NewRequest(verb, uri, body)
 	payload, err := getJSON(c, req, token, espClient.Credentials.APIKey)
 	if err != nil {
 		log.Fatal(err)
