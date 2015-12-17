@@ -14,17 +14,9 @@ type SubmissionBatch struct {
 	EventId               string `json:"event_id,omitempty"`
 }
 
-func (s SubmissionBatch) Marshal() ([]byte, error) {
-	return json.MarshalIndent(s, "", "  ")
-}
-
-func (b *SubmissionBatch) TypeIsValid() bool {
-	return batchTypeIsValid[b.SubmissionType]
-}
-
-func (b SubmissionBatch) NameIsValid() bool {
-	return len(b.SubmissionName) > 0
-}
+func (s SubmissionBatch) Marshal() ([]byte, error) { return json.MarshalIndent(s, "", "  ") }
+func (b *SubmissionBatch) TypeIsValid() bool       { return batchTypeIsValid[b.SubmissionType] }
+func (b SubmissionBatch) NameIsValid() bool        { return len(b.SubmissionName) > 0 }
 
 type SubmissionBatchUpdate struct {
 	SubmissionBatch SubmissionBatchChanges `json:"submission_batch"`
