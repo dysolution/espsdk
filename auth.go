@@ -27,8 +27,8 @@ func (c Client) GetToken() Token {
 	v.Set("password", c.ESPPassword)
 	v.Set("grant_type", "password")
 
-	log.Debugf(uri)
-	log.Debugf(v.Encode())
+	log.Debugf("%s", uri)
+	log.Debugf("%s", v.Encode())
 
 	resp, err := http.PostForm(uri, v)
 	if err != nil {
