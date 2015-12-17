@@ -12,11 +12,6 @@ import (
 
 const endpoint = "https://esp-sandbox.api.gettyimages.com/esp"
 
-type APIClient interface {
-	PostBatch(SubmissionBatch) error
-	PostRelease(Release) error
-}
-
 type Credentials struct {
 	APIKey      string
 	APISecret   string
@@ -39,19 +34,6 @@ func (espClient Client) Get(path string, token Token) ([]byte, error) {
 func (espClient Client) Post(o []byte, token Token, path string) ([]byte, error) {
 	payload, err := espClient.request("POST", path, token, o)
 	return payload, err
-}
-
-func (client Client) PostRelease(r []byte) {
-	log.Infof("Received serialized release: %s", r)
-	client.Call()
-}
-
-func (client Client) PostContribution(c []byte) {
-	log.Infof("Received serialized contribution: %s", c)
-	client.Call()
-}
-
-func (c Client) Call() {
 }
 
 // Private
