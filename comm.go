@@ -33,7 +33,7 @@ func (espClient Client) Request(verb string, path string, token Token, object []
 	uri := endpoint + path
 	log.Debug(uri)
 
-	if verb == "POST" && object != nil {
+	if (verb == "POST" || verb == "PUT") && object != nil {
 		log.Debugf("Received serialized object: %s", object)
 	}
 	req, err := http.NewRequest(verb, uri, bytes.NewBuffer(object))

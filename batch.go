@@ -5,13 +5,13 @@ import "encoding/json"
 type SubmissionBatchType string
 
 type SubmissionBatch struct {
-	SubmissionName        string `json:"submission_name"`
-	SubmissionType        string `json:"submission_type"`
-	Note                  string `json:"note"`
-	SaveExtractedMetadata bool   `json:"save_extracted_metadata"`
-	AssignmentId          string `json:"assignment_id"`
-	BriefId               string `json:"brief_id"`
-	EventId               string `json:"event_id"`
+	SubmissionName        string `json:"submission_name,omitempty"`
+	SubmissionType        string `json:"submission_type,omitempty"`
+	Note                  string `json:"note,omitempty"`
+	SaveExtractedMetadata bool   `json:"save_extracted_metadata,omitempty"`
+	AssignmentId          string `json:"assignment_id,omitempty"`
+	BriefId               string `json:"brief_id,omitempty"`
+	EventId               string `json:"event_id,omitempty"`
 }
 
 func (s SubmissionBatch) Marshal() ([]byte, error) {
@@ -24,6 +24,19 @@ func (b *SubmissionBatch) TypeIsValid() bool {
 
 func (b SubmissionBatch) NameIsValid() bool {
 	return len(b.SubmissionName) > 0
+}
+
+type SubmissionBatchUpdate struct {
+	SubmissionBatch SubmissionBatchChanges `json:"submission_batch"`
+}
+
+func (s SubmissionBatchUpdate) Marshal() ([]byte, error) {
+	return json.MarshalIndent(s, "", "  ")
+}
+
+type SubmissionBatchChanges struct {
+	SubmissionName string `json:"submission_name,omitempty"`
+	Note           string `json:"note,omitempty"`
 }
 
 func BatchTypes() []string {
