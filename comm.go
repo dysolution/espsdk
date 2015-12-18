@@ -122,7 +122,11 @@ func getJSON(c *http.Client, req *http.Request, token Token, apiKey string) ([]b
 		log.Fatal(err)
 		return nil, err
 	}
-	log.Infof("HTTP %s", resp.Status)
+	if resp.StatusCode < 200 || resp.StatusCode > 299 {
+		log.Warnf("HTTP %s", resp.Status)
+	} else {
+		log.Infof("HTTP %s", resp.Status)
+	}
 	return payload, nil
 }
 
