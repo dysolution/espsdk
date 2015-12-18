@@ -104,11 +104,11 @@ func getJSON(c *http.Client, req *http.Request, token Token, apiKey string) ([]b
 	req.Header.Set("Api-Key", apiKey)
 
 	resp, err := c.Do(req)
-	defer resp.Body.Close()
 	if err != nil {
 		log.Fatal(err)
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	payload, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
