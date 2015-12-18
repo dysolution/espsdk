@@ -1,4 +1,4 @@
-package espapi
+package espsdk
 
 import (
 	"testing"
