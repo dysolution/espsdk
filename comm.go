@@ -75,20 +75,27 @@ func (c Client) tokenFrom(payload []byte) Token {
 	return Token(response["access_token"])
 }
 
+type RequestParams struct {
+	Verb   string
+	Path   string
+	Token  Token
+	Object []byte
+}
+
 // request performs a request using the provided HTTP verb and returns
 // the response as a JSON payload. If the verb is POST, the optional
 // serialized object will become the body of the HTTP request.
-func (c Client) Request(verb string, path string, token Token, object []byte) ([]byte, error) {
-	uri := endpoint + path
-	log.Debug(uri)
+func (c Client) Request(p *RequestParams) ([]byte, error) {
+	uri := endpoint + p.Path
+	log.Info(p.Verb + " " + uri)
 
-	if (verb == "POST" || verb == "PUT") && object != nil {
-		log.Debugf("Received serialized object: %s", object)
+	if (p.Verb == "POST" || p.Verb == "PUT") && p.Object != nil {
+		log.Debugf("Received serialized object: %s", p.Object)
 	}
-	req, err := http.NewRequest(verb, uri, bytes.NewBuffer(object))
+	req, err := http.NewRequest(p.Verb, uri, bytes.NewBuffer(p.Object))
 	httpClient := insecureClient()
 
-	payload, err := getJSON(httpClient, req, token, c.APIKey)
+	payload, err := getJSON(httpClient, req, p.Token, c.APIKey)
 	if err != nil {
 		log.Fatal(err)
 		return nil, err
