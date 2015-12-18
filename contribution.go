@@ -16,6 +16,7 @@ type Contribution struct {
 	FilePath             string   `json:"file_path"`
 	Headline             string   `json:"headline"`
 	IptcCategory         string   `json:"iptc_category"`
+	IptcSubjects         []string `json:"iptc_subjects"`
 	MimeType             string   `json:"mime_type"`
 	ParentSource         string   `json:"parent_source"`
 	RecordedDate         string   `json:"recorded_date"`
