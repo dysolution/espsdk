@@ -90,6 +90,13 @@ type RequestParams struct {
 	Object []byte `json:"-"`
 }
 
+func (p *RequestParams) requiresAnObject() bool {
+	if p.Verb == "POST" || p.Verb == "PUT" || p.Verb == "DELETE" {
+		return true
+	}
+	return false
+}
+
 type Response struct {
 	StatusCode int    `json:"status_code"`
 	Status     string `json:"-"`
@@ -108,7 +115,7 @@ type Result struct {
 func (c Client) Request(p *RequestParams) *FulfilledRequest {
 	uri := endpoint + p.Path
 
-	if (p.Verb == "POST" || p.Verb == "PUT") && p.Object != nil {
+	if p.requiresAnObject() && p.Object != nil {
 		log.Debugf("Received serialized object: %s", p.Object)
 	}
 	req, err := http.NewRequest(p.Verb, uri, bytes.NewBuffer(p.Object))
