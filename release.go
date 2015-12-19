@@ -15,10 +15,5 @@ type Release struct {
 	ModelGender          string   `json:"model_gender"`
 }
 
-func (r Release) Marshal() ([]byte, error) {
-	return json.MarshalIndent(r, "", "  ")
-}
-
-func ReleaseTypes() []string {
-	return []string{"Model", "Property"}
-}
+func (r Release) Marshal() ([]byte, error) { return json.MarshalIndent(r, "", "  ") }
+func (r Release) ValidTypes() []string     { return []string{"Model", "Property"} }

@@ -40,6 +40,16 @@ func (s SubmissionBatch) Marshal() ([]byte, error) { return json.MarshalIndent(s
 func (b *SubmissionBatch) TypeIsValid() bool       { return batchTypeIsValid[b.SubmissionType] }
 func (b SubmissionBatch) NameIsValid() bool        { return len(b.SubmissionName) > 0 }
 
+func (b SubmissionBatch) ValidTypes() []string {
+	keys := make([]string, len(batchTypeIsValid))
+	i := 0
+	for k := range batchTypeIsValid {
+		keys[i] = k
+		i++
+	}
+	return keys
+}
+
 type SubmissionBatchUpdate struct {
 	SubmissionBatch SubmissionBatchChanges `json:"submission_batch"`
 }
@@ -51,16 +61,6 @@ func (s SubmissionBatchUpdate) Marshal() ([]byte, error) {
 type SubmissionBatchChanges struct {
 	SubmissionName string `json:"submission_name,omitempty"`
 	Note           string `json:"note,omitempty"`
-}
-
-func BatchTypes() []string {
-	keys := make([]string, len(batchTypeIsValid))
-	i := 0
-	for k := range batchTypeIsValid {
-		keys[i] = k
-		i++
-	}
-	return keys
 }
 
 type ExtantSubmissionBatch struct {
