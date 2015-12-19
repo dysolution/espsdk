@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"time"
 
 	log "github.com/Sirupsen/logrus"
 )
@@ -75,59 +76,107 @@ func (c Client) tokenFrom(payload []byte) Token {
 	return Token(response["access_token"])
 }
 
-type RequestParams struct {
-	Verb   string
-	Path   string
-	Token  Token
-	Object []byte
+type FulfilledRequest struct {
+	*RequestParams
+	*Result
 }
 
-// request performs a request using the provided HTTP verb and returns
+func (r *FulfilledRequest) Marshal() ([]byte, error) { return json.Marshal(r) }
+
+type RequestParams struct {
+	Verb   string `json:"method"`
+	Path   string `json:"path"`
+	Token  Token  `json:"-"`
+	Object []byte `json:"-"`
+}
+
+type Response struct {
+	StatusCode int    `json:"status_code"`
+	Status     string `json:"-"`
+}
+
+type Result struct {
+	Response *Response     `json:"response"`
+	Payload  []byte        `json:"-"`
+	Duration time.Duration `json:"duration"`
+	Err      error         `json:"-"`
+}
+
+// Request performs a request using the provided HTTP verb and returns
 // the response as a JSON payload. If the verb is POST, the optional
 // serialized object will become the body of the HTTP request.
-func (c Client) Request(p *RequestParams) ([]byte, error) {
+func (c Client) Request(p *RequestParams) FulfilledRequest {
 	uri := endpoint + p.Path
-	log.Info(p.Verb + " " + uri)
 
 	if (p.Verb == "POST" || p.Verb == "PUT") && p.Object != nil {
 		log.Debugf("Received serialized object: %s", p.Object)
 	}
 	req, err := http.NewRequest(p.Verb, uri, bytes.NewBuffer(p.Object))
-	httpClient := insecureClient()
-
-	payload, err := getJSON(httpClient, req, p.Token, c.APIKey)
 	if err != nil {
 		log.Fatal(err)
-		return nil, err
 	}
-	return payload, nil
+	httpClient := insecureClient()
+
+	result := getJSON(httpClient, req, p.Token, c.APIKey)
+	if result.Err != nil {
+		log.Fatal(result.Err)
+		return FulfilledRequest{
+			p,
+			&Result{
+				&Response{
+					result.Response.StatusCode,
+					result.Response.Status,
+				},
+				nil,
+				result.Duration,
+				result.Err,
+			},
+		}
+	}
+	return FulfilledRequest{p, &result}
 }
 
 // Private
 
-func getJSON(c *http.Client, req *http.Request, token Token, apiKey string) ([]byte, error) {
+func getJSON(c *http.Client, req *http.Request, token Token, apiKey string) Result {
+	httpCommand := req.Method + " " + string(req.URL.Path)
+	start := start(httpCommand)
 	req.Header.Set("Authorization", "Token token="+string(token))
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Api-Key", apiKey)
 
 	resp, err := c.Do(req)
+	duration := elapsed(httpCommand, start)
 	if err != nil {
 		log.Fatal(err)
-		return nil, err
+		return Result{
+			&Response{
+				resp.StatusCode,
+				resp.Status,
+			},
+			nil, duration, err}
 	}
 	defer resp.Body.Close()
 
 	payload, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		log.Fatal(err)
-		return nil, err
+		return Result{
+			&Response{
+				resp.StatusCode,
+				resp.Status,
+			},
+			nil, duration, err}
 	}
 	if resp.StatusCode < 200 || resp.StatusCode > 299 {
 		log.Warnf("HTTP %s", resp.Status)
-	} else {
-		log.Infof("HTTP %s", resp.Status)
 	}
-	return payload, nil
+	return Result{
+		&Response{
+			resp.StatusCode,
+			resp.Status,
+		},
+		payload, duration, nil}
 }
 
 // insecureClient returns an HTTP client that will not verify the validity
@@ -137,4 +186,11 @@ func insecureClient() *http.Client {
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
 	return &http.Client{Transport: tr}
+}
+
+func start(s string) time.Time { return time.Now() }
+
+func elapsed(s string, startTime time.Time) time.Duration {
+	duration := time.Now().Sub(startTime)
+	return duration
 }
