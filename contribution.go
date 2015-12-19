@@ -33,3 +33,20 @@ type Contribution struct {
 func (c Contribution) Marshal() ([]byte, error) {
 	return json.MarshalIndent(c, "", "  ")
 }
+
+type ContributionUpdate struct {
+	Contribution Contribution `json:"contribution"`
+}
+
+type ContributionDeleteParams struct {
+	SubmissionBatchID string `json:"submission_batch_id,omitempty"`
+	ContributionID    string `json:"id,omitempty"`
+}
+
+func (c ContributionDeleteParams) Marshal() ([]byte, error) {
+	return json.MarshalIndent(c, "", "  ")
+}
+
+func (c ContributionUpdate) Marshal() ([]byte, error) {
+	return json.MarshalIndent(c, "", "  ")
+}
