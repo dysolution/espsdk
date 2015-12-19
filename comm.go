@@ -98,14 +98,14 @@ type Response struct {
 type Result struct {
 	Response *Response     `json:"response"`
 	Payload  []byte        `json:"-"`
-	Duration time.Duration `json:"duration"`
+	Duration time.Duration `json:"response_ms"`
 	Err      error         `json:"-"`
 }
 
 // Request performs a request using the provided HTTP verb and returns
 // the response as a JSON payload. If the verb is POST, the optional
 // serialized object will become the body of the HTTP request.
-func (c Client) Request(p *RequestParams) FulfilledRequest {
+func (c Client) Request(p *RequestParams) *FulfilledRequest {
 	uri := endpoint + p.Path
 
 	if (p.Verb == "POST" || p.Verb == "PUT") && p.Object != nil {
@@ -120,7 +120,7 @@ func (c Client) Request(p *RequestParams) FulfilledRequest {
 	result := getJSON(httpClient, req, p.Token, c.APIKey)
 	if result.Err != nil {
 		log.Fatal(result.Err)
-		return FulfilledRequest{
+		return &FulfilledRequest{
 			p,
 			&Result{
 				&Response{
@@ -133,12 +133,12 @@ func (c Client) Request(p *RequestParams) FulfilledRequest {
 			},
 		}
 	}
-	return FulfilledRequest{p, &result}
+	return &FulfilledRequest{p, result}
 }
 
 // Private
 
-func getJSON(c *http.Client, req *http.Request, token Token, apiKey string) Result {
+func getJSON(c *http.Client, req *http.Request, token Token, apiKey string) *Result {
 	httpCommand := req.Method + " " + string(req.URL.Path)
 	start := start(httpCommand)
 	req.Header.Set("Authorization", "Token token="+string(token))
@@ -146,32 +146,26 @@ func getJSON(c *http.Client, req *http.Request, token Token, apiKey string) Resu
 	req.Header.Set("Api-Key", apiKey)
 
 	resp, err := c.Do(req)
-	duration := elapsed(httpCommand, start)
+	duration := elapsed(httpCommand, start) / time.Millisecond
 	if err != nil {
 		log.Fatal(err)
-		return Result{
-			&Response{
-				resp.StatusCode,
-				resp.Status,
-			},
-			nil, duration, err}
+		return getResult(resp, nil, duration)
 	}
 	defer resp.Body.Close()
 
 	payload, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		log.Fatal(err)
-		return Result{
-			&Response{
-				resp.StatusCode,
-				resp.Status,
-			},
-			nil, duration, err}
+		return getResult(resp, payload, duration)
 	}
 	if resp.StatusCode < 200 || resp.StatusCode > 299 {
 		log.Warnf("HTTP %s", resp.Status)
 	}
-	return Result{
+	return getResult(resp, payload, duration)
+}
+
+func getResult(resp *http.Response, payload []byte, duration time.Duration) *Result {
+	return &Result{
 		&Response{
 			resp.StatusCode,
 			resp.Status,
