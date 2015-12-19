@@ -63,34 +63,6 @@ type SubmissionBatchChanges struct {
 	Note           string `json:"note,omitempty"`
 }
 
-type ExtantSubmissionBatch struct {
-	Id                               int
-	submissionName                   string
-	submissionType                   string
-	userId                           string
-	profileId                        int
-	createdAt                        string
-	updatedAt                        string
-	status                           string
-	note                             string
-	createdBy                        string
-	lastContributionSubmittedAt      string
-	contributionsCount               int
-	submittedContributionsCount      int
-	istockExclusive                  bool
-	contributionsAwaitingReviewCount int
-	reviewedContributionsCount       int
-	revisableContributionsCount      int
-	lastSubmittedAt                  string
-	isGetty                          bool
-	isIstock                         bool
-	totalProfileNotes                int
-	saveExtractedMetadata            bool
-	assignmentId                     string
-	briefId                          string
-	eventId                          string
-}
-
 var batchTypeIsValid = map[string]bool{
 	"getty_creative_video":  true,
 	"getty_editorial_video": true,
