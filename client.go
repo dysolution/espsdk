@@ -92,6 +92,27 @@ func (c *Client) get(path string) []byte {
 	return result.Payload
 }
 
+func (c *Client) post(object Serializable, path string) []byte {
+	serializedObject, err := object.Marshal()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	request := NewRequest("POST", path, c.GetToken(), serializedObject)
+	result := c.PerformRequest(request)
+	if result.Err != nil {
+		log.Fatal(result.Err)
+	}
+
+	stats, err := result.Marshal()
+	if err != nil {
+		log.Fatal(result.Err)
+	}
+	log.Info(string(stats))
+	log.Debugf("%s\n", result.Payload)
+	return result.Payload
+}
+
 func (c *Client) put(object Serializable, path string) []byte {
 	serializedObject, err := object.Marshal()
 	if err != nil {
