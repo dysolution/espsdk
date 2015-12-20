@@ -20,16 +20,10 @@ type Release struct {
 	UploadID             int      `json:"upload_id,omitempty"`
 }
 
-func (r Release) Marshal() ([]byte, error) { return json.MarshalIndent(r, "", "  ") }
+func (r Release) Marshal() ([]byte, error) { return indentedJSON(r) }
 func (r Release) ValidTypes() []string     { return []string{"Model", "Property"} }
 
-func (r Release) PrettyPrint() string {
-	prettyOutput, err := r.Marshal()
-	if err != nil {
-		log.Fatal(err)
-	}
-	return string(prettyOutput)
-}
+func (r Release) PrettyPrint() string { return PrettyPrint(r) }
 
 // Unmarshal attempts to deserialize the provided JSON payload into a
 // Release object.
@@ -43,9 +37,7 @@ func (r Release) Unmarshal(payload []byte) Release {
 
 type ReleaseList []Release
 
-func (rl ReleaseList) Marshal() ([]byte, error) {
-	return json.MarshalIndent(rl, "", "  ")
-}
+func (rl ReleaseList) Marshal() ([]byte, error) { return indentedJSON(rl) }
 
 func (rl ReleaseList) Unmarshal(payload []byte) ReleaseList {
 	var releaseList ReleaseList
@@ -55,10 +47,4 @@ func (rl ReleaseList) Unmarshal(payload []byte) ReleaseList {
 	return releaseList
 }
 
-func (rl ReleaseList) PrettyPrint() string {
-	prettyOutput, err := rl.Marshal()
-	if err != nil {
-		log.Fatal(err)
-	}
-	return string(prettyOutput)
-}
+func (rl ReleaseList) PrettyPrint() string { return PrettyPrint(rl) }

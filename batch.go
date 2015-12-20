@@ -37,7 +37,7 @@ type SubmissionBatch struct {
 	UserID                           string     `json:"user_id,omitempty"`
 }
 
-func (s SubmissionBatch) Marshal() ([]byte, error) { return json.MarshalIndent(s, "", "  ") }
+func (s SubmissionBatch) Marshal() ([]byte, error) { return indentedJSON(s) }
 func (b *SubmissionBatch) TypeIsValid() bool       { return batchTypeIsValid[b.SubmissionType] }
 func (b SubmissionBatch) NameIsValid() bool        { return len(b.SubmissionName) > 0 }
 
@@ -70,9 +70,7 @@ type SubmissionBatchUpdate struct {
 	SubmissionBatch SubmissionBatch `json:"submission_batch"`
 }
 
-func (s SubmissionBatchUpdate) Marshal() ([]byte, error) {
-	return json.MarshalIndent(s, "", "  ")
-}
+func (s SubmissionBatchUpdate) Marshal() ([]byte, error) { return indentedJSON(s) }
 
 var batchTypeIsValid = map[string]bool{
 	"getty_creative_video":  true,
@@ -84,9 +82,7 @@ var batchTypeIsValid = map[string]bool{
 
 type BatchList []SubmissionBatch
 
-func (bl BatchList) Marshal() ([]byte, error) {
-	return json.MarshalIndent(bl, "", "  ")
-}
+func (bl BatchList) Marshal() ([]byte, error) { return indentedJSON(bl) }
 
 func (bl BatchList) Unmarshal(payload []byte) BatchList {
 	var batchList BatchList
@@ -96,13 +92,7 @@ func (bl BatchList) Unmarshal(payload []byte) BatchList {
 	return batchList
 }
 
-func (bl BatchList) PrettyPrint() string {
-	prettyOutput, err := bl.Marshal()
-	if err != nil {
-		log.Fatal(err)
-	}
-	return string(prettyOutput)
-}
+func (bl BatchList) PrettyPrint() string { return PrettyPrint(bl) }
 
 type BatchListContainer struct {
 	Items BatchList `json:"items"`
@@ -111,9 +101,7 @@ type BatchListContainer struct {
 	} `json:"meta"`
 }
 
-func (blc BatchListContainer) Marshal() ([]byte, error) {
-	return json.MarshalIndent(blc, "", "  ")
-}
+func (blc BatchListContainer) Marshal() ([]byte, error) { return indentedJSON(blc) }
 
 func (blc BatchListContainer) Unmarshal(payload []byte) BatchListContainer {
 	var batchListContainer BatchListContainer
@@ -123,10 +111,4 @@ func (blc BatchListContainer) Unmarshal(payload []byte) BatchListContainer {
 	return batchListContainer
 }
 
-func (blc BatchListContainer) PrettyPrint() string {
-	prettyOutput, err := blc.Marshal()
-	if err != nil {
-		log.Fatal(err)
-	}
-	return string(prettyOutput)
-}
+func (blc BatchListContainer) PrettyPrint() string { return PrettyPrint(blc) }

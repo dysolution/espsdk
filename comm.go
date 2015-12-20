@@ -15,9 +15,22 @@ import (
 const (
 	endpoint      = "https://esp-sandbox.api.gettyimages.com/esp"
 	oauthEndpoint = "https://api.gettyimages.com/oauth2/token"
+	jsonIndent    = "\t"
 )
 
 type Token string
+
+type Serializable interface {
+	Marshal() ([]byte, error)
+}
+
+func PrettyPrint(obj Serializable) string {
+	prettyOutput, err := obj.Marshal()
+	if err != nil {
+		log.Fatal(err)
+	}
+	return string(prettyOutput)
+}
 
 type Credentials struct {
 	APIKey      string
@@ -194,4 +207,8 @@ func start(s string) time.Time { return time.Now() }
 func elapsed(s string, startTime time.Time) time.Duration {
 	duration := time.Now().Sub(startTime)
 	return duration
+}
+
+func indentedJSON(obj interface{}) ([]byte, error) {
+	return json.MarshalIndent(obj, "", "\t")
 }

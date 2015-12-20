@@ -35,9 +35,7 @@ type Contribution struct {
 	UploadId             string   `json:"upload_id,omitempty"`
 }
 
-func (c Contribution) Marshal() ([]byte, error) {
-	return json.MarshalIndent(c, "", "  ")
-}
+func (c Contribution) Marshal() ([]byte, error) { return indentedJSON(c) }
 
 func (c Contribution) PrettyPrint() string {
 	prettyOutput, err := c.Marshal()
@@ -51,9 +49,7 @@ type ContributionUpdate struct {
 	Contribution Contribution `json:"contribution"`
 }
 
-func (c ContributionUpdate) Marshal() ([]byte, error) {
-	return json.MarshalIndent(c, "", "  ")
-}
+func (c ContributionUpdate) Marshal() ([]byte, error) { return indentedJSON(c) }
 
 // Unmarshal attempts to deserialize the provided JSON payload into a
 // Contribution object.
@@ -67,9 +63,7 @@ func (c Contribution) Unmarshal(payload []byte) Contribution {
 
 type ContributionList []Contribution
 
-func (cl ContributionList) Marshal() ([]byte, error) {
-	return json.MarshalIndent(cl, "", "  ")
-}
+func (cl ContributionList) Marshal() ([]byte, error) { return indentedJSON(cl) }
 
 func (cl ContributionList) Unmarshal(payload []byte) ContributionList {
 	var contributionList ContributionList
