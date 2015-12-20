@@ -56,7 +56,7 @@ func (c ContributionUpdate) Marshal() ([]byte, error) {
 }
 
 // Unmarshal attempts to deserialize the provided JSON payload into a
-// Contribution object as defined by the SDK.
+// Contribution object.
 func (c Contribution) Unmarshal(payload []byte) Contribution {
 	var contribution Contribution
 	if err := json.Unmarshal(payload, &contribution); err != nil {
