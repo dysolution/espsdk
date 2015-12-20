@@ -5,6 +5,8 @@ import (
 	"log"
 )
 
+// A Contribution is the metadata that represents a media asset from
+// a contributor.
 type Contribution struct {
 	AlternateID          string   `json:"alternate_id,omitempty"`
 	CameraShotDate       string   `json:"camera_shot_date,omitempty"`
@@ -32,23 +34,23 @@ type Contribution struct {
 	SubmissionBatchID    int      `json:"submission_batch_id,omitempty"`
 	SubmittedToReviewAt  string   `json:"submitted_to_review_at,omitempty"`
 	UploadBucket         string   `json:"upload_bucket,omitempty"`
-	UploadId             string   `json:"upload_id,omitempty"`
+	UploadID             string   `json:"upload_id,omitempty"`
 }
 
+// Marshal serializes a Contribution into a byte slice.
 func (c Contribution) Marshal() ([]byte, error) { return indentedJSON(c) }
 
-func (c Contribution) PrettyPrint() string {
-	prettyOutput, err := c.Marshal()
-	if err != nil {
-		log.Fatal(err)
-	}
-	return string(prettyOutput)
-}
+// PrettyPrint returns a human-readable serialized JSON representation of
+// the provided object.
+func (c Contribution) PrettyPrint() string { return prettyPrint(c) }
 
+// A ContributionUpdate contains a Contribution. This matches the
+// structure of the JSON payload the API expects during a PUT.
 type ContributionUpdate struct {
 	Contribution Contribution `json:"contribution"`
 }
 
+// Marshal serializes a ContributionUpdate into a byte slice.
 func (c ContributionUpdate) Marshal() ([]byte, error) { return indentedJSON(c) }
 
 // Unmarshal attempts to deserialize the provided JSON payload into a
@@ -61,10 +63,15 @@ func (c Contribution) Unmarshal(payload []byte) Contribution {
 	return contribution
 }
 
+// A ContributionList is a slice of zero or more Contributions.
 type ContributionList []Contribution
 
+// Marshal serializes a ContributionList into a byte slice.
 func (cl ContributionList) Marshal() ([]byte, error) { return indentedJSON(cl) }
 
+// Unmarshal attempts to deserialize the provided JSON payload
+// into the complete metadata returned by a request to the Index (GET all)
+// API endpoint.
 func (cl ContributionList) Unmarshal(payload []byte) ContributionList {
 	var contributionList ContributionList
 	if err := json.Unmarshal(payload, &contributionList); err != nil {
@@ -73,10 +80,6 @@ func (cl ContributionList) Unmarshal(payload []byte) ContributionList {
 	return contributionList
 }
 
-func (cl ContributionList) PrettyPrint() string {
-	prettyOutput, err := cl.Marshal()
-	if err != nil {
-		log.Fatal(err)
-	}
-	return string(prettyOutput)
-}
+// PrettyPrint returns a human-readable serialized JSON representation of
+// the provided object.
+func (cl ContributionList) PrettyPrint() string { return prettyPrint(cl) }

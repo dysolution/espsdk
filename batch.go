@@ -6,8 +6,8 @@ import (
 	"time"
 )
 
-type SubmissionBatchType string
-
+// A SubmissionBatch is a container for Contributions of the same type and
+// any Releases that may be associated with them.
 type SubmissionBatch struct {
 	AssignmentID                     string     `json:"assignment_id,omitempty"`
 	BatchTags                        []string   `json:"batch_tags,omitempty"`
@@ -37,10 +37,16 @@ type SubmissionBatch struct {
 	UserID                           string     `json:"user_id,omitempty"`
 }
 
-func (s SubmissionBatch) Marshal() ([]byte, error) { return indentedJSON(s) }
-func (b *SubmissionBatch) TypeIsValid() bool       { return batchTypeIsValid[b.SubmissionType] }
-func (b SubmissionBatch) NameIsValid() bool        { return len(b.SubmissionName) > 0 }
+// Marshal serializes a SubmissionBatch into a byte slice.
+func (b SubmissionBatch) Marshal() ([]byte, error) { return indentedJSON(b) }
 
+// NameIsValid provides validation for a proposed SubmissionName.
+func (b SubmissionBatch) NameIsValid() bool { return len(b.SubmissionName) > 0 }
+
+// TypeIsValid reports whether a proposed type is valid for ESP.
+func (b *SubmissionBatch) TypeIsValid() bool { return batchTypeIsValid[b.SubmissionType] }
+
+// ValidTypes are the SubmissionBatchTypes supported by ESP.
 func (b SubmissionBatch) ValidTypes() []string {
 	keys := make([]string, len(batchTypeIsValid))
 	i := 0
@@ -51,6 +57,8 @@ func (b SubmissionBatch) ValidTypes() []string {
 	return keys
 }
 
+// Unmarshal attempts to deserialize the provided JSON payload
+// into a SubmissionBatch object.
 func (b SubmissionBatch) Unmarshal(payload []byte) SubmissionBatch {
 	var batch SubmissionBatch
 	if err := json.Unmarshal(payload, &batch); err != nil {
@@ -58,18 +66,18 @@ func (b SubmissionBatch) Unmarshal(payload []byte) SubmissionBatch {
 	}
 	return batch
 }
-func (b SubmissionBatch) PrettyPrint() string {
-	prettyOutput, err := b.Marshal()
-	if err != nil {
-		log.Fatal(err)
-	}
-	return string(prettyOutput)
-}
 
+// PrettyPrint returns a human-readable serialized JSON representation of
+// the provided object.
+func (b SubmissionBatch) PrettyPrint() string { return prettyPrint(b) }
+
+// A SubmissionBatchUpdate contains a SubmissionBatch. This matches the
+// structure of the JSON payload the API expects during a PUT.
 type SubmissionBatchUpdate struct {
 	SubmissionBatch SubmissionBatch `json:"submission_batch"`
 }
 
+// Marshal serializes a SubmissionBatchUpdate into a byte slice.
 func (s SubmissionBatchUpdate) Marshal() ([]byte, error) { return indentedJSON(s) }
 
 var batchTypeIsValid = map[string]bool{
@@ -80,11 +88,13 @@ var batchTypeIsValid = map[string]bool{
 	"istock_creative_video": true,
 }
 
+// A BatchList is a slice of zero or more SubmissionBatches.
 type BatchList []SubmissionBatch
 
+// Marshal serializes a BatchList into a byte slice.
 func (bl BatchList) Marshal() ([]byte, error) { return indentedJSON(bl) }
 
-func (bl BatchList) Unmarshal(payload []byte) BatchList {
+func (bl BatchList) unmarshal(payload []byte) BatchList {
 	var batchList BatchList
 	if err := json.Unmarshal(payload, &batchList); err != nil {
 		log.Fatal(err)
@@ -92,8 +102,10 @@ func (bl BatchList) Unmarshal(payload []byte) BatchList {
 	return batchList
 }
 
-func (bl BatchList) PrettyPrint() string { return PrettyPrint(bl) }
+func (bl BatchList) prettyPrint() string { return prettyPrint(bl) }
 
+// A BatchListContainer matches the structure of the JSON payload returned
+// by the GET (all) SubmissionBatches API endpoint.
 type BatchListContainer struct {
 	Items BatchList `json:"items"`
 	Meta  struct {
@@ -101,8 +113,12 @@ type BatchListContainer struct {
 	} `json:"meta"`
 }
 
+// Marshal serializes a BatchListContainer into a byte slice.
 func (blc BatchListContainer) Marshal() ([]byte, error) { return indentedJSON(blc) }
 
+// Unmarshal attempts to deserialize the provided JSON payload
+// into the complete metadata returned by a request to the Index (GET all)
+// API endpoint.
 func (blc BatchListContainer) Unmarshal(payload []byte) BatchListContainer {
 	var batchListContainer BatchListContainer
 	if err := json.Unmarshal(payload, &batchListContainer); err != nil {
@@ -111,4 +127,6 @@ func (blc BatchListContainer) Unmarshal(payload []byte) BatchListContainer {
 	return batchListContainer
 }
 
-func (blc BatchListContainer) PrettyPrint() string { return PrettyPrint(blc) }
+// PrettyPrint returns a human-readable serialized JSON representation of
+// the provided object.
+func (blc BatchListContainer) PrettyPrint() string { return prettyPrint(blc) }

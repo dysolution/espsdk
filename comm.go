@@ -18,13 +18,16 @@ const (
 	jsonIndent    = "\t"
 )
 
+// A Token is a string representation of an OAuth2 token. It grants a user
+// access to the ESP API for a limited time.
 type Token string
 
-type Serializable interface {
+// A Serializable object can be serialized to a byte stream such as JSON.
+type serializable interface {
 	Marshal() ([]byte, error)
 }
 
-func PrettyPrint(obj Serializable) string {
+func prettyPrint(obj serializable) string {
 	prettyOutput, err := obj.Marshal()
 	if err != nil {
 		log.Fatal(err)
@@ -32,6 +35,8 @@ func PrettyPrint(obj Serializable) string {
 	return string(prettyOutput)
 }
 
+// Credentials represent a specific authorized application performing
+// operations on objects belonging to a specific ESP user.
 type Credentials struct {
 	APIKey      string
 	APISecret   string
@@ -56,11 +61,16 @@ func (c *Credentials) formValues() url.Values {
 	return v
 }
 
+// A Client is able to request an access token and submit HTTP requests to
+// the ESP API.
 type Client struct {
 	Credentials
 	UploadBucket string
 }
 
+// GetToken submits the provided credentials to Getty's OAuth2 endpoint
+// and returns a token that can be used to authenticate HTTP requests to the
+// ESP API.
 func (c Client) GetToken() Token {
 	if c.Credentials.areInvalid() {
 		log.Fatal("Not all required credentials were supplied.")
@@ -89,13 +99,19 @@ func (c Client) tokenFrom(payload []byte) Token {
 	return Token(response["access_token"])
 }
 
+// A FulfilledRequest provides an overview of a completed API request and
+// its result, including timing and HTTP status codes.
 type FulfilledRequest struct {
 	*RequestParams
 	*Result
 }
 
+// Marshal serializes a FulfilledRequest into a byte stream.
 func (r *FulfilledRequest) Marshal() ([]byte, error) { return json.Marshal(r) }
 
+// RequestParams are provided to a Request to indicate the specific API
+// endpoint and action to take. The Object is optional and applies only to
+// endpoints that create or update items (POST and PUT).
 type RequestParams struct {
 	Verb   string `json:"method"`
 	Path   string `json:"path"`
@@ -110,11 +126,15 @@ func (p *RequestParams) requiresAnObject() bool {
 	return false
 }
 
+// A Response contains the HTTP status code and text tha represent the API's
+// response to a request.
 type Response struct {
 	StatusCode int    `json:"status_code"`
 	Status     string `json:"-"`
 }
 
+// A Result contains information relative to a completed request, including
+// the time elapsed to fulfill the request and any errors.
 type Result struct {
 	Response *Response     `json:"response"`
 	Payload  []byte        `json:"-"`
