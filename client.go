@@ -72,6 +72,21 @@ func (c Client) PerformRequest(p *request) *FulfilledRequest {
 	return &FulfilledRequest{p, result}
 }
 
+func (c *Client) get(path string) []byte {
+	request := NewRequest("GET", path, c.GetToken(), nil)
+	result := c.PerformRequest(request)
+	if result.Err != nil {
+		log.Fatal(result.Err)
+	}
+	stats, err := result.Marshal()
+	if err != nil {
+		log.Fatal(result.Err)
+	}
+	log.Info(string(stats))
+	log.Debugf("%s\n", result.Payload)
+	return result.Payload
+}
+
 // insecureClient returns an HTTP client that will not verify the validity
 // of an SSL certificate when performing a request.
 func insecureClient() *http.Client {

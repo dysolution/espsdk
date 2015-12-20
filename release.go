@@ -23,14 +23,8 @@ type Release struct {
 }
 
 // Get requests the metadata for a specific Release.
-func (r Release) Get(id string, batchId string, token Token) Release {
-	return r.Unmarshal(r.get(id, batchId, token))
-}
-func (r Release) path(id string, batchId string) string {
-	return (Batches + "/" + batchId + "/releases/" + id)
-}
-func (r Release) get(id string, batchId string, token Token) []byte {
-	return get(r.path(id, batchId), token)
+func (r Release) Get(client *Client, batchID int) Release {
+	return r.Unmarshal(client.get(ReleasePath(batchID, r.ID)))
 }
 
 // Marshal serializes a Release into a byte slice.

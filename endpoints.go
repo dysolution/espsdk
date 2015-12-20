@@ -1,5 +1,7 @@
 package espsdk
 
+import "fmt"
+
 // These constants represent the relative paths for various ESP API endpoints.
 const (
 	Batches            string = "/submission/v1/submission_batches"
@@ -11,3 +13,8 @@ const (
 	Expressions        string = "/submission/v1/people_metadata/expressions"
 	NumberOfPeople     string = "/submission/v1/people_metadata/number_of_people"
 )
+
+func batchPath(b *Batch) string { return fmt.Sprintf("%s/%d", Batches, b.ID) }
+func ReleasePath(batchID int, releaseID int) string {
+	return fmt.Sprintf("%s/%d/releases/%d", Batches, batchID, releaseID)
+}
