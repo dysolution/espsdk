@@ -1,3 +1,12 @@
+/*
+The ESP SDK provides a Go interface to the JSON API of Getty Images'
+Enterprise Submission Portal (ESP).
+
+You will need a username and password that allows you
+to log in to https://sandbox.espaws.com/ as well as
+an API Key and and API Secret, both of which are accessible
+at https://developer.gettyimages.com/apps/mykeys/.
+*/
 package espsdk
 
 import (
