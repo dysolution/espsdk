@@ -44,6 +44,11 @@ func (b Batch) Marshal() ([]byte, error) { return indentedJSON(b) }
 // Get requests the metadata for a specific Submission Batch.
 func (b Batch) Get(client *Client) Batch { return b.Unmarshal(client.get(BatchPath(&b))) }
 
+// Update changes metadata for an existing Batch.
+func (b Batch) Update(client *Client, updatedData BatchUpdate) Batch {
+	return b.Unmarshal(client.put(updatedData, BatchPath(&b)))
+}
+
 // Delete destroys a specific Submission Batch.
 func (b Batch) Delete(client *Client) { client._delete(BatchPath(&b)) }
 
