@@ -2,6 +2,7 @@ package espsdk
 
 import (
 	"bytes"
+	"crypto/tls"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
@@ -50,7 +51,7 @@ func (c Client) tokenFrom(payload []byte) Token {
 // Request performs a request using the provided HTTP verb and returns
 // the response as a JSON payload. If the verb is POST, the optional
 // serialized object will become the body of the HTTP request.
-func (c Client) Request(p *RequestParams) *FulfilledRequest {
+func (c Client) PerformRequest(p *request) *FulfilledRequest {
 	uri := endpoint + p.Path
 
 	if p.requiresAnObject() && p.Object != nil {
@@ -60,23 +61,22 @@ func (c Client) Request(p *RequestParams) *FulfilledRequest {
 	if err != nil {
 		log.Fatal(err)
 	}
-	httpClient := insecureClient()
+	p.httpRequest = req
 
-	result := getJSON(httpClient, req, p.Token, c.APIKey)
+	p.addHeaders(p.Token, c.APIKey)
+
+	result := getResult(insecureClient(), req)
 	if result.Err != nil {
 		log.Fatal(result.Err)
-		return &FulfilledRequest{
-			p,
-			&Result{
-				&Response{
-					result.Response.StatusCode,
-					result.Response.Status,
-				},
-				nil,
-				result.Duration,
-				result.Err,
-			},
-		}
 	}
 	return &FulfilledRequest{p, result}
+}
+
+// insecureClient returns an HTTP client that will not verify the validity
+// of an SSL certificate when performing a request.
+func insecureClient() *http.Client {
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
+	return &http.Client{Transport: tr}
 }
