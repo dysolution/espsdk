@@ -22,6 +22,17 @@ type Release struct {
 	UploadID             int      `json:"upload_id,omitempty"`
 }
 
+// Get requests the metadata for a specific Release.
+func (r Release) Get(id string, batchId string, token Token) Release {
+	return r.Unmarshal(r.get(id, batchId, token))
+}
+func (r Release) path(id string, batchId string) string {
+	return (Batches + "/" + batchId + "/releases/" + id)
+}
+func (r Release) get(id string, batchId string, token Token) []byte {
+	return get(r.path(id, batchId), token)
+}
+
 // Marshal serializes a Release into a byte slice.
 func (r Release) Marshal() ([]byte, error) { return indentedJSON(r) }
 
