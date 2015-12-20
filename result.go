@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"docker-machine/src/github.com/docker/machine/libmachine/log"
+	log "github.com/Sirupsen/logrus"
 )
 
 // A Result contains information relative to a completed request, including

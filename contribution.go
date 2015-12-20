@@ -2,7 +2,7 @@ package espsdk
 
 import (
 	"encoding/json"
-	"log"
+	log "github.com/Sirupsen/logrus"
 )
 
 // A Contribution is the metadata that represents a media asset from

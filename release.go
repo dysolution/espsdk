@@ -2,7 +2,7 @@ package espsdk
 
 import (
 	"encoding/json"
-	"log"
+	log "github.com/Sirupsen/logrus"
 )
 
 // A Release is the metadata that represents a legal agreement for
