@@ -40,6 +40,11 @@ type Contribution struct {
 // Marshal serializes a Contribution into a byte slice.
 func (c Contribution) Marshal() ([]byte, error) { return indentedJSON(c) }
 
+// Get requests the metadata for a specific Contribution.
+func (c Contribution) Get(client *Client, batchID int) Contribution {
+	return c.Unmarshal(client.get(ContributionPath(batchID, c.ID)))
+}
+
 // Delete destroys a specific Contribution.
 func (c Contribution) Delete(client *Client, batchID int) {
 	client._delete(ContributionPath(batchID, c.ID))
