@@ -41,7 +41,7 @@ type Batch struct {
 // Marshal serializes a Batch into a byte slice.
 func (b Batch) Marshal() ([]byte, error) { return indentedJSON(b) }
 
-func (b Batch) Get(client *Client) Batch { return b.Unmarshal(client.get(batchPath(&b))) }
+func (b Batch) Get(client *Client) Batch { return b.Unmarshal(client.get(BatchPath(&b))) }
 
 // NameIsValid provides validation for a proposed SubmissionName.
 func (b Batch) NameIsValid() bool { return len(b.SubmissionName) > 0 }

@@ -14,7 +14,7 @@ const (
 	NumberOfPeople     string = "/submission/v1/people_metadata/number_of_people"
 )
 
-func batchPath(b *Batch) string { return fmt.Sprintf("%s/%d", Batches, b.ID) }
+func BatchPath(b *Batch) string { return fmt.Sprintf("%s/%d", Batches, b.ID) }
 func ReleasePath(batchID int, releaseID int) string {
 	return fmt.Sprintf("%s/%d/releases/%d", Batches, batchID, releaseID)
 }
