@@ -6,9 +6,9 @@ import (
 	"time"
 )
 
-// A SubmissionBatch is a container for Contributions of the same type and
+// A Batch is a container for Contributions of the same type and
 // any Releases that may be associated with them.
-type SubmissionBatch struct {
+type Batch struct {
 	AssignmentID                     string     `json:"assignment_id,omitempty"`
 	BatchTags                        []string   `json:"batch_tags,omitempty"`
 	BriefID                          string     `json:"brief_id,omitempty"`
@@ -37,17 +37,17 @@ type SubmissionBatch struct {
 	UserID                           string     `json:"user_id,omitempty"`
 }
 
-// Marshal serializes a SubmissionBatch into a byte slice.
-func (b SubmissionBatch) Marshal() ([]byte, error) { return indentedJSON(b) }
+// Marshal serializes a Batch into a byte slice.
+func (b Batch) Marshal() ([]byte, error) { return indentedJSON(b) }
 
 // NameIsValid provides validation for a proposed SubmissionName.
-func (b SubmissionBatch) NameIsValid() bool { return len(b.SubmissionName) > 0 }
+func (b Batch) NameIsValid() bool { return len(b.SubmissionName) > 0 }
 
 // TypeIsValid reports whether a proposed type is valid for ESP.
-func (b *SubmissionBatch) TypeIsValid() bool { return batchTypeIsValid[b.SubmissionType] }
+func (b *Batch) TypeIsValid() bool { return batchTypeIsValid[b.SubmissionType] }
 
-// ValidTypes are the SubmissionBatchTypes supported by ESP.
-func (b SubmissionBatch) ValidTypes() []string {
+// ValidTypes are the BatchTypes supported by ESP.
+func (b Batch) ValidTypes() []string {
 	keys := make([]string, len(batchTypeIsValid))
 	i := 0
 	for k := range batchTypeIsValid {
@@ -58,9 +58,9 @@ func (b SubmissionBatch) ValidTypes() []string {
 }
 
 // Unmarshal attempts to deserialize the provided JSON payload
-// into a SubmissionBatch object.
-func (b SubmissionBatch) Unmarshal(payload []byte) SubmissionBatch {
-	var batch SubmissionBatch
+// into a Batch object.
+func (b Batch) Unmarshal(payload []byte) Batch {
+	var batch Batch
 	if err := json.Unmarshal(payload, &batch); err != nil {
 		log.Fatal(err)
 	}
@@ -69,16 +69,16 @@ func (b SubmissionBatch) Unmarshal(payload []byte) SubmissionBatch {
 
 // PrettyPrint returns a human-readable serialized JSON representation of
 // the provided object.
-func (b SubmissionBatch) PrettyPrint() string { return prettyPrint(b) }
+func (b Batch) PrettyPrint() string { return prettyPrint(b) }
 
-// A SubmissionBatchUpdate contains a SubmissionBatch. This matches the
+// A BatchUpdate contains a Batch. This matches the
 // structure of the JSON payload the API expects during a PUT.
-type SubmissionBatchUpdate struct {
-	SubmissionBatch SubmissionBatch `json:"submission_batch"`
+type BatchUpdate struct {
+	Batch Batch `json:"submission_batch"`
 }
 
-// Marshal serializes a SubmissionBatchUpdate into a byte slice.
-func (s SubmissionBatchUpdate) Marshal() ([]byte, error) { return indentedJSON(s) }
+// Marshal serializes a BatchUpdate into a byte slice.
+func (s BatchUpdate) Marshal() ([]byte, error) { return indentedJSON(s) }
 
 var batchTypeIsValid = map[string]bool{
 	"getty_creative_video":  true,
@@ -88,8 +88,8 @@ var batchTypeIsValid = map[string]bool{
 	"istock_creative_video": true,
 }
 
-// A BatchList is a slice of zero or more SubmissionBatches.
-type BatchList []SubmissionBatch
+// A BatchList is a slice of zero or more Batches.
+type BatchList []Batch
 
 // Marshal serializes a BatchList into a byte slice.
 func (bl BatchList) Marshal() ([]byte, error) { return indentedJSON(bl) }
@@ -105,7 +105,7 @@ func (bl BatchList) unmarshal(payload []byte) BatchList {
 func (bl BatchList) prettyPrint() string { return prettyPrint(bl) }
 
 // A BatchListContainer matches the structure of the JSON payload returned
-// by the GET (all) SubmissionBatches API endpoint.
+// by the GET (all) Batches API endpoint.
 type BatchListContainer struct {
 	Items BatchList `json:"items"`
 	Meta  struct {
