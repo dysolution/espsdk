@@ -54,3 +54,35 @@ type ContributionUpdate struct {
 func (c ContributionUpdate) Marshal() ([]byte, error) {
 	return json.MarshalIndent(c, "", "  ")
 }
+
+// Unmarshal attempts to deserialize the provided JSON payload into a
+// Contribution object as defined by the SDK.
+func (c Contribution) Unmarshal(payload []byte) Contribution {
+	var contribution Contribution
+	if err := json.Unmarshal(payload, &contribution); err != nil {
+		log.Fatal(err)
+	}
+	return contribution
+}
+
+type ContributionList []Contribution
+
+func (cl ContributionList) Marshal() ([]byte, error) {
+	return json.MarshalIndent(cl, "", "  ")
+}
+
+func (cl ContributionList) Unmarshal(payload []byte) ContributionList {
+	var contributionList ContributionList
+	if err := json.Unmarshal(payload, &contributionList); err != nil {
+		log.Fatal(err)
+	}
+	return contributionList
+}
+
+func (cl ContributionList) PrettyPrint() string {
+	prettyOutput, err := cl.Marshal()
+	if err != nil {
+		log.Fatal(err)
+	}
+	return string(prettyOutput)
+}

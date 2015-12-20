@@ -51,6 +51,13 @@ func (b SubmissionBatch) ValidTypes() []string {
 	return keys
 }
 
+func (b SubmissionBatch) Unmarshal(payload []byte) SubmissionBatch {
+	var batch SubmissionBatch
+	if err := json.Unmarshal(payload, &batch); err != nil {
+		log.Fatal(err)
+	}
+	return batch
+}
 func (b SubmissionBatch) PrettyPrint() string {
 	prettyOutput, err := b.Marshal()
 	if err != nil {
@@ -73,4 +80,53 @@ var batchTypeIsValid = map[string]bool{
 	"getty_creative_still":  true,
 	"getty_editorial_still": true,
 	"istock_creative_video": true,
+}
+
+type BatchList []SubmissionBatch
+
+func (bl BatchList) Marshal() ([]byte, error) {
+	return json.MarshalIndent(bl, "", "  ")
+}
+
+func (bl BatchList) Unmarshal(payload []byte) BatchList {
+	var batchList BatchList
+	if err := json.Unmarshal(payload, &batchList); err != nil {
+		log.Fatal(err)
+	}
+	return batchList
+}
+
+func (bl BatchList) PrettyPrint() string {
+	prettyOutput, err := bl.Marshal()
+	if err != nil {
+		log.Fatal(err)
+	}
+	return string(prettyOutput)
+}
+
+type BatchListContainer struct {
+	Items BatchList `json:"items"`
+	Meta  struct {
+		TotalItems int `json:"total_items"`
+	} `json:"meta"`
+}
+
+func (blc BatchListContainer) Marshal() ([]byte, error) {
+	return json.MarshalIndent(blc, "", "  ")
+}
+
+func (blc BatchListContainer) Unmarshal(payload []byte) BatchListContainer {
+	var batchListContainer BatchListContainer
+	if err := json.Unmarshal(payload, &batchListContainer); err != nil {
+		log.Fatal(err)
+	}
+	return batchListContainer
+}
+
+func (blc BatchListContainer) PrettyPrint() string {
+	prettyOutput, err := blc.Marshal()
+	if err != nil {
+		log.Fatal(err)
+	}
+	return string(prettyOutput)
 }
