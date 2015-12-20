@@ -10,6 +10,11 @@ import (
 	log "github.com/Sirupsen/logrus"
 )
 
+// Serializable objects can be Marshaled into JSON.
+type Serializable interface {
+	Marshal() ([]byte, error)
+}
+
 // A Client is able to request an access token and submit HTTP requests to
 // the ESP API.
 type Client struct {
@@ -78,6 +83,27 @@ func (c *Client) get(path string) []byte {
 	if result.Err != nil {
 		log.Fatal(result.Err)
 	}
+	stats, err := result.Marshal()
+	if err != nil {
+		log.Fatal(result.Err)
+	}
+	log.Info(string(stats))
+	log.Debugf("%s\n", result.Payload)
+	return result.Payload
+}
+
+func (c *Client) put(object Serializable, path string) []byte {
+	serializedObject, err := object.Marshal()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	request := NewRequest("PUT", path, c.GetToken(), serializedObject)
+	result := c.PerformRequest(request)
+	if result.Err != nil {
+		log.Fatal(result.Err)
+	}
+
 	stats, err := result.Marshal()
 	if err != nil {
 		log.Fatal(result.Err)
