@@ -15,6 +15,11 @@ const (
 )
 
 func BatchPath(b *Batch) string { return fmt.Sprintf("%s/%d", Batches, b.ID) }
+
 func ReleasePath(batchID int, releaseID int) string {
 	return fmt.Sprintf("%s/%d/releases/%d", Batches, batchID, releaseID)
+}
+
+func ContributionPath(batchID int, contributionID int) string {
+	return fmt.Sprintf("%s/%d/contributions/%d", Batches, batchID, contributionID)
 }

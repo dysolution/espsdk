@@ -40,6 +40,11 @@ type Contribution struct {
 // Marshal serializes a Contribution into a byte slice.
 func (c Contribution) Marshal() ([]byte, error) { return indentedJSON(c) }
 
+// Delete destroys a specific Contribution.
+func (c Contribution) Delete(client *Client, batchID int) {
+	client._delete(ContributionPath(batchID, c.ID))
+}
+
 // PrettyPrint returns a human-readable serialized JSON representation of
 // the provided object.
 func (c Contribution) PrettyPrint() string { return prettyPrint(c) }
