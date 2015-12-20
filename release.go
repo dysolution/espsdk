@@ -2,6 +2,7 @@ package espsdk
 
 import (
 	"encoding/json"
+	"log"
 )
 
 type Release struct {
@@ -21,3 +22,11 @@ type Release struct {
 
 func (r Release) Marshal() ([]byte, error) { return json.MarshalIndent(r, "", "  ") }
 func (r Release) ValidTypes() []string     { return []string{"Model", "Property"} }
+
+func (r Release) PrettyPrint() string {
+	prettyOutput, err := r.Marshal()
+	if err != nil {
+		log.Fatal(err)
+	}
+	return string(prettyOutput)
+}

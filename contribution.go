@@ -2,9 +2,11 @@ package espsdk
 
 import (
 	"encoding/json"
+	"log"
 )
 
 type Contribution struct {
+	AlternateID          string   `json:"alternate_id,omitempty"`
 	CameraShotDate       string   `json:"camera_shot_date,omitempty"`
 	CollectionCode       string   `json:"collection_code,omitempty"`
 	ContentProviderName  string   `json:"content_provider_name,omitempty"`
@@ -35,6 +37,14 @@ type Contribution struct {
 
 func (c Contribution) Marshal() ([]byte, error) {
 	return json.MarshalIndent(c, "", "  ")
+}
+
+func (c Contribution) PrettyPrint() string {
+	prettyOutput, err := c.Marshal()
+	if err != nil {
+		log.Fatal(err)
+	}
+	return string(prettyOutput)
 }
 
 type ContributionUpdate struct {

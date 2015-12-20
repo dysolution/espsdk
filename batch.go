@@ -2,6 +2,7 @@ package espsdk
 
 import (
 	"encoding/json"
+	"log"
 	"time"
 )
 
@@ -48,6 +49,14 @@ func (b SubmissionBatch) ValidTypes() []string {
 		i++
 	}
 	return keys
+}
+
+func (b SubmissionBatch) PrettyPrint() string {
+	prettyOutput, err := b.Marshal()
+	if err != nil {
+		log.Fatal(err)
+	}
+	return string(prettyOutput)
 }
 
 type SubmissionBatchUpdate struct {
