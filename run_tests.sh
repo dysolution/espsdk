@@ -1,0 +1,2 @@
+golint
+go test
