@@ -17,6 +17,7 @@ const (
 	oauthEndpoint      = "https://api.gettyimages.com/oauth2/token"
 )
 
+// BatchPath returns the canonical path for a(ll) Submission Batch(es).
 func BatchPath(b *Batch) string {
 	if b.ID == 0 {
 		return Batches
@@ -24,6 +25,8 @@ func BatchPath(b *Batch) string {
 	return fmt.Sprintf("%s/%d", Batches, b.ID)
 }
 
+// ReleasePath returns the canonical path for a(ll) Release(s) within a
+// Submission Batch.
 func ReleasePath(batchID int, releaseID int) string {
 	if releaseID == 0 {
 		return fmt.Sprintf("%s/%d/releases", Batches, batchID)
@@ -31,6 +34,8 @@ func ReleasePath(batchID int, releaseID int) string {
 	return fmt.Sprintf("%s/%d/releases/%d", Batches, batchID, releaseID)
 }
 
+// ContributionPath returns the canonical path for a(ll) Contribution(s) within
+// a Submission Batch.
 func ContributionPath(batchID int, contributionID int) string {
 	if contributionID == 0 {
 		return fmt.Sprintf("%s/%d/contributions", Batches, batchID)

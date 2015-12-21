@@ -29,6 +29,9 @@ func GetControlledValues(client *Client) []byte { return client.get(ControlledVa
 // TODO: not implemented (needs new struct type)
 func GetTranscoderMappings(client *Client) []byte { return client.get(TranscoderMappings) }
 
+// A TermItem is an expression of a concept that has a canonical string to
+// describe it and an optional image_uri and help_text. TermItems are the
+// base unit of Keywords, Personalities, Facial Expressions, and others.
 type TermItem struct {
 	Term     string `json:"term,omitempty"`
 	TermID   int    `json:"term_id,omitempty"`
@@ -36,6 +39,7 @@ type TermItem struct {
 	HelpText string `json:"help_text,omitempty"`
 }
 
+// A TermList is an array (slice) of terms (TermItems).
 type TermList []TermItem
 
 // Marshal serializes a TermList into a byte slice of indented JSON.
