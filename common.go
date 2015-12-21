@@ -1,5 +1,5 @@
 /*
-The ESP SDK provides a Go interface to the JSON API of Getty Images'
+Package espsdk provides a Go interface to the JSON API of Getty Images'
 Enterprise Submission Portal (ESP).
 
 You will need a username and password that allows you

@@ -53,9 +53,9 @@ func (c Client) tokenFrom(payload []byte) Token {
 	return Token(response["access_token"])
 }
 
-// Request performs a request using the provided HTTP verb and returns
-// the response as a JSON payload. If the verb is POST, the optional
-// serialized object will become the body of the HTTP request.
+// PerformRequest performs a request using the given parameters and
+// returns a struct that contains the HTTP status code and payload from
+// the server's response as well as metadata such as the response time.
 func (c Client) PerformRequest(p *request) *FulfilledRequest {
 	uri := ESPAPIRoot + p.Path
 
