@@ -10,6 +10,11 @@ import (
 	log "github.com/Sirupsen/logrus"
 )
 
+const (
+	ESPEndpoint   = "https://esp-sandbox.api.gettyimages.com/esp"
+	oauthEndpoint = "https://api.gettyimages.com/oauth2/token"
+)
+
 // Serializable objects can be Marshaled into JSON.
 type Serializable interface {
 	Marshal() ([]byte, error)
@@ -57,7 +62,7 @@ func (c Client) tokenFrom(payload []byte) Token {
 // the response as a JSON payload. If the verb is POST, the optional
 // serialized object will become the body of the HTTP request.
 func (c Client) PerformRequest(p *request) *FulfilledRequest {
-	uri := endpoint + p.Path
+	uri := ESPEndpoint + p.Path
 
 	if p.requiresAnObject() && p.Object != nil {
 		log.Debugf("Received serialized object: %s", p.Object)

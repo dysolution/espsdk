@@ -16,12 +16,6 @@ import (
 	log "github.com/Sirupsen/logrus"
 )
 
-const (
-	endpoint      = "https://esp-sandbox.api.gettyimages.com/esp"
-	oauthEndpoint = "https://api.gettyimages.com/oauth2/token"
-	jsonIndent    = "\t"
-)
-
 // A Token is a string representation of an OAuth2 token. It grants a user
 // access to the ESP API for a limited time.
 type Token string
