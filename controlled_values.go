@@ -24,9 +24,6 @@ func GetTranscoderMappings(client *Client) []byte { return client.get(Transcoder
 // GetCompositions lists all possible composition values.
 func GetCompositions(client *Client) []byte { return client.get(Compositions) }
 
-// GetExpressions lists all possible facial expression values.
-func GetExpressions(client *Client) []byte { return client.get(Expressions) }
-
 type PeopleMetadata struct {
 	Term     string `json:"term,omitempty"`
 	TermID   int    `json:"term_id,omitempty"`
@@ -52,6 +49,11 @@ func (m PeopleMetadataList) Unmarshal(payload []byte) PeopleMetadataList {
 // GetNumberOfPeople lists all possible values for Number of People.
 func (m PeopleMetadataList) GetNumberOfPeople(client *Client) PeopleMetadataList {
 	return m.Unmarshal(client.get(NumberOfPeople))
+}
+
+// GetExpressions lists all possible facial expression values.
+func (m PeopleMetadataList) GetExpressions(client *Client) PeopleMetadataList {
+	return m.Unmarshal(client.get(Expressions))
 }
 
 // PrettyPrint returns a human-readable serialized JSON representation of
