@@ -24,5 +24,8 @@ func ReleasePath(batchID int, releaseID int) string {
 }
 
 func ContributionPath(batchID int, contributionID int) string {
+	if contributionID == 0 {
+		return fmt.Sprintf("%s/%d/contributions", Batches, batchID)
+	}
 	return fmt.Sprintf("%s/%d/contributions/%d", Batches, batchID, contributionID)
 }

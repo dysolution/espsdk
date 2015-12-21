@@ -45,6 +45,11 @@ func (c Contribution) Get(client *Client, batchID int) Contribution {
 	return c.Unmarshal(client.get(ContributionPath(batchID, c.ID)))
 }
 
+// Create adds a new Contribution to a Submission Batch.
+func (c Contribution) Create(client *Client, batchID int, contributionData Contribution) Contribution {
+	return c.Unmarshal(client.post(contributionData, ContributionPath(batchID, c.ID)))
+}
+
 // Update changes metadata for an existing Contribution.
 func (c Contribution) Update(client *Client, batchID int, updatedData ContributionUpdate) Contribution {
 	return c.Unmarshal(client.put(updatedData, ContributionPath(batchID, c.ID)))
