@@ -41,6 +41,11 @@ type Batch struct {
 // Marshal serializes a Batch into a byte slice.
 func (b Batch) Marshal() ([]byte, error) { return indentedJSON(b) }
 
+// Index requests a list of all Batches owned by the user.
+func (b Batch) Index(client *Client) BatchListContainer {
+	return BatchListContainer{}.Unmarshal(client.get(BatchPath(&b)))
+}
+
 // Get requests the metadata for a specific Submission Batch.
 func (b Batch) Get(client *Client) Batch { return b.Unmarshal(client.get(BatchPath(&b))) }
 

@@ -22,6 +22,12 @@ type Release struct {
 	UploadID             int      `json:"upload_id,omitempty"`
 }
 
+// Index requests a list of all Releases associated with the specified
+// Submission Batch.
+func (r Release) Index(client *Client, batchID int) ReleaseList {
+	return ReleaseList{}.Unmarshal(client.get(ReleasePath(batchID, 0)))
+}
+
 // Get requests the metadata for a specific Release.
 func (r Release) Get(client *Client, batchID int) Release {
 	return r.Unmarshal(client.get(ReleasePath(batchID, r.ID)))
