@@ -17,6 +17,9 @@ const (
 func BatchPath(b *Batch) string { return fmt.Sprintf("%s/%d", Batches, b.ID) }
 
 func ReleasePath(batchID int, releaseID int) string {
+	if releaseID == 0 {
+		return fmt.Sprintf("%s/%d/releases", Batches, batchID)
+	}
 	return fmt.Sprintf("%s/%d/releases/%d", Batches, batchID, releaseID)
 }
 
