@@ -56,6 +56,11 @@ func (m PeopleMetadataList) GetExpressions(client *Client) PeopleMetadataList {
 	return m.Unmarshal(client.get(Expressions))
 }
 
+// GetCompositions lists all possible composition values.
+func (m PeopleMetadataList) GetCompositions(client *Client) PeopleMetadataList {
+	return m.Unmarshal(client.get(Compositions))
+}
+
 // PrettyPrint returns a human-readable serialized JSON representation of
 // the provided object.
 func (m PeopleMetadataList) PrettyPrint() string { return prettyPrint(m) }
