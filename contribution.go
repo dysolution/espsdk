@@ -40,6 +40,12 @@ type Contribution struct {
 // Marshal serializes a Contribution into a byte slice.
 func (c Contribution) Marshal() ([]byte, error) { return indentedJSON(c) }
 
+// Index requests a list of all Contributions associated with the specified
+// Submission Batch.
+func (c Contribution) Index(client *Client, batchID int) ContributionList {
+	return ContributionList{}.Unmarshal(client.get(ContributionPath(batchID, 0)))
+}
+
 // Get requests the metadata for a specific Contribution.
 func (c Contribution) Get(client *Client, batchID int) Contribution {
 	return c.Unmarshal(client.get(ContributionPath(batchID, c.ID)))
