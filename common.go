@@ -64,7 +64,7 @@ func indentedJSON(obj interface{}) ([]byte, error) {
 }
 
 func get(path string, token Token) []byte {
-	request := NewRequest("GET", path, token, nil)
+	request := newRequest("GET", path, token, nil)
 	result := Client{}.PerformRequest(request)
 	if result.Err != nil {
 		log.Fatal(result.Err)

@@ -83,7 +83,7 @@ func (c Client) PerformRequest(p *request) *FulfilledRequest {
 }
 
 func (c *Client) get(path string) []byte {
-	request := NewRequest("GET", path, c.GetToken(), nil)
+	request := newRequest("GET", path, c.GetToken(), nil)
 	result := c.PerformRequest(request)
 	if result.Err != nil {
 		log.Fatal(result.Err)
@@ -103,7 +103,7 @@ func (c *Client) post(object Serializable, path string) []byte {
 		log.Fatal(err)
 	}
 
-	request := NewRequest("POST", path, c.GetToken(), serializedObject)
+	request := newRequest("POST", path, c.GetToken(), serializedObject)
 	result := c.PerformRequest(request)
 	if result.Err != nil {
 		log.Fatal(result.Err)
@@ -124,7 +124,7 @@ func (c *Client) put(object Serializable, path string) []byte {
 		log.Fatal(err)
 	}
 
-	request := NewRequest("PUT", path, c.GetToken(), serializedObject)
+	request := newRequest("PUT", path, c.GetToken(), serializedObject)
 	result := c.PerformRequest(request)
 	if result.Err != nil {
 		log.Fatal(result.Err)
@@ -140,7 +140,7 @@ func (c *Client) put(object Serializable, path string) []byte {
 }
 
 func (c *Client) _delete(path string) {
-	request := NewRequest("DELETE", path, c.GetToken(), nil)
+	request := newRequest("DELETE", path, c.GetToken(), nil)
 	result := c.PerformRequest(request)
 	if result.Err != nil {
 		log.Fatal(result.Err)

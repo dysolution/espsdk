@@ -15,7 +15,7 @@ type request struct {
 	httpRequest *http.Request `json:"-"`
 }
 
-func NewRequest(verb string, path string, token Token, object []byte) *request {
+func newRequest(verb string, path string, token Token, object []byte) *request {
 	req, err := http.NewRequest(verb, path, bytes.NewBuffer(object))
 	if err != nil {
 		log.Fatal(err)
