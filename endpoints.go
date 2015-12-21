@@ -2,16 +2,19 @@ package espsdk
 
 import "fmt"
 
-// These constants represent the relative paths for various ESP API endpoints.
+// These constants represent the root path of the ESP API and the
+// relative paths for various endpoints.
 const (
-	Batches            string = "/submission/v1/submission_batches"
-	ControlledValues   string = "/submission/v1/controlled_values/index"
-	Keywords           string = "/submission/v1/keywords/getty"
-	Personalities      string = "/submission/v1/personalities"
-	TranscoderMappings string = "/submission/v1/video_transcoder_mapping_values"
-	Compositions       string = "/submission/v1/people_metadata/compositions"
-	Expressions        string = "/submission/v1/people_metadata/expressions"
-	NumberOfPeople     string = "/submission/v1/people_metadata/number_of_people"
+	ESPAPIRoot         = "https://esp-sandbox.api.gettyimages.com/esp"
+	Batches            = "/submission/v1/submission_batches"
+	ControlledValues   = "/submission/v1/controlled_values/index"
+	Keywords           = "/submission/v1/keywords/getty"
+	Personalities      = "/submission/v1/personalities"
+	TranscoderMappings = "/submission/v1/video_transcoder_mapping_values"
+	Compositions       = "/submission/v1/people_metadata/compositions"
+	Expressions        = "/submission/v1/people_metadata/expressions"
+	NumberOfPeople     = "/submission/v1/people_metadata/number_of_people"
+	oauthEndpoint      = "https://api.gettyimages.com/oauth2/token"
 )
 
 func BatchPath(b *Batch) string {

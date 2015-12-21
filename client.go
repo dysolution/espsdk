@@ -10,11 +10,6 @@ import (
 	log "github.com/Sirupsen/logrus"
 )
 
-const (
-	ESPAPIRoot    = "https://esp-sandbox.api.gettyimages.com/esp"
-	oauthEndpoint = "https://api.gettyimages.com/oauth2/token"
-)
-
 // Serializable objects can be Marshaled into JSON.
 type Serializable interface {
 	Marshal() ([]byte, error)
