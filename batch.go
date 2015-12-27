@@ -2,6 +2,7 @@ package espsdk
 
 import (
 	"encoding/json"
+	"fmt"
 	"time"
 
 	log "github.com/Sirupsen/logrus"
@@ -47,15 +48,10 @@ func (b Batch) Index(client *Client) BatchListContainer {
 }
 
 // Get requests the metadata for a specific Submission Batch.
-func (b Batch) Get(client *Client) Batch { return b.Unmarshal(client.get(BatchPath(&b))) }
-
-// Create adds a new Submission Batch.
-func (b Batch) Create(client *Client, batchData Batch) Batch {
-	return b.Unmarshal(client.post(batchData, BatchPath(&b)))
-}
+func (b Batch) Get(client *Client) Createable { return b.Unmarshal(client.get(BatchPath(&b))) }
 
 // Update changes metadata for an existing Batch.
-func (b Batch) Update(client *Client, updatedData BatchUpdate) Batch {
+func (b Batch) Update(client *Client, updatedData BatchUpdate) Createable {
 	return b.Unmarshal(client.put(updatedData, BatchPath(&b)))
 }
 
@@ -81,7 +77,7 @@ func (b Batch) ValidTypes() []string {
 
 // Unmarshal attempts to deserialize the provided JSON payload
 // into a Batch object.
-func (b Batch) Unmarshal(payload []byte) Batch {
+func (b Batch) Unmarshal(payload []byte) Createable {
 	var batch Batch
 	if err := json.Unmarshal(payload, &batch); err != nil {
 		log.Fatal(err)
@@ -93,10 +89,17 @@ func (b Batch) Unmarshal(payload []byte) Batch {
 // the provided object.
 func (b Batch) PrettyPrint() string { return prettyPrint(b) }
 
+func (b Batch) Path() string {
+	if b.ID == 0 {
+		return Batches
+	}
+	return fmt.Sprintf("%s/%d", Batches, b.ID)
+}
+
 // A BatchUpdate contains a Batch. This matches the
 // structure of the JSON payload the API expects during a PUT.
 type BatchUpdate struct {
-	Batch Batch `json:"submission_batch"`
+	Batch Createable `json:"submission_batch"`
 }
 
 // Marshal serializes a BatchUpdate into a byte slice.
