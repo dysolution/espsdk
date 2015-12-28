@@ -33,11 +33,6 @@ func (r Release) Get(client *Client, batchID int) Release {
 	return r.Unmarshal(client.get(ReleasePath(batchID, r.ID)))
 }
 
-// Create adds a new Release to a Submission Batch.
-func (r Release) Create(client *Client, batchID int, releaseData Release) Release {
-	return r.Unmarshal(client.post(releaseData, ReleasePath(batchID, r.ID)))
-}
-
 // Delete destroys a specific Release.
 func (r Release) Delete(client *Client, batchID int) {
 	client._delete(ReleasePath(batchID, r.ID))

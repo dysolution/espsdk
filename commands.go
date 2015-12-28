@@ -10,6 +10,7 @@ type PrettyPrintable interface {
 
 type DeserializedObject struct {
 	Batch
+	Release
 }
 
 type Createable interface {
@@ -30,7 +31,8 @@ func (do DeserializedObject) Unmarshal(payload []byte) DeserializedObject {
 	return Unmarshal(payload)
 }
 
-// Create creates an object and returns the deserialized response.
+// Create uses the provided path and data to ask the API to create a new
+// object and returns the deserialized response.
 func Create(path string, object interface{}, client *Client) DeserializedObject {
 	marshaledObject := client.post(object, path)
 	return Unmarshal(marshaledObject)
