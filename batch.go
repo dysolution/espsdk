@@ -39,9 +39,6 @@ type Batch struct {
 	UserID                           string     `json:"user_id,omitempty"`
 }
 
-// Marshal serializes a Batch into a byte slice.
-func (b Batch) Marshal() ([]byte, error) { return indentedJSON(b) }
-
 // Index requests a list of all Batches owned by the user.
 func (b Batch) Index(client *Client) BatchListContainer {
 	return BatchListContainer{}.Unmarshal(client.get(BatchPath(&b)))

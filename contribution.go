@@ -51,11 +51,6 @@ func (c Contribution) Get(client *Client, batchID int) DeserializedObject {
 	return Unmarshal(client.get(ContributionPath(batchID, c.ID)))
 }
 
-// Create adds a new Contribution to a Submission Batch.
-func (c Contribution) Create(client *Client, batchID int, data Contribution) DeserializedObject {
-	return Unmarshal(client.post(data, ContributionPath(batchID, c.ID)))
-}
-
 // Update changes metadata for an existing Contribution.
 func (c Contribution) Update(client *Client, batchID int, data ContributionUpdate) DeserializedObject {
 	return Unmarshal(client.put(data, ContributionPath(batchID, c.ID)))
@@ -65,10 +60,6 @@ func (c Contribution) Update(client *Client, batchID int, data ContributionUpdat
 func (c Contribution) Delete(client *Client, batchID int) {
 	client._delete(ContributionPath(batchID, c.ID))
 }
-
-// PrettyPrint returns a human-readable serialized JSON representation of
-// the provided object.
-func (c Contribution) PrettyPrint() string { return prettyPrint(c) }
 
 // A ContributionUpdate contains a Contribution. This matches the
 // structure of the JSON payload the API expects during a PUT.

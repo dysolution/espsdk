@@ -79,8 +79,8 @@ type serializable interface {
 	Marshal() ([]byte, error)
 }
 
-func prettyPrint(obj serializable) string {
-	prettyOutput, err := obj.Marshal()
+func prettyPrint(object interface{}) string {
+	prettyOutput, err := Marshal(object)
 	if err != nil {
 		log.Fatal(err)
 	}

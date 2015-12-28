@@ -14,12 +14,10 @@ type DeserializedObject struct {
 
 type Createable interface {
 	PrettyPrintable
-	Path() string
-	Marshal() ([]byte, error)
 }
 
 func (do DeserializedObject) PrettyPrint() string {
-	prettyOutput, err := do.Marshal()
+	prettyOutput, err := Marshal(do)
 	if err != nil {
 		panic(err)
 	}
@@ -32,8 +30,9 @@ func (do DeserializedObject) Unmarshal(payload []byte) DeserializedObject {
 	return Unmarshal(payload)
 }
 
-func Create(object Createable, client *Client) DeserializedObject {
-	marshaledObject := client.newPost(object)
+// Create creates an object and returns the deserialized response.
+func Create(path string, object interface{}, client *Client) DeserializedObject {
+	marshaledObject := client.post(object, path)
 	return Unmarshal(marshaledObject)
 }
 
@@ -41,6 +40,9 @@ func Create(object Createable, client *Client) DeserializedObject {
 func Get(path string, client *Client) DeserializedObject {
 	return Unmarshal(client.get(path))
 }
+
+// Marshal serializes an object into a byte slice.
+func Marshal(object interface{}) ([]byte, error) { return indentedJSON(object) }
 
 // Unmarshal attempts to deserialize the provided JSON payload
 // into an object.
