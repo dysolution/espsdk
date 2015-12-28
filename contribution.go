@@ -47,18 +47,18 @@ func (c Contribution) Index(client *Client, batchID int) ContributionList {
 }
 
 // Get requests the metadata for a specific Contribution.
-func (c Contribution) Get(client *Client, batchID int) Contribution {
-	return c.Unmarshal(client.get(ContributionPath(batchID, c.ID)))
+func (c Contribution) Get(client *Client, batchID int) DeserializedObject {
+	return Unmarshal(client.get(ContributionPath(batchID, c.ID)))
 }
 
 // Create adds a new Contribution to a Submission Batch.
-func (c Contribution) Create(client *Client, batchID int, data Contribution) Contribution {
-	return c.Unmarshal(client.post(data, ContributionPath(batchID, c.ID)))
+func (c Contribution) Create(client *Client, batchID int, data Contribution) DeserializedObject {
+	return Unmarshal(client.post(data, ContributionPath(batchID, c.ID)))
 }
 
 // Update changes metadata for an existing Contribution.
-func (c Contribution) Update(client *Client, batchID int, data ContributionUpdate) Contribution {
-	return c.Unmarshal(client.put(data, ContributionPath(batchID, c.ID)))
+func (c Contribution) Update(client *Client, batchID int, data ContributionUpdate) DeserializedObject {
+	return Unmarshal(client.put(data, ContributionPath(batchID, c.ID)))
 }
 
 // Delete destroys a specific Contribution.
@@ -78,16 +78,6 @@ type ContributionUpdate struct {
 
 // Marshal serializes a ContributionUpdate into a byte slice.
 func (c ContributionUpdate) Marshal() ([]byte, error) { return indentedJSON(c) }
-
-// Unmarshal attempts to deserialize the provided JSON payload into a
-// Contribution object.
-func (c Contribution) Unmarshal(payload []byte) Contribution {
-	var contribution Contribution
-	if err := json.Unmarshal(payload, &contribution); err != nil {
-		log.Fatal(err)
-	}
-	return contribution
-}
 
 // A ContributionList is a slice of zero or more Contributions.
 type ContributionList []Contribution

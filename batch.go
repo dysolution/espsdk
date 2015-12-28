@@ -48,11 +48,11 @@ func (b Batch) Index(client *Client) BatchListContainer {
 }
 
 // Get requests the metadata for a specific Submission Batch.
-func (b Batch) Get(client *Client) Createable { return b.Unmarshal(client.get(BatchPath(&b))) }
+func (b Batch) Get(client *Client) DeserializedObject { return Unmarshal(client.get(BatchPath(&b))) }
 
 // Update changes metadata for an existing Batch.
-func (b Batch) Update(client *Client, updatedData BatchUpdate) Createable {
-	return b.Unmarshal(client.put(updatedData, BatchPath(&b)))
+func (b Batch) Update(client *Client, updatedData BatchUpdate) DeserializedObject {
+	return Unmarshal(client.put(updatedData, BatchPath(&b)))
 }
 
 // Delete destroys a specific Submission Batch.
@@ -73,16 +73,6 @@ func (b Batch) ValidTypes() []string {
 		i++
 	}
 	return keys
-}
-
-// Unmarshal attempts to deserialize the provided JSON payload
-// into a Batch object.
-func (b Batch) Unmarshal(payload []byte) Createable {
-	var batch Batch
-	if err := json.Unmarshal(payload, &batch); err != nil {
-		log.Fatal(err)
-	}
-	return batch
 }
 
 // PrettyPrint returns a human-readable serialized JSON representation of
