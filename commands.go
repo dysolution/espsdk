@@ -10,6 +10,7 @@ type PrettyPrintable interface {
 
 type DeserializedObject struct {
 	Batch
+	Contribution
 	Release
 }
 

@@ -46,11 +46,6 @@ func (c Contribution) Index(client *Client, batchID int) ContributionList {
 	return ContributionList{}.Unmarshal(client.get(ContributionPath(batchID, 0)))
 }
 
-// Get requests the metadata for a specific Contribution.
-func (c Contribution) Get(client *Client, batchID int) DeserializedObject {
-	return Unmarshal(client.get(ContributionPath(batchID, c.ID)))
-}
-
 // Update changes metadata for an existing Contribution.
 func (c Contribution) Update(client *Client, batchID int, data ContributionUpdate) DeserializedObject {
 	return Unmarshal(client.put(data, ContributionPath(batchID, c.ID)))
