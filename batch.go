@@ -44,9 +44,6 @@ func (b Batch) Index(client *Client) BatchListContainer {
 	return BatchListContainer{}.Unmarshal(client.get(BatchPath(&b)))
 }
 
-// Get requests the metadata for a specific Submission Batch.
-func (b Batch) Get(client *Client) DeserializedObject { return Unmarshal(client.get(BatchPath(&b))) }
-
 // Update changes metadata for an existing Batch.
 func (b Batch) Update(client *Client, updatedData BatchUpdate) DeserializedObject {
 	return Unmarshal(client.put(updatedData, BatchPath(&b)))
