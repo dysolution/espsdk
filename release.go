@@ -29,9 +29,9 @@ func (r Release) Index(client *Client, batchID int) ReleaseList {
 }
 
 // Get requests the metadata for a specific Release.
-func (r Release) Get(client *Client, batchID int) Release {
-	return r.Unmarshal(client.get(ReleasePath(batchID, r.ID)))
-}
+// func (r Release) Get(client *Client, batchID int) Release {
+// 	return r.Unmarshal(client.get(ReleasePath(batchID, r.ID)))
+// }
 
 // Delete destroys a specific Release.
 func (r Release) Delete(client *Client, batchID int) {
