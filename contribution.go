@@ -37,9 +37,6 @@ type Contribution struct {
 	UploadID             string   `json:"upload_id,omitempty"`
 }
 
-// Marshal serializes a Contribution into a byte slice.
-func (c Contribution) Marshal() ([]byte, error) { return indentedJSON(c) }
-
 // Index requests a list of all Contributions associated with the specified
 // Submission Batch.
 func (c Contribution) Index(client *Client, batchID int) ContributionList {
