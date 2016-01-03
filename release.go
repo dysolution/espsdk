@@ -2,6 +2,7 @@ package espsdk
 
 import (
 	"encoding/json"
+	"fmt"
 	log "github.com/Sirupsen/logrus"
 )
 
@@ -28,15 +29,21 @@ func (r Release) Index(client *Client, batchID int) ReleaseList {
 	return ReleaseList{}.Unmarshal(client.get(ReleasePath(batchID, 0)))
 }
 
+// Path returns the path for the contribution.
+// If the Contribution has no ID, Path returns the root for all
+// contributions for the Batch (the Contribution Index).
+func (r Release) Path() string {
+	bid := r.SubmissionBatchID
+	if r.ID == 0 {
+		return fmt.Sprintf("%s/%d/releases", Batches, bid)
+	}
+	return fmt.Sprintf("%s/%d/releases/%d", Batches, bid, r.ID)
+}
+
 // Get requests the metadata for a specific Release.
 // func (r Release) Get(client *Client, batchID int) Release {
 // 	return r.Unmarshal(client.get(ReleasePath(batchID, r.ID)))
 // }
-
-// Delete destroys a specific Release.
-func (r Release) Delete(client *Client, batchID int) {
-	client._delete(ReleasePath(batchID, r.ID))
-}
 
 // ValidTypes are the Release types supported by ESP.
 func (r Release) ValidTypes() []string { return []string{"Model", "Property"} }
