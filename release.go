@@ -38,9 +38,6 @@ func (r Release) Delete(client *Client, batchID int) {
 	client._delete(ReleasePath(batchID, r.ID))
 }
 
-// Marshal serializes a Release into a byte slice.
-func (r Release) Marshal() ([]byte, error) { return indentedJSON(r) }
-
 // ValidTypes are the Release types supported by ESP.
 func (r Release) ValidTypes() []string { return []string{"Model", "Property"} }
 
