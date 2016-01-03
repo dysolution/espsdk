@@ -77,6 +77,9 @@ func (c Client) PerformRequest(p *request) *FulfilledRequest {
 	return &FulfilledRequest{p, result}
 }
 
+// Delete destroys the object at the provided path.
+func (c *Client) Delete(path string) { c._delete(path) }
+
 func (c *Client) get(path string) []byte {
 	request := newRequest("GET", path, c.GetToken(), nil)
 	result := c.PerformRequest(request)
