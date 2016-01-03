@@ -2,12 +2,6 @@ package espsdk
 
 import "encoding/json"
 
-// PrettyPrintable applies to all objects that should have an easy-to-read
-// JSON representation of themselves availalbe for printing.
-type PrettyPrintable interface {
-	PrettyPrint() string
-}
-
 // A DeserializedObject contains JSON struct tags that map object properties
 // to JSON fields.
 type DeserializedObject struct {
@@ -18,17 +12,6 @@ type DeserializedObject struct {
 
 // A Createable object can be passed to the Create() method.
 type Createable interface {
-	PrettyPrintable
-}
-
-// PrettyPrint returns a human-readable serialized JSON representation of
-// the provided object.
-func (do DeserializedObject) PrettyPrint() string {
-	prettyOutput, err := Marshal(do)
-	if err != nil {
-		panic(err)
-	}
-	return string(prettyOutput)
 }
 
 // Unmarshal attempts to deserialize the provided JSON payload

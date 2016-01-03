@@ -101,8 +101,6 @@ func (bl BatchList) unmarshal(payload []byte) BatchList {
 	return batchList
 }
 
-func (bl BatchList) prettyPrint() string { return prettyPrint(bl) }
-
 // A BatchListContainer matches the structure of the JSON payload returned
 // by the GET (all) Batches API endpoint.
 type BatchListContainer struct {
@@ -122,7 +120,3 @@ func (blc BatchListContainer) Unmarshal(payload []byte) BatchListContainer {
 	}
 	return batchListContainer
 }
-
-// PrettyPrint returns a human-readable serialized JSON representation of
-// the provided object.
-func (blc BatchListContainer) PrettyPrint() string { return prettyPrint(blc) }

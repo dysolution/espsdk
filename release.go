@@ -70,7 +70,3 @@ func (rl ReleaseList) Unmarshal(payload []byte) ReleaseList {
 	}
 	return releaseList
 }
-
-// PrettyPrint returns a human-readable serialized JSON representation of
-// the provided object.
-func (rl ReleaseList) PrettyPrint() string { return prettyPrint(rl) }

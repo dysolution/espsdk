@@ -30,7 +30,3 @@ func (m TermList) Unmarshal(payload []byte) TermList {
 	}
 	return items
 }
-
-// PrettyPrint returns a human-readable serialized JSON representation of
-// the provided object.
-func (m TermList) PrettyPrint() string { return prettyPrint(m) }

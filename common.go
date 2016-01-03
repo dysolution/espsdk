@@ -79,14 +79,6 @@ type serializable interface {
 	Marshal() ([]byte, error)
 }
 
-func prettyPrint(object interface{}) string {
-	prettyOutput, err := Marshal(object)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return string(prettyOutput)
-}
-
 // A FulfilledRequest provides an overview of a completed API request and
 // its result, including timing and HTTP status codes.
 type fulfilledRequest struct {

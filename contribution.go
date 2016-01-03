@@ -81,7 +81,3 @@ func (cl ContributionList) Unmarshal(payload []byte) ContributionList {
 	}
 	return contributionList
 }
-
-// PrettyPrint returns a human-readable serialized JSON representation of
-// the provided object.
-func (cl ContributionList) PrettyPrint() string { return prettyPrint(cl) }
