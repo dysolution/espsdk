@@ -49,9 +49,6 @@ func (b Batch) Update(client *Client, updatedData BatchUpdate) DeserializedObjec
 	return Unmarshal(client.put(updatedData, BatchPath(&b)))
 }
 
-// Delete destroys a specific Submission Batch.
-func (b Batch) Delete(client *Client) { client._delete(BatchPath(&b)) }
-
 // NameIsValid provides validation for a proposed SubmissionName.
 func (b Batch) NameIsValid() bool { return len(b.SubmissionName) > 0 }
 
