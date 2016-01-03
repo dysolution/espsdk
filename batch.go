@@ -44,11 +44,6 @@ func (b Batch) Index(client *Client) BatchListContainer {
 	return BatchListContainer{}.Unmarshal(client.get(BatchPath(&b)))
 }
 
-// Update changes metadata for an existing Batch.
-func (b Batch) Update(client *Client, updatedData BatchUpdate) DeserializedObject {
-	return Unmarshal(client.put(updatedData, BatchPath(&b)))
-}
-
 // NameIsValid provides validation for a proposed SubmissionName.
 func (b Batch) NameIsValid() bool { return len(b.SubmissionName) > 0 }
 
