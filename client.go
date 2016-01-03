@@ -56,7 +56,7 @@ func (c Client) tokenFrom(payload []byte) Token {
 // PerformRequest performs a request using the given parameters and
 // returns a struct that contains the HTTP status code and payload from
 // the server's response as well as metadata such as the response time.
-func (c Client) PerformRequest(p *request) *FulfilledRequest {
+func (c Client) performRequest(p *request) *fulfilledRequest {
 	uri := ESPAPIRoot + p.Path
 
 	if p.requiresAnObject() && p.Object != nil {
@@ -74,7 +74,7 @@ func (c Client) PerformRequest(p *request) *FulfilledRequest {
 	if result.Err != nil {
 		log.Fatal(result.Err)
 	}
-	return &FulfilledRequest{p, result}
+	return &fulfilledRequest{p, result}
 }
 
 // Create uses the provided path and data to ask the API to create a new
@@ -99,7 +99,7 @@ func (c *Client) Get(path string) DeserializedObject {
 
 func (c *Client) get(path string) []byte {
 	request := newRequest("GET", path, c.GetToken(), nil)
-	result := c.PerformRequest(request)
+	result := c.performRequest(request)
 	if result.Err != nil {
 		log.Fatal(result.Err)
 	}
@@ -114,7 +114,7 @@ func (c *Client) get(path string) []byte {
 
 func (c *Client) newGet(path string) []byte {
 	request := newRequest("GET", path, c.GetToken(), nil)
-	result := c.PerformRequest(request)
+	result := c.performRequest(request)
 	if result.Err != nil {
 		log.Fatal(result.Err)
 	}
@@ -134,7 +134,7 @@ func (c *Client) post(object interface{}, path string) []byte {
 	}
 
 	request := newRequest("POST", path, c.GetToken(), serializedObject)
-	result := c.PerformRequest(request)
+	result := c.performRequest(request)
 	if result.Err != nil {
 		log.Fatal(result.Err)
 	}
@@ -155,7 +155,7 @@ func (c *Client) put(object Serializable, path string) []byte {
 	}
 
 	request := newRequest("PUT", path, c.GetToken(), serializedObject)
-	result := c.PerformRequest(request)
+	result := c.performRequest(request)
 	if result.Err != nil {
 		log.Fatal(result.Err)
 	}
@@ -171,7 +171,7 @@ func (c *Client) put(object Serializable, path string) []byte {
 
 func (c *Client) _delete(path string) {
 	request := newRequest("DELETE", path, c.GetToken(), nil)
-	result := c.PerformRequest(request)
+	result := c.performRequest(request)
 	if result.Err != nil {
 		log.Fatal(result.Err)
 	}

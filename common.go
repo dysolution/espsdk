@@ -89,22 +89,22 @@ func prettyPrint(object interface{}) string {
 
 // A FulfilledRequest provides an overview of a completed API request and
 // its result, including timing and HTTP status codes.
-type FulfilledRequest struct {
+type fulfilledRequest struct {
 	*request
-	*Result
+	*result
 }
 
 // Marshal serializes a FulfilledRequest into a byte stream.
-func (r *FulfilledRequest) Marshal() ([]byte, error) { return json.Marshal(r) }
+func (r *fulfilledRequest) Marshal() ([]byte, error) { return json.Marshal(r) }
+
+// Private
 
 // A Response contains the HTTP status code and text that represent the API's
 // response to a request.
-type Response struct {
+type response struct {
 	StatusCode int    `json:"status_code"`
 	Status     string `json:"-"`
 }
-
-// Private
 
 func start(s string) time.Time { return time.Now() }
 
@@ -119,7 +119,7 @@ func indentedJSON(obj interface{}) ([]byte, error) {
 
 func get(path string, token Token) []byte {
 	request := newRequest("GET", path, token, nil)
-	result := Client{}.PerformRequest(request)
+	result := Client{}.performRequest(request)
 	if result.Err != nil {
 		log.Fatal(result.Err)
 	}

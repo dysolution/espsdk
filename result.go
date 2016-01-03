@@ -10,14 +10,14 @@ import (
 
 // A Result contains information relative to a completed request, including
 // the time elapsed to fulfill the request and any errors.
-type Result struct {
-	Response *Response     `json:"response"`
+type result struct {
+	Response *response     `json:"response"`
 	Payload  []byte        `json:"-"`
 	Duration time.Duration `json:"response_ms"`
 	Err      error         `json:"-"`
 }
 
-func getResult(c *http.Client, req *http.Request) *Result {
+func getResult(c *http.Client, req *http.Request) *result {
 	httpCommand := req.Method + " " + string(req.URL.Path)
 	start := start(httpCommand)
 	resp, err := c.Do(req)
@@ -39,9 +39,9 @@ func getResult(c *http.Client, req *http.Request) *Result {
 	return buildResult(resp, payload, duration)
 }
 
-func buildResult(resp *http.Response, payload []byte, duration time.Duration) *Result {
-	return &Result{
-		&Response{
+func buildResult(resp *http.Response, payload []byte, duration time.Duration) *result {
+	return &result{
+		&response{
 			resp.StatusCode,
 			resp.Status,
 		},
