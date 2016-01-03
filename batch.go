@@ -81,6 +81,9 @@ type BatchUpdate struct {
 	Batch Batch `json:"submission_batch"`
 }
 
+// Path returns the path of the batch being updated.
+func (c BatchUpdate) Path() string { return c.Batch.Path() }
+
 // Marshal serializes a BatchUpdate into a byte slice.
 func (s BatchUpdate) Marshal() ([]byte, error) { return indentedJSON(s) }
 

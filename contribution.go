@@ -69,6 +69,9 @@ type ContributionUpdate struct {
 // Marshal serializes a ContributionUpdate into a byte slice.
 func (c ContributionUpdate) Marshal() ([]byte, error) { return indentedJSON(c) }
 
+// Path returns the path of the contribution being updated.
+func (c ContributionUpdate) Path() string { return c.Contribution.Path() }
+
 // A ContributionList is a slice of zero or more Contributions.
 type ContributionList []Contribution
 

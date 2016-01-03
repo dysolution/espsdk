@@ -84,6 +84,11 @@ func (c *Client) Create(path string, object interface{}) DeserializedObject {
 	return Unmarshal(marshaledObject)
 }
 
+// Update changes metadata for an existing Batch.
+func (c *Client) Update(path string, object Serializable) DeserializedObject {
+	return Unmarshal(c.put(object, path))
+}
+
 // Delete destroys the object at the provided path.
 func (c *Client) Delete(path string) { c._delete(path) }
 
