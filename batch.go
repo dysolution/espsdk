@@ -70,6 +70,8 @@ func (b Batch) ValidTypes() []string {
 // the provided object.
 func (b Batch) PrettyPrint() string { return prettyPrint(b) }
 
+// Path returns the path for the Batch. If the Batch has no ID, Path returns
+// the root for all Batches (the Batch Index).
 func (b Batch) Path() string {
 	if b.ID == 0 {
 		return Batches

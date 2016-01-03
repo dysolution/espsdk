@@ -8,16 +8,21 @@ type PrettyPrintable interface {
 	PrettyPrint() string
 }
 
+// A DeserializedObject contains JSON struct tags that map object properties
+// to JSON fields.
 type DeserializedObject struct {
 	Batch
 	Contribution
 	Release
 }
 
+// A Createable object can be passed to the Create() method.
 type Createable interface {
 	PrettyPrintable
 }
 
+// PrettyPrint returns a human-readable serialized JSON representation of
+// the provided object.
 func (do DeserializedObject) PrettyPrint() string {
 	prettyOutput, err := Marshal(do)
 	if err != nil {

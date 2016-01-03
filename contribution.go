@@ -49,6 +49,9 @@ func (c Contribution) Update(client *Client, batchID int, data ContributionUpdat
 	return Unmarshal(client.put(data, ContributionPath(batchID, c.ID)))
 }
 
+// Path returns the path for the contribution.
+// If the Contribution has no ID, Path returns the root for all
+// contributions for the Batch (the Contribution Index).
 func (c Contribution) Path() string {
 	bid := c.SubmissionBatchID
 	if c.ID == 0 {
