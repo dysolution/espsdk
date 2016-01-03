@@ -18,7 +18,7 @@ type Serializable interface {
 // GetClient returns a Client that can be used to send requests to the ESP API.
 func GetClient(key, secret, username, password, uploadBucket string) Client {
 	return Client{
-		Credentials{
+		credentials{
 			APIKey:      key,
 			APISecret:   secret,
 			ESPUsername: username,
@@ -31,7 +31,7 @@ func GetClient(key, secret, username, password, uploadBucket string) Client {
 // A Client is able to request an access token and submit HTTP requests to
 // the ESP API.
 type Client struct {
-	Credentials
+	credentials
 	UploadBucket string
 }
 
@@ -39,7 +39,7 @@ type Client struct {
 // and returns a token that can be used to authenticate HTTP requests to the
 // ESP API.
 func (c Client) GetToken() Token {
-	if c.Credentials.areInvalid() {
+	if c.credentials.areInvalid() {
 		log.Fatal("Not all required credentials were supplied.")
 	}
 

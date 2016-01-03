@@ -4,21 +4,21 @@ import "net/url"
 
 // Credentials represent a specific authorized application performing
 // operations on objects belonging to a specific ESP user.
-type Credentials struct {
+type credentials struct {
 	APIKey      string
 	APISecret   string
 	ESPUsername string
 	ESPPassword string
 }
 
-func (c *Credentials) areInvalid() bool {
+func (c *credentials) areInvalid() bool {
 	if len(c.APIKey) < 1 || len(c.APISecret) < 1 || len(c.ESPUsername) < 1 || len(c.ESPPassword) < 1 {
 		return true
 	}
 	return false
 }
 
-func (c *Credentials) formValues() url.Values {
+func (c *credentials) formValues() url.Values {
 	v := url.Values{}
 	v.Set("client_id", c.APIKey)
 	v.Set("client_secret", c.APISecret)
