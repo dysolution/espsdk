@@ -2,6 +2,7 @@ package espsdk
 
 import (
 	"encoding/json"
+	"fmt"
 	log "github.com/Sirupsen/logrus"
 )
 
@@ -48,9 +49,12 @@ func (c Contribution) Update(client *Client, batchID int, data ContributionUpdat
 	return Unmarshal(client.put(data, ContributionPath(batchID, c.ID)))
 }
 
-// Delete destroys a specific Contribution.
-func (c Contribution) Delete(client *Client, batchID int) {
-	client._delete(ContributionPath(batchID, c.ID))
+func (c Contribution) Path() string {
+	bid := c.SubmissionBatchID
+	if c.ID == 0 {
+		return fmt.Sprintf("%s/%d/contributions", Batches, bid)
+	}
+	return fmt.Sprintf("%s/%d/contributions/%d", Batches, bid, c.ID)
 }
 
 // A ContributionUpdate contains a Contribution. This matches the
