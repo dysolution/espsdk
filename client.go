@@ -80,6 +80,11 @@ func (c Client) PerformRequest(p *request) *FulfilledRequest {
 // Delete destroys the object at the provided path.
 func (c *Client) Delete(path string) { c._delete(path) }
 
+// Get requests the metadata for the object at the provided path.
+func (c *Client) Get(path string) DeserializedObject {
+	return Unmarshal(c.get(path))
+}
+
 func (c *Client) get(path string) []byte {
 	request := newRequest("GET", path, c.GetToken(), nil)
 	result := c.PerformRequest(request)
