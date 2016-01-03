@@ -66,10 +66,6 @@ func (b Batch) ValidTypes() []string {
 	return keys
 }
 
-// PrettyPrint returns a human-readable serialized JSON representation of
-// the provided object.
-func (b Batch) PrettyPrint() string { return prettyPrint(b) }
-
 // Path returns the path for the Batch. If the Batch has no ID, Path returns
 // the root for all Batches (the Batch Index).
 func (b Batch) Path() string {
@@ -82,7 +78,7 @@ func (b Batch) Path() string {
 // A BatchUpdate contains a Batch. This matches the
 // structure of the JSON payload the API expects during a PUT.
 type BatchUpdate struct {
-	Batch Createable `json:"submission_batch"`
+	Batch Batch `json:"submission_batch"`
 }
 
 // Marshal serializes a BatchUpdate into a byte slice.

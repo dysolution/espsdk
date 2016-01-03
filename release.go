@@ -48,10 +48,6 @@ func (r Release) Path() string {
 // ValidTypes are the Release types supported by ESP.
 func (r Release) ValidTypes() []string { return []string{"Model", "Property"} }
 
-// PrettyPrint returns a human-readable serialized JSON representation of
-// the provided object.
-func (r Release) PrettyPrint() string { return prettyPrint(r) }
-
 // Unmarshal attempts to deserialize the provided JSON payload into a
 // Release object.
 func (r Release) Unmarshal(payload []byte) Release {
