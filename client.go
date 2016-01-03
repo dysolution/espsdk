@@ -66,30 +66,6 @@ func (c Client) tokenFrom(payload []byte) Token {
 	return Token(response["access_token"])
 }
 
-// PerformRequest performs a request using the given parameters and
-// returns a struct that contains the HTTP status code and payload from
-// the server's response as well as metadata such as the response time.
-func (c Client) performRequest(p *request) *fulfilledRequest {
-	uri := ESPAPIRoot + p.Path
-
-	if p.requiresAnObject() && p.Object != nil {
-		log.Debugf("Received serialized object: %s", p.Object)
-	}
-	req, err := http.NewRequest(p.Verb, uri, bytes.NewBuffer(p.Object))
-	if err != nil {
-		log.Fatal(err)
-	}
-	p.httpRequest = req
-
-	p.addHeaders(p.Token, c.APIKey)
-
-	result := getResult(insecureClient(), req)
-	if result.Err != nil {
-		log.Fatal(result.Err)
-	}
-	return &fulfilledRequest{p, result}
-}
-
 // Create uses the provided path and data to ask the API to create a new
 // object and returns the deserialized response.
 func (c *Client) Create(path string, object interface{}) DeserializedObject {
@@ -204,4 +180,28 @@ func insecureClient() *http.Client {
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
 	return &http.Client{Transport: tr}
+}
+
+// PerformRequest performs a request using the given parameters and
+// returns a struct that contains the HTTP status code and payload from
+// the server's response as well as metadata such as the response time.
+func (c Client) performRequest(p *request) *fulfilledRequest {
+	uri := ESPAPIRoot + p.Path
+
+	if p.requiresAnObject() && p.Object != nil {
+		log.Debugf("Received serialized object: %s", p.Object)
+	}
+	req, err := http.NewRequest(p.Verb, uri, bytes.NewBuffer(p.Object))
+	if err != nil {
+		log.Fatal(err)
+	}
+	p.httpRequest = req
+
+	p.addHeaders(p.Token, c.APIKey)
+
+	result := getResult(insecureClient(), req)
+	if result.Err != nil {
+		log.Fatal(result.Err)
+	}
+	return &fulfilledRequest{p, result}
 }
