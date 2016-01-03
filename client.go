@@ -15,6 +15,19 @@ type Serializable interface {
 	Marshal() ([]byte, error)
 }
 
+// GetClient returns a Client that can be used to send requests to the ESP API.
+func GetClient(key, secret, username, password, uploadBucket string) Client {
+	return Client{
+		Credentials{
+			APIKey:      key,
+			APISecret:   secret,
+			ESPUsername: username,
+			ESPPassword: password,
+		},
+		uploadBucket,
+	}
+}
+
 // A Client is able to request an access token and submit HTTP requests to
 // the ESP API.
 type Client struct {
