@@ -95,9 +95,6 @@ var batchTypeIsValid = map[string]bool{
 // A BatchList is a slice of zero or more Batches.
 type BatchList []Batch
 
-// Marshal serializes a BatchList into a byte slice.
-func (bl BatchList) Marshal() ([]byte, error) { return indentedJSON(bl) }
-
 func (bl BatchList) unmarshal(payload []byte) BatchList {
 	var batchList BatchList
 	if err := json.Unmarshal(payload, &batchList); err != nil {
@@ -116,9 +113,6 @@ type BatchListContainer struct {
 		TotalItems int `json:"total_items"`
 	} `json:"meta"`
 }
-
-// Marshal serializes a BatchListContainer into a byte slice.
-func (blc BatchListContainer) Marshal() ([]byte, error) { return indentedJSON(blc) }
 
 // Unmarshal attempts to deserialize the provided JSON payload
 // into the complete metadata returned by a request to the Index (GET all)
