@@ -77,6 +77,13 @@ func (c Client) PerformRequest(p *request) *FulfilledRequest {
 	return &FulfilledRequest{p, result}
 }
 
+// Create uses the provided path and data to ask the API to create a new
+// object and returns the deserialized response.
+func (c *Client) Create(path string, object interface{}) DeserializedObject {
+	marshaledObject := c.post(object, path)
+	return Unmarshal(marshaledObject)
+}
+
 // Delete destroys the object at the provided path.
 func (c *Client) Delete(path string) { c._delete(path) }
 
