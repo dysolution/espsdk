@@ -60,10 +60,9 @@ func (c Client) GetToken() Token {
 	return c.tokenFrom(payload)
 }
 
-func (c Client) tokenFrom(payload []byte) Token {
-	var response map[string]string
-	json.Unmarshal(payload, &response)
-	return Token(response["access_token"])
+// GetTermList lists all possible values for the given controlled vocabulary.
+func (c *Client) GetTermList(endpoint string) TermList {
+	return TermList{}.Unmarshal(c.get(endpoint))
 }
 
 // Create uses the provided path and data to ask the API to create a new
@@ -189,4 +188,10 @@ func (c Client) performRequest(p *request) *fulfilledRequest {
 		log.Fatal(result.Err)
 	}
 	return &fulfilledRequest{p, result}
+}
+
+func (c Client) tokenFrom(payload []byte) Token {
+	var response map[string]string
+	json.Unmarshal(payload, &response)
+	return Token(response["access_token"])
 }

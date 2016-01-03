@@ -55,21 +55,6 @@ func (m TermList) Unmarshal(payload []byte) TermList {
 	return items
 }
 
-// GetNumberOfPeople lists all possible values for Number of People.
-func (m TermList) GetNumberOfPeople(client *Client) TermList {
-	return m.Unmarshal(client.get(NumberOfPeople))
-}
-
-// GetExpressions lists all possible facial expression values.
-func (m TermList) GetExpressions(client *Client) TermList {
-	return m.Unmarshal(client.get(Expressions))
-}
-
-// GetCompositions lists all possible composition values.
-func (m TermList) GetCompositions(client *Client) TermList {
-	return m.Unmarshal(client.get(Compositions))
-}
-
 // PrettyPrint returns a human-readable serialized JSON representation of
 // the provided object.
 func (m TermList) PrettyPrint() string { return prettyPrint(m) }
