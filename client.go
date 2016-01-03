@@ -60,6 +60,30 @@ func (c Client) GetToken() Token {
 	return c.tokenFrom(payload)
 }
 
+// GetKeywords requests suggestions from the Getty controlled vocabulary
+// for the keywords provided.
+//
+// TODO: not implemented (keywords and personalities need a new struct type)
+func (c *Client) GetKeywords() []byte { return c.get(Keywords) }
+
+// GetPersonalities requests suggestions from the Getty controlled vocabulary
+// for the famous personalities provided.
+//
+// TODO: not implemented (keywords and personalities need a new struct type)
+func (c *Client) GetPersonalities() []byte { return c.get(Personalities) }
+
+// GetControlledValues returns complete lists of values and descriptions for
+// fields with controlled vocabularies, grouped by submission type.
+//
+// TODO: not implemented (needs new struct type)
+func (c *Client) GetControlledValues() []byte { return c.get(ControlledValues) }
+
+// GetTranscoderMappings lists acceptable transcoder mapping values
+// for Getty and iStock video.
+//
+// TODO: not implemented (needs new struct type)
+func (c *Client) GetTranscoderMappings() []byte { return c.get(TranscoderMappings) }
+
 // GetTermList lists all possible values for the given controlled vocabulary.
 func (c *Client) GetTermList(endpoint string) TermList {
 	return TermList{}.Unmarshal(c.get(endpoint))
