@@ -10,10 +10,6 @@ type DeserializedObject struct {
 	Release
 }
 
-// A Createable object can be passed to the Create() method.
-type Createable interface {
-}
-
 // Unmarshal attempts to deserialize the provided JSON payload
 // into an object.
 func (do DeserializedObject) Unmarshal(payload []byte) DeserializedObject {
