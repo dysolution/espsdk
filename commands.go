@@ -44,14 +44,6 @@ func Create(path string, object interface{}, client *Client) DeserializedObject 
 	return Unmarshal(marshaledObject)
 }
 
-// Delete destroys a specific object.
-func Delete(path string, client *Client) { client._delete(path) }
-
-// Get requests the metadata for a specific object.
-func Get(path string, client *Client) DeserializedObject {
-	return Unmarshal(client.get(path))
-}
-
 // Marshal serializes an object into a byte slice.
 func Marshal(object interface{}) ([]byte, error) { return indentedJSON(object) }
 
