@@ -41,11 +41,6 @@ func (r Release) Path() string {
 	return fmt.Sprintf("%s/%d/releases/%d", Batches, bid, r.ID)
 }
 
-// Get requests the metadata for a specific Release.
-// func (r Release) Get(client *Client, batchID int) Release {
-// 	return r.Unmarshal(client.get(ReleasePath(batchID, r.ID)))
-// }
-
 // ValidTypes are the Release types supported by ESP.
 func (r Release) ValidTypes() []string { return []string{"Model", "Property"} }
 
