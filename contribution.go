@@ -72,9 +72,6 @@ func (c ContributionUpdate) Marshal() ([]byte, error) { return indentedJSON(c) }
 // A ContributionList is a slice of zero or more Contributions.
 type ContributionList []Contribution
 
-// Marshal serializes a ContributionList into a byte slice.
-func (cl ContributionList) Marshal() ([]byte, error) { return indentedJSON(cl) }
-
 // Unmarshal attempts to deserialize the provided JSON payload
 // into the complete metadata returned by a request to the Index (GET all)
 // API endpoint.
