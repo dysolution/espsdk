@@ -80,9 +80,9 @@ func (c *Client) GetControlledValues() []byte { return c.get(ControlledValues) }
 
 // GetTranscoderMappings lists acceptable transcoder mapping values
 // for Getty and iStock video.
-//
-// TODO: not implemented (needs new struct type)
-func (c *Client) GetTranscoderMappings() []byte { return c.get(TranscoderMappings) }
+func (c *Client) GetTranscoderMappings() TranscoderMappingList {
+	return TranscoderMappingList{}.Unmarshal(c.get(TranscoderMappings))
+}
 
 // GetTermList lists all possible values for the given controlled vocabulary.
 func (c *Client) GetTermList(endpoint string) TermList {
