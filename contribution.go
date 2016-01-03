@@ -41,7 +41,8 @@ type Contribution struct {
 // Index requests a list of all Contributions associated with the specified
 // Submission Batch.
 func (c Contribution) Index(client *Client, batchID int) ContributionList {
-	return ContributionList{}.Unmarshal(client.get(ContributionPath(batchID, 0)))
+	c.SubmissionBatchID = batchID
+	return ContributionList{}.Unmarshal(client.get(c.Path()))
 }
 
 // Path returns the path for the contribution.
