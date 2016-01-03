@@ -77,10 +77,10 @@ type BatchUpdate struct {
 }
 
 // Path returns the path of the batch being updated.
-func (c BatchUpdate) Path() string { return c.Batch.Path() }
+func (bu BatchUpdate) Path() string { return bu.Batch.Path() }
 
 // Marshal serializes a BatchUpdate into a byte slice.
-func (s BatchUpdate) Marshal() ([]byte, error) { return indentedJSON(s) }
+func (bu BatchUpdate) Marshal() ([]byte, error) { return indentedJSON(bu) }
 
 var batchTypeIsValid = map[string]bool{
 	"getty_creative_video":  true,
