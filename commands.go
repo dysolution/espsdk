@@ -6,9 +6,10 @@ import "encoding/json"
 // to JSON fields.
 type DeserializedObject struct {
 	Batch
+	BatchList
 	Contribution
 	Release
-	BatchList
+	ContributionList `json:",omitempty"`
 }
 
 func Deserialize(payload []byte, dest *DeserializedObject) *DeserializedObject {
