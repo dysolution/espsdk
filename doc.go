@@ -9,7 +9,7 @@ at https://developer.gettyimages.com/apps/mykeys/.
 
 	// Configure the SDK's client with your credentials.
 	client := espsdk.GetClient(
-	  "esp_api_key",
+		"esp_api_key",
 		"esp_api_secret",
 		"esp_username",
 		"esp_password",
