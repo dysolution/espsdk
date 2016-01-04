@@ -3,6 +3,7 @@ package espsdk
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 
 	log "github.com/Sirupsen/logrus"
 )
@@ -22,8 +23,8 @@ type Contribution struct {
 	ContentWarnings             string            `json:"content_warnings,omitempty"`
 	Copyright                   string            `json:"copyright,omitempty"`
 	CountryOfShoot              string            `json:"country_of_shoot,omitempty"`
-	CreatedAt                   string            `json:"created_at,omitempty"`
-	CreatedDate                 string            `json:"created_date,omitempty"`
+	CreatedAt                   *time.Time        `json:"created_at,omitempty"`
+	CreatedDate                 *time.Time        `json:"created_date,omitempty"`
 	CreditLine                  string            `json:"credit_line,omitempty"`
 	Errors                      map[string]string `json:"errors,omitempty"`
 	EventID                     string            `json:"event_id,omitempty"`
@@ -48,7 +49,7 @@ type Contribution struct {
 	Keywords                    []string          `json:"keywords,omitempty"`
 	MasterID                    string            `json:"master_id,omitempty"`
 	MediaType                   string            `json:"media_type,omitempty"`
-	MetadataExtractionStartedAt string            `json:"metadata_extraction_started_at,omitempty"`
+	MetadataExtractionStartedAt *time.Time        `json:"metadata_extraction_started_at,omitempty"`
 	MetadataExtractionTimeout   bool              `json:"metadata_extraction_timeout,omitempty"`
 	MimeType                    string            `json:"mime_type,omitempty"`
 	NumberOfPeople              string            `json:"string,omitempty"`
@@ -60,7 +61,7 @@ type Contribution struct {
 	PicscoutSuggestions         string            `json:"picscout_suggestions,omitempty"`
 	ProvinceState               string            `json:"province_state,omitempty"`
 	PublicistApprovalRequired   bool              `json:"publicist_approval_required,omitempty"`
-	PublishedAt                 string            `json:"published_at,omitempty"`
+	PublishedAt                 *time.Time        `json:"published_at,omitempty"`
 	PulledReason                string            `json:"pulled_reason,omitempty"`
 	Rank                        int               `json:"rank,omitempty"`
 	ReadyForSale                bool              `json:"ready_for_sale,omitempty"`
@@ -74,10 +75,10 @@ type Contribution struct {
 	StorageURL                  string            `json:"storage_url,omitempty"`
 	SubmissionBatchID           int               `json:"submission_batch_id,omitempty"`
 	Submittable                 bool              `json:"submittable,omitempty"`
-	SubmittedAt                 string            `json:"submitted_at,omitempty"`
+	SubmittedAt                 *time.Time        `json:"submitted_at,omitempty"`
 	SubmittedToReviewAt         string            `json:"submitted_to_review_at,omitempty"`
 	ThumbnailURL                string            `json:"thumbnail_url,omitempty"`
-	UpdatedAt                   string            `json:"updated_at,omitempty"`
+	UpdatedAt                   *time.Time        `json:"updated_at,omitempty"`
 	UploadBucket                string            `json:"upload_bucket,omitempty"`
 	UploadID                    string            `json:"upload_id,omitempty"`
 	UserMetadataValid           bool              `json:"user_metadata_valid,omitempty"`
