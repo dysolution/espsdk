@@ -89,6 +89,12 @@ func (c *Client) GetTermList(endpoint string) TermList {
 	return TermList{}.Unmarshal(c.get(endpoint))
 }
 
+// Index requests a list of all Batches owned by the user.
+func (c *Client) Index(path string) *DeserializedObject {
+	var obj *DeserializedObject
+	return Deserialize(c.get(path), obj)
+}
+
 // Create uses the provided path and data to ask the API to create a new
 // object and returns the deserialized response.
 func (c *Client) Create(path string, object interface{}) DeserializedObject {

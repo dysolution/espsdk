@@ -39,11 +39,6 @@ type Batch struct {
 	UserID                           string     `json:"user_id,omitempty"`
 }
 
-// Index requests a list of all Batches owned by the user.
-func (b Batch) Index(client *Client) BatchListContainer {
-	return BatchListContainer{}.Unmarshal(client.get(BatchPath(&b)))
-}
-
 // NameIsValid provides validation for a proposed SubmissionName.
 func (b Batch) NameIsValid() bool { return len(b.SubmissionName) > 0 }
 
@@ -90,21 +85,10 @@ var batchTypeIsValid = map[string]bool{
 	"istock_creative_video": true,
 }
 
-// A BatchList is a slice of zero or more Batches.
-type BatchList []Batch
-
-func (bl BatchList) unmarshal(payload []byte) BatchList {
-	var batchList BatchList
-	if err := json.Unmarshal(payload, &batchList); err != nil {
-		log.Fatal(err)
-	}
-	return batchList
-}
-
 // A BatchListContainer matches the structure of the JSON payload returned
 // by the GET (all) Batches API endpoint.
-type BatchListContainer struct {
-	Items BatchList `json:"items"`
+type BatchList struct {
+	Items []Batch `json:"items"`
 	Meta  struct {
 		TotalItems int `json:"total_items"`
 	} `json:"meta"`
@@ -113,10 +97,15 @@ type BatchListContainer struct {
 // Unmarshal attempts to deserialize the provided JSON payload
 // into the complete metadata returned by a request to the Index (GET all)
 // API endpoint.
-func (blc BatchListContainer) Unmarshal(payload []byte) BatchListContainer {
-	var batchListContainer BatchListContainer
-	if err := json.Unmarshal(payload, &batchListContainer); err != nil {
+func (blc BatchList) Unmarshal(payload []byte) BatchList {
+	var dest BatchList
+	err := json.Unmarshal(payload, &dest)
+	check(err)
+	return dest
+}
+
+func check(err error) {
+	if err != nil {
 		log.Fatal(err)
 	}
-	return batchListContainer
 }

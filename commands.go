@@ -8,6 +8,13 @@ type DeserializedObject struct {
 	Batch
 	Contribution
 	Release
+	BatchList
+}
+
+func Deserialize(payload []byte, dest *DeserializedObject) *DeserializedObject {
+	err := json.Unmarshal(payload, &dest)
+	check(err)
+	return dest
 }
 
 // Unmarshal attempts to deserialize the provided JSON payload
