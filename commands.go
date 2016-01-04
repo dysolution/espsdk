@@ -6,7 +6,7 @@ import "encoding/json"
 // to JSON fields.
 type DeserializedObject struct {
 	Batch
-	BatchList
+	*BatchList
 	Contribution
 	Release
 	ContributionList `json:",omitempty"`
