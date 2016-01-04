@@ -2,6 +2,8 @@ package espsdk
 
 import "encoding/json"
 
+// A TranscoderMapping is a set of parameters that represent a video
+// encoding that can be accepted by ESP.
 type TranscoderMapping struct {
 	FrameSize             string `json:"frame_size,omitempty"`
 	FrameRate             string `json:"frame_rate,omitempty"`
@@ -9,6 +11,8 @@ type TranscoderMapping struct {
 	MasteredToCompression string `json:"mastered_to_compression,omitempty"`
 }
 
+// The TranscoderMappingList contains valid mappings for both Getty video
+// and iStock video.
 type TranscoderMappingList struct {
 	GettyVideoMappings  []TranscoderMapping `json:"getty_video_mappings",omitempty`
 	IstockVideoMappings []TranscoderMapping `json:"istock_video_mappings",omitempty`
