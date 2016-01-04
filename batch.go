@@ -88,20 +88,24 @@ var batchTypeIsValid = map[string]bool{
 // A BatchListContainer matches the structure of the JSON payload returned
 // by the GET (all) Batches API endpoint.
 type BatchList struct {
-	Items []Batch `json:"items"`
+	Items []Batch `json:"items,omitempty"`
 	Meta  struct {
-		TotalItems int `json:"total_items"`
-	} `json:"meta"`
+		TotalItems int `json:"total_items,omitempty"`
+	} `json:"meta,omitempty"`
 }
 
 // Unmarshal attempts to deserialize the provided JSON payload
 // into the complete metadata returned by a request to the Index (GET all)
 // API endpoint.
-func (blc BatchList) Unmarshal(payload []byte) BatchList {
+func (bl BatchList) Unmarshal(payload []byte) BatchList {
 	var dest BatchList
 	err := json.Unmarshal(payload, &dest)
 	check(err)
 	return dest
+}
+
+func (bl BatchList) Last() Batch {
+	return bl.Items[len(bl.Items)-1]
 }
 
 func check(err error) {
