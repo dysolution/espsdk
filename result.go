@@ -34,7 +34,11 @@ func getResult(c *http.Client, req *http.Request) *result {
 		return buildResult(resp, payload, duration)
 	}
 	if resp.StatusCode < 200 || resp.StatusCode > 299 {
-		log.Warnf("HTTP %s", resp.Status)
+		log.WithFields(log.Fields{
+			"object":      "response",
+			"status_code": resp.StatusCode,
+			"status":      resp.Status,
+		}).Warn()
 	}
 	return buildResult(resp, payload, duration)
 }
