@@ -108,7 +108,9 @@ func (c *Client) Update(path string, object Serializable) DeserializedObject {
 }
 
 // Delete destroys the object at the provided path.
-func (c *Client) Delete(path string) { c._delete(path) }
+func (c *Client) Delete(path string) DeserializedObject {
+	return Unmarshal(c._delete(path))
+}
 
 // Get requests the metadata for the object at the provided path.
 func (c *Client) Get(path string) DeserializedObject {
@@ -172,7 +174,7 @@ func (c *Client) put(object Serializable, path string) []byte {
 	return result.Payload
 }
 
-func (c *Client) _delete(path string) {
+func (c *Client) _delete(path string) []byte {
 	request := newRequest("DELETE", path, c.GetToken(), nil)
 	result := c.performRequest(request)
 	if result.Err != nil {
@@ -185,6 +187,7 @@ func (c *Client) _delete(path string) {
 	}
 	log.Info(string(stats))
 	log.Debugf("%s\n", result.Payload)
+	return result.Payload
 }
 
 // insecureClient returns an HTTP client that will not verify the validity
