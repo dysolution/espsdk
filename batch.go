@@ -65,6 +65,9 @@ func (b Batch) Path() string {
 	return fmt.Sprintf("%s/%d", Batches, b.ID)
 }
 
+// Marshal serializes the Batch into a byte slice.
+func (b Batch) Marshal() ([]byte, error) { return indentedJSON(b) }
+
 // A BatchUpdate contains a Batch. This matches the
 // structure of the JSON payload the API expects during a PUT.
 type BatchUpdate struct {
