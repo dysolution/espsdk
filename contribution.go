@@ -103,6 +103,9 @@ func (c Contribution) Path() string {
 	return fmt.Sprintf("%s/%d/contributions/%d", Batches, bid, c.ID)
 }
 
+// Marshal serializes the Contribution into a byte slice.
+func (c Contribution) Marshal() ([]byte, error) { return indentedJSON(c) }
+
 // A ContributionUpdate contains a Contribution. This matches the
 // structure of the JSON payload the API expects during a PUT.
 type ContributionUpdate struct {
