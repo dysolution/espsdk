@@ -43,9 +43,9 @@ type Contribution struct {
 	ImageWidth                  int               `json:"image_width,omitempty"`
 	InactiveDate                string            `json:"inactive_date,omitempty"`
 	InclusionRoutes             string            `json:"inclusion_routes,omitempty"`
-	IptcCaptionWriter           string            `json:"iptc_caption_writer,omitempty"`
-	IptcCategory                string            `json:"iptc_category,omitempty"`
-	IptcSubjects                []string          `json:"iptc_subjects,omitempty"`
+	IPTCCaptionWriter           string            `json:"iptc_caption_writer,omitempty"`
+	IPTCCategory                string            `json:"iptc_category,omitempty"`
+	IPTCSubjects                []string          `json:"iptc_subjects,omitempty"`
 	Keywords                    []string          `json:"keywords,omitempty"`
 	MasterID                    string            `json:"master_id,omitempty"`
 	MediaType                   string            `json:"media_type,omitempty"`
