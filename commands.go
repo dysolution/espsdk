@@ -28,8 +28,8 @@ func (do DeserializedObject) Unmarshal(payload []byte) DeserializedObject {
 
 // Create uses the provided path and data to ask the API to create a new
 // object and returns the deserialized response.
-func Create(path string, object interface{}, client *Client) DeserializedObject {
-	marshaledObject := client.post(object, path)
+func Create(object RESTObject, client *Client) DeserializedObject {
+	marshaledObject := client.post(object)
 	return Unmarshal(marshaledObject)
 }
 

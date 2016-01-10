@@ -15,6 +15,15 @@ type Serializable interface {
 	Marshal() ([]byte, error)
 }
 
+type Findable interface {
+	Path() string
+}
+
+type RESTObject interface {
+	Serializable
+	Findable
+}
+
 // GetClient returns a Client that can be used to send requests to the ESP API.
 func GetClient(key, secret, username, password, uploadBucket string) Client {
 	creds := credentials{
@@ -97,14 +106,14 @@ func (c *Client) Index(path string) *DeserializedObject {
 
 // Create uses the provided path and data to ask the API to create a new
 // object and returns the deserialized response.
-func (c *Client) Create(path string, object interface{}) DeserializedObject {
-	marshaledObject := c.post(object, path)
+func (c *Client) Create(object RESTObject) DeserializedObject {
+	marshaledObject := c.post(object)
 	return Unmarshal(marshaledObject)
 }
 
 // Update changes metadata for an existing Batch.
-func (c *Client) Update(path string, object Serializable) DeserializedObject {
-	return Unmarshal(c.put(object, path))
+func (c *Client) Update(object RESTObject) DeserializedObject {
+	return Unmarshal(c.put(object))
 }
 
 // Delete destroys the object at the provided path.
@@ -128,13 +137,12 @@ func (c *Client) get(path string) []byte {
 	return result.Payload
 }
 
-func (c *Client) post(object interface{}, path string) []byte {
+func (c *Client) post(object RESTObject) []byte {
 	serializedObject, err := Marshal(object)
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	request := newRequest("POST", path, c.Token, serializedObject)
+	request := newRequest("POST", object.Path(), c.Token, serializedObject)
 	result := c.performRequest(request)
 	if result.Err != nil {
 		log.Fatal(result.Err)
@@ -145,13 +153,13 @@ func (c *Client) post(object interface{}, path string) []byte {
 	return result.Payload
 }
 
-func (c *Client) put(object Serializable, path string) []byte {
+func (c *Client) put(object RESTObject) []byte {
 	serializedObject, err := object.Marshal()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	request := newRequest("PUT", path, c.Token, serializedObject)
+	request := newRequest("PUT", object.Path(), c.Token, serializedObject)
 	result := c.performRequest(request)
 	if result.Err != nil {
 		log.Fatal(result.Err)

@@ -41,6 +41,9 @@ func (r Release) Path() string {
 	return fmt.Sprintf("%s/%d/releases/%d", Batches, bid, r.ID)
 }
 
+// Marshal serializes the Release into a byte slice.
+func (r Release) Marshal() ([]byte, error) { return indentedJSON(r) }
+
 // ValidTypes are the Release types supported by ESP.
 func (r Release) ValidTypes() []string { return []string{"Model", "Property"} }
 
