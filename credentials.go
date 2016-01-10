@@ -18,7 +18,7 @@ func (c *credentials) areInvalid() bool {
 	return false
 }
 
-func (c *credentials) formValues() url.Values {
+func formValues(c *credentials) url.Values {
 	v := url.Values{}
 	v.Set("client_id", c.APIKey)
 	v.Set("client_secret", c.APISecret)

@@ -17,35 +17,35 @@ type Serializable interface {
 
 // GetClient returns a Client that can be used to send requests to the ESP API.
 func GetClient(key, secret, username, password, uploadBucket string) Client {
-	return Client{
-		credentials{
-			APIKey:      key,
-			APISecret:   secret,
-			ESPUsername: username,
-			ESPPassword: password,
-		},
-		uploadBucket,
+	creds := credentials{
+		APIKey:      key,
+		APISecret:   secret,
+		ESPUsername: username,
+		ESPPassword: password,
 	}
+	token := getToken(&creds)
+	return Client{creds, token, uploadBucket}
 }
 
 // A Client is able to request an access token and submit HTTP requests to
 // the ESP API.
 type Client struct {
 	credentials
+	Token        Token
 	UploadBucket string
 }
 
-// GetToken submits the provided credentials to Getty's OAuth2 endpoint
+// getToken submits the provided credentials to Getty's OAuth2 endpoint
 // and returns a token that can be used to authenticate HTTP requests to the
 // ESP API.
-func (c Client) GetToken() Token {
-	if c.credentials.areInvalid() {
+func getToken(credentials *credentials) Token {
+	if credentials.areInvalid() {
 		log.Fatal("Not all required credentials were supplied.")
 	}
 
 	uri := oauthEndpoint
 	log.Debugf("%s", uri)
-	formValues := c.formValues()
+	formValues := formValues(credentials)
 	log.Debugf("%s", formValues.Encode())
 
 	resp, err := http.PostForm(uri, formValues)
@@ -57,7 +57,7 @@ func (c Client) GetToken() Token {
 	payload, err := ioutil.ReadAll(resp.Body)
 	log.Debugf("HTTP %d", resp.StatusCode)
 	log.Debugf("%s", payload)
-	return c.tokenFrom(payload)
+	return tokenFrom(payload)
 }
 
 // GetKeywords requests suggestions from the Getty controlled vocabulary
@@ -118,7 +118,7 @@ func (c *Client) Get(path string) DeserializedObject {
 }
 
 func (c *Client) get(path string) []byte {
-	request := newRequest("GET", path, c.GetToken(), nil)
+	request := newRequest("GET", path, c.Token, nil)
 	result := c.performRequest(request)
 	if result.Err != nil {
 		log.Fatal(result.Err)
@@ -138,7 +138,7 @@ func (c *Client) post(object interface{}, path string) []byte {
 		log.Fatal(err)
 	}
 
-	request := newRequest("POST", path, c.GetToken(), serializedObject)
+	request := newRequest("POST", path, c.Token, serializedObject)
 	result := c.performRequest(request)
 	if result.Err != nil {
 		log.Fatal(result.Err)
@@ -159,7 +159,7 @@ func (c *Client) put(object Serializable, path string) []byte {
 		log.Fatal(err)
 	}
 
-	request := newRequest("PUT", path, c.GetToken(), serializedObject)
+	request := newRequest("PUT", path, c.Token, serializedObject)
 	result := c.performRequest(request)
 	if result.Err != nil {
 		log.Fatal(result.Err)
@@ -175,7 +175,7 @@ func (c *Client) put(object Serializable, path string) []byte {
 }
 
 func (c *Client) _delete(path string) []byte {
-	request := newRequest("DELETE", path, c.GetToken(), nil)
+	request := newRequest("DELETE", path, c.Token, nil)
 	result := c.performRequest(request)
 	if result.Err != nil {
 		log.Fatal(result.Err)
@@ -223,7 +223,7 @@ func (c Client) performRequest(p *request) *fulfilledRequest {
 	return &fulfilledRequest{p, result}
 }
 
-func (c Client) tokenFrom(payload []byte) Token {
+func tokenFrom(payload []byte) Token {
 	var response map[string]string
 	json.Unmarshal(payload, &response)
 	return Token(response["access_token"])
