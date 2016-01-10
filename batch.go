@@ -88,7 +88,7 @@ var batchTypeIsValid = map[string]bool{
 	"istock_creative_video": true,
 }
 
-// A BatchListContainer matches the structure of the JSON payload returned
+// A BatchList matches the structure of the JSON payload returned
 // by the GET (all) Batches API endpoint.
 type BatchList struct {
 	Items []Batch `json:"items,omitempty"`
@@ -107,6 +107,7 @@ func (bl BatchList) Unmarshal(payload []byte) BatchList {
 	return dest
 }
 
+// Last returns the most recently-created batch.
 func (bl BatchList) Last() Batch {
 	return bl.Items[len(bl.Items)-1]
 }

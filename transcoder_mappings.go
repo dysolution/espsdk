@@ -14,8 +14,8 @@ type TranscoderMapping struct {
 // The TranscoderMappingList contains valid mappings for both Getty video
 // and iStock video.
 type TranscoderMappingList struct {
-	GettyVideoMappings  []TranscoderMapping `json:"getty_video_mappings",omitempty`
-	IstockVideoMappings []TranscoderMapping `json:"istock_video_mappings",omitempty`
+	GettyVideoMappings  []TranscoderMapping `json:"getty_video_mappings,omitempty"`
+	IstockVideoMappings []TranscoderMapping `json:"istock_video_mappings,omitempty"`
 }
 
 // Unmarshal attempts to deserialize the provided JSON payload

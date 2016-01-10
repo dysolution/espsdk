@@ -12,6 +12,8 @@ type DeserializedObject struct {
 	ContributionList `json:",omitempty"`
 }
 
+// Deserialize attempts to deserialize the provided JSON payload
+// into an object.
 func Deserialize(payload []byte, dest *DeserializedObject) *DeserializedObject {
 	err := json.Unmarshal(payload, &dest)
 	check(err)

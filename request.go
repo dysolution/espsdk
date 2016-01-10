@@ -8,11 +8,11 @@ import (
 
 // A Request represents the specific API endpoint and action to take. The Object is optional and applies only to endpoints that create or update items (POST and PUT).
 type request struct {
-	Verb        string        `json:"method"`
-	Path        string        `json:"path"`
-	Token       Token         `json:"-"`
-	Object      []byte        `json:"-"`
-	httpRequest *http.Request `json:"-"`
+	Verb        string `json:"method"`
+	Path        string `json:"path"`
+	Token       Token  `json:"token"`
+	Object      []byte `json:"object"`
+	httpRequest *http.Request
 }
 
 func newRequest(verb string, path string, token Token, object []byte) *request {
