@@ -118,7 +118,12 @@ func (c *Client) Update(object RESTObject) DeserializedObject {
 
 // Delete destroys the object at the provided path.
 func (c *Client) Delete(path string) DeserializedObject {
-	return Unmarshal(c._delete(path))
+	marshaledObject := c._delete(path)
+	if len(marshaledObject) > 0 {
+		return Unmarshal(c._delete(path))
+	}
+	// successful deletion usually returns a 204 without a payload/body
+	return DeserializedObject{}
 }
 
 // Get requests the metadata for the object at the provided path.
@@ -178,7 +183,7 @@ func (c *Client) _delete(path string) []byte {
 	}
 
 	log.WithFields(result.Stats()).Info()
-	log.Debugf("%s\n", result.Payload)
+	log.Debugf("response payload: %s\n", result.Payload)
 	return result.Payload
 }
 

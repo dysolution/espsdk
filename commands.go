@@ -40,8 +40,7 @@ func Marshal(object interface{}) ([]byte, error) { return indentedJSON(object) }
 // into an object.
 func Unmarshal(payload []byte) DeserializedObject {
 	var dest DeserializedObject
-	if err := json.Unmarshal(payload, &dest); err != nil {
-		panic(err)
-	}
+	err := json.Unmarshal(payload, &dest)
+	check(err)
 	return dest
 }
