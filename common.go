@@ -37,11 +37,11 @@ func (r *fulfilledRequest) MarshalIndent() ([]byte, error) {
 
 func (r *fulfilledRequest) Stats() log.Fields {
 	return log.Fields{
-		"method":      r.Verb,
-		"path":        r.Path,
-		"response_ms": r.Duration,
-		"status":      r.Response.Status,
-		"status_code": r.Response.StatusCode,
+		"method":        r.Verb,
+		"path":          r.Path,
+		"response_time": r.Duration * time.Millisecond,
+		"status":        r.Response.Status,
+		"status_code":   r.Response.StatusCode,
 	}
 }
 

@@ -13,7 +13,7 @@ import (
 type result struct {
 	Response *response     `json:"response"`
 	Payload  []byte        `json:"-"`
-	Duration time.Duration `json:"response_ms"`
+	Duration time.Duration `json:"response_time"`
 	Err      error         `json:"-"`
 }
 
