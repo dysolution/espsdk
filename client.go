@@ -123,11 +123,7 @@ func (c *Client) get(path string) []byte {
 	if result.Err != nil {
 		log.Fatal(result.Err)
 	}
-	stats, err := result.Marshal()
-	if err != nil {
-		log.Fatal(result.Err)
-	}
-	log.Info(string(stats))
+	log.WithFields(result.Stats()).Info()
 	log.Debugf("%s\n", result.Payload)
 	return result.Payload
 }
@@ -144,11 +140,7 @@ func (c *Client) post(object interface{}, path string) []byte {
 		log.Fatal(result.Err)
 	}
 
-	stats, err := result.Marshal()
-	if err != nil {
-		log.Fatal(result.Err)
-	}
-	log.Info(string(stats))
+	log.WithFields(result.Stats()).Info()
 	log.Debugf("%s\n", result.Payload)
 	return result.Payload
 }
@@ -165,11 +157,7 @@ func (c *Client) put(object Serializable, path string) []byte {
 		log.Fatal(result.Err)
 	}
 
-	stats, err := result.Marshal()
-	if err != nil {
-		log.Fatal(result.Err)
-	}
-	log.Info(string(stats))
+	log.WithFields(result.Stats()).Info()
 	log.Debugf("%s\n", result.Payload)
 	return result.Payload
 }
@@ -181,11 +169,7 @@ func (c *Client) _delete(path string) []byte {
 		log.Fatal(result.Err)
 	}
 
-	stats, err := result.Marshal()
-	if err != nil {
-		log.Fatal(result.Err)
-	}
-	log.Info(string(stats))
+	log.WithFields(result.Stats()).Info()
 	log.Debugf("%s\n", result.Payload)
 	return result.Payload
 }

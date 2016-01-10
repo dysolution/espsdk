@@ -27,7 +27,23 @@ type fulfilledRequest struct {
 }
 
 // Marshal serializes a FulfilledRequest into a byte stream.
-func (r *fulfilledRequest) Marshal() ([]byte, error) { return json.Marshal(r) }
+func (r *fulfilledRequest) Marshal() ([]byte, error) {
+	return json.Marshal(r)
+}
+
+func (r *fulfilledRequest) MarshalIndent() ([]byte, error) {
+	return json.MarshalIndent(r, "", "    ")
+}
+
+func (r *fulfilledRequest) Stats() log.Fields {
+	return log.Fields{
+		"method":      r.Verb,
+		"path":        r.Path,
+		"response_ms": r.Duration,
+		"status":      r.Response.Status,
+		"status_code": r.Response.StatusCode,
+	}
+}
 
 // Private
 
@@ -35,7 +51,7 @@ func (r *fulfilledRequest) Marshal() ([]byte, error) { return json.Marshal(r) }
 // response to a request.
 type response struct {
 	StatusCode int    `json:"status_code"`
-	Status     string `json:"-"`
+	Status     string `json:"status"`
 }
 
 func start(s string) time.Time { return time.Now() }
