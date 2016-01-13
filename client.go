@@ -3,12 +3,15 @@ package espsdk
 import (
 	"bytes"
 	"crypto/tls"
+	"crypto/x509"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
 
 	log "github.com/Sirupsen/logrus"
 )
+
+var pool *x509.CertPool
 
 // Serializable objects can be Marshaled into JSON.
 type Serializable interface {
@@ -209,8 +212,12 @@ func (c *Client) _delete(path string) []byte {
 // insecureClient returns an HTTP client that will not verify the validity
 // of an SSL certificate when performing a request.
 func insecureClient() *http.Client {
+	pool = x509.NewCertPool()
+	pool.AppendCertsFromPEM(pemCerts)
 	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		TLSClientConfig: &tls.Config{
+			InsecureSkipVerify: true,
+			RootCAs:            pool},
 	}
 	return &http.Client{Transport: tr}
 }
