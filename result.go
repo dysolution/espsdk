@@ -18,10 +18,9 @@ type result struct {
 }
 
 func getResult(c *http.Client, req *http.Request) (*result, error) {
-	httpCommand := req.Method + " " + string(req.URL.Path)
-	start := start(httpCommand)
+	start := time.Now()
 	resp, err := c.Do(req)
-	duration := elapsed(httpCommand, start) / time.Millisecond
+	duration := time.Since(start) / time.Millisecond
 	if err != nil {
 		log.Error(err)
 		return buildResult(resp, nil, duration, err), err

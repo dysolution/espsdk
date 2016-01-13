@@ -7,9 +7,6 @@ import (
 	log "github.com/Sirupsen/logrus"
 )
 
-func foo() {
-}
-
 // A Token is a string representation of an OAuth2 token. It grants a user
 // access to the ESP API for a limited time.
 type Token string
@@ -52,13 +49,6 @@ func (r *fulfilledRequest) Stats() log.Fields {
 type response struct {
 	StatusCode int    `json:"status_code"`
 	Status     string `json:"status"`
-}
-
-func start(s string) time.Time { return time.Now() }
-
-func elapsed(s string, startTime time.Time) time.Duration {
-	duration := time.Now().Sub(startTime)
-	return duration
 }
 
 func indentedJSON(obj interface{}) ([]byte, error) {
