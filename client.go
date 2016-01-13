@@ -152,9 +152,9 @@ func (c *Client) GetFromObject(object RESTObject) DeserializedObject {
 
 func (c *Client) get(path string) []byte {
 	request := newRequest("GET", path, c.Token, nil)
-	result := c.performRequest(request)
-	if result.Err != nil {
-		log.Fatal(result.Err)
+	result, err := c.performRequest(request)
+	if err != nil {
+		log.Fatal(err)
 	}
 	log.WithFields(result.Stats()).Info()
 	log.Debugf("%s\n", result.Payload)
@@ -167,9 +167,9 @@ func (c *Client) post(object RESTObject) []byte {
 		log.Fatal(err)
 	}
 	request := newRequest("POST", object.Path(), c.Token, serializedObject)
-	result := c.performRequest(request)
-	if result.Err != nil {
-		log.Fatal(result.Err)
+	result, err := c.performRequest(request)
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	log.WithFields(result.Stats()).Info()
@@ -184,9 +184,9 @@ func (c *Client) put(object RESTObject) []byte {
 	}
 
 	request := newRequest("PUT", object.Path(), c.Token, serializedObject)
-	result := c.performRequest(request)
-	if result.Err != nil {
-		log.Fatal(result.Err)
+	result, err := c.performRequest(request)
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	log.WithFields(result.Stats()).Info()
@@ -196,9 +196,9 @@ func (c *Client) put(object RESTObject) []byte {
 
 func (c *Client) _delete(path string) []byte {
 	request := newRequest("DELETE", path, c.Token, nil)
-	result := c.performRequest(request)
-	if result.Err != nil {
-		log.Fatal(result.Err)
+	result, err := c.performRequest(request)
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	log.WithFields(result.Stats()).Info()
@@ -215,10 +215,10 @@ func insecureClient() *http.Client {
 	return &http.Client{Transport: tr}
 }
 
-// PerformRequest performs a request using the given parameters and
+// performRequest performs a request using the given parameters and
 // returns a struct that contains the HTTP status code and payload from
 // the server's response as well as metadata such as the response time.
-func (c Client) performRequest(p *request) *fulfilledRequest {
+func (c Client) performRequest(p *request) (*fulfilledRequest, error) {
 	uri := ESPAPIRoot + p.Path
 
 	if p.requiresAnObject() && p.Object != nil {
@@ -226,17 +226,19 @@ func (c Client) performRequest(p *request) *fulfilledRequest {
 	}
 	req, err := http.NewRequest(p.Verb, uri, bytes.NewBuffer(p.Object))
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
+		return nil, err
 	}
 	p.httpRequest = req
 
 	p.addHeaders(p.Token, c.APIKey)
 
-	result := getResult(insecureClient(), req)
-	if result.Err != nil {
-		log.Fatal(result.Err)
+	result, err := getResult(insecureClient(), req)
+	if err != nil {
+		log.Error(err)
+		return nil, err
 	}
-	return &fulfilledRequest{p, result}
+	return &fulfilledRequest{p, result}, nil
 }
 
 func tokenFrom(payload []byte) Token {

@@ -17,21 +17,21 @@ type result struct {
 	Err      error         `json:"-"`
 }
 
-func getResult(c *http.Client, req *http.Request) *result {
+func getResult(c *http.Client, req *http.Request) (*result, error) {
 	httpCommand := req.Method + " " + string(req.URL.Path)
 	start := start(httpCommand)
 	resp, err := c.Do(req)
 	duration := elapsed(httpCommand, start) / time.Millisecond
 	if err != nil {
-		log.Fatal(err)
-		return buildResult(resp, nil, duration)
+		log.Error(err)
+		return buildResult(resp, nil, duration, err), err
 	}
 	defer resp.Body.Close()
 
 	payload, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatal(err)
-		return buildResult(resp, payload, duration)
+		log.Error(err)
+		return buildResult(resp, payload, duration, err), nil
 	}
 	if resp.StatusCode < 200 || resp.StatusCode > 299 {
 		log.WithFields(log.Fields{
@@ -40,14 +40,14 @@ func getResult(c *http.Client, req *http.Request) *result {
 			"status":      resp.Status,
 		}).Warn()
 	}
-	return buildResult(resp, payload, duration)
+	return buildResult(resp, payload, duration, nil), nil
 }
 
-func buildResult(resp *http.Response, payload []byte, duration time.Duration) *result {
+func buildResult(resp *http.Response, payload []byte, duration time.Duration, err error) *result {
 	return &result{
 		&response{
 			resp.StatusCode,
 			resp.Status,
 		},
-		payload, duration, nil}
+		payload, duration, err}
 }
