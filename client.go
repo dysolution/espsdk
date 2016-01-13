@@ -15,10 +15,12 @@ type Serializable interface {
 	Marshal() ([]byte, error)
 }
 
+// Findable objects can report the URL where they can be found.
 type Findable interface {
 	Path() string
 }
 
+// A RESTObject has a canonical API endpoint URL and can be serialized to JSON.
 type RESTObject interface {
 	Serializable
 	Findable
@@ -118,9 +120,20 @@ func (c *Client) Update(object RESTObject) DeserializedObject {
 
 // Delete destroys the object at the provided path.
 func (c *Client) Delete(path string) DeserializedObject {
-	marshaledObject := c._delete(path)
-	if len(marshaledObject) > 0 {
-		return Unmarshal(c._delete(path))
+	bytes := c._delete(path)
+	if len(bytes) > 0 {
+		return Unmarshal(bytes)
+	}
+	// successful deletion usually returns a 204 without a payload/body
+	return DeserializedObject{}
+}
+
+// DeleteFromObject destroys the object described by the provided object,
+// as long as enough data is provided to unambiguously identify it to the API.
+func (c *Client) DeleteFromObject(object RESTObject) DeserializedObject {
+	bytes := c._delete(object.Path())
+	if len(bytes) > 0 {
+		return Unmarshal(bytes)
 	}
 	// successful deletion usually returns a 204 without a payload/body
 	return DeserializedObject{}
@@ -129,6 +142,12 @@ func (c *Client) Delete(path string) DeserializedObject {
 // Get requests the metadata for the object at the provided path.
 func (c *Client) Get(path string) DeserializedObject {
 	return Unmarshal(c.get(path))
+}
+
+// GetFromObject requests the metadata for the provided object, as long as
+// enough data is provided to unambiguously identify it to the API.
+func (c *Client) GetFromObject(object RESTObject) DeserializedObject {
+	return Unmarshal(c.get(object.Path()))
 }
 
 func (c *Client) get(path string) []byte {
