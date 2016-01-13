@@ -64,18 +64,3 @@ func elapsed(s string, startTime time.Time) time.Duration {
 func indentedJSON(obj interface{}) ([]byte, error) {
 	return json.MarshalIndent(obj, "", "\t")
 }
-
-func get(path string, token Token) []byte {
-	request := newRequest("GET", path, token, nil)
-	result, err := Client{}.performRequest(request)
-	if err != nil {
-		log.Fatal(err)
-	}
-	stats, err := result.Marshal()
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.Info(string(stats))
-	log.Debugf("%s\n", result.Payload)
-	return result.Payload
-}
