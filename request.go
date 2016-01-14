@@ -10,7 +10,7 @@ import (
 type request struct {
 	Verb        string `json:"method"`
 	Path        string `json:"path"`
-	Token       Token  `json:"token"`
+	Token       Token  `json:"-"`
 	Object      []byte `json:"object"`
 	httpRequest *http.Request
 }
