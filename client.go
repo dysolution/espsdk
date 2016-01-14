@@ -116,9 +116,32 @@ func (c *Client) Create(object RESTObject) DeserializedObject {
 	return Unmarshal(marshaledObject)
 }
 
+// VerboseCreate uses the provided metadata to create and object
+// and returns it along with metadata about the HTTP request, including
+// response time.
+func (c *Client) VerboseCreate(object RESTObject) (*FulfilledRequest, error) {
+	req, err := c.verbosePost(object)
+	if err != nil {
+		log.Errorf("Client.VerboseCreate: %v", err)
+		return &FulfilledRequest{}, err
+	}
+	return req, nil
+}
+
 // Update changes metadata for an existing Batch.
 func (c *Client) Update(object RESTObject) DeserializedObject {
 	return Unmarshal(c.put(object))
+}
+
+// VerboseUpdate uses the provided metadata to update an object and returns
+// metadata about the HTTP request, including response time.
+func (c *Client) VerboseUpdate(object RESTObject) (*FulfilledRequest, error) {
+	result, err := c.verbosePut(object)
+	if err != nil {
+		log.Errorf("Client.VerboseUpdate: %v", err)
+		return &FulfilledRequest{}, err
+	}
+	return result, nil
 }
 
 // Delete destroys the object at the provided path.
@@ -189,6 +212,21 @@ func (c *Client) get(path string) []byte {
 	return result.Payload
 }
 
+func (c *Client) verbosePost(object RESTObject) (*FulfilledRequest, error) {
+	serializedObject, err := Marshal(object)
+	if err != nil {
+		log.Errorf("Client.verbosePost: %v", err)
+		return &FulfilledRequest{}, err
+	}
+	request := newRequest("POST", object.Path(), c.Token, serializedObject)
+	result, err := c.performRequest(request)
+	if err != nil {
+		log.Errorf("Client.verbosePost: %v", err)
+		return &FulfilledRequest{}, err
+	}
+	return result, nil
+}
+
 func (c *Client) post(object RESTObject) []byte {
 	serializedObject, err := Marshal(object)
 	if err != nil {
@@ -220,6 +258,21 @@ func (c *Client) put(object RESTObject) []byte {
 	log.WithFields(result.Stats()).Info()
 	log.Debugf("%s\n", result.Payload)
 	return result.Payload
+}
+
+func (c *Client) verbosePut(object RESTObject) (*FulfilledRequest, error) {
+	serializedObject, err := Marshal(object)
+	if err != nil {
+		log.Errorf("Client.verbosePut: %v", err)
+		return &FulfilledRequest{}, err
+	}
+	request := newRequest("PUT", object.Path(), c.Token, serializedObject)
+	result, err := c.performRequest(request)
+	if err != nil {
+		log.Errorf("Client.verbosePut: %v", err)
+		return &FulfilledRequest{}, err
+	}
+	return result, nil
 }
 
 func (c *Client) _delete(path string) []byte {
