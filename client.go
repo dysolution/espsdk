@@ -144,13 +144,38 @@ func (c *Client) DeleteFromObject(object RESTObject) DeserializedObject {
 
 // Get requests the metadata for the object at the provided path.
 func (c *Client) Get(path string) DeserializedObject {
-	return Unmarshal(c.get(path))
+	completedRequest, err := c.verboseGet(path)
+	check(err)
+	log.WithFields(completedRequest.Stats()).Info("Client.Get")
+	return Unmarshal(completedRequest.result.Payload)
 }
 
 // GetFromObject requests the metadata for the provided object, as long as
 // enough data is provided to unambiguously identify it to the API.
 func (c *Client) GetFromObject(object RESTObject) DeserializedObject {
 	return Unmarshal(c.get(object.Path()))
+}
+
+// GetWithMetadata uses the provided metadata to request an object from the API
+// and returns it along with metadata about the HTTP request, including
+// response time.
+func (c *Client) GetWithMetadata(object RESTObject) (DeserializedObject, *FulfilledRequest, error) {
+	completedRequest, err := c.verboseGet(object.Path())
+	if err != nil {
+		log.Errorf("Client.GetWithMetadata: %v", err)
+		return DeserializedObject{}, &FulfilledRequest{}, err
+	}
+	deserializedObject := Unmarshal(completedRequest.result.Payload)
+	return deserializedObject, completedRequest, nil
+}
+
+func (c *Client) verboseGet(path string) (*FulfilledRequest, error) {
+	ack, err := c.performRequest(newRequest("GET", path, c.Token, nil))
+	if err != nil {
+		log.Errorf("Client.verboseGet: %s", err)
+		return &FulfilledRequest{}, err
+	}
+	return ack, nil
 }
 
 func (c *Client) get(path string) []byte {
@@ -225,7 +250,7 @@ func insecureClient() *http.Client {
 // performRequest performs a request using the given parameters and
 // returns a struct that contains the HTTP status code and payload from
 // the server's response as well as metadata such as the response time.
-func (c Client) performRequest(p *request) (*fulfilledRequest, error) {
+func (c Client) performRequest(p *request) (*FulfilledRequest, error) {
 	uri := ESPAPIRoot + p.Path
 
 	if p.requiresAnObject() && p.Object != nil {
@@ -245,7 +270,7 @@ func (c Client) performRequest(p *request) (*fulfilledRequest, error) {
 		log.Error(err)
 		return nil, err
 	}
-	return &fulfilledRequest{p, result}, nil
+	return &FulfilledRequest{p, result}, nil
 }
 
 func tokenFrom(payload []byte) Token {
