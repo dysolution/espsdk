@@ -20,7 +20,7 @@ type serializable interface {
 // its result, including timing and HTTP status codes.
 type FulfilledRequest struct {
 	*request
-	*result
+	*Result
 }
 
 // Marshal serializes a FulfilledRequest into a byte stream.

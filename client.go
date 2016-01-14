@@ -170,7 +170,7 @@ func (c *Client) Get(path string) DeserializedObject {
 	req, err := c.verboseGet(path)
 	check(err)
 	log.WithFields(req.Stats()).Info("Client.Get")
-	return Unmarshal(req.result.Payload)
+	return Unmarshal(req.Result.Payload)
 }
 
 // GetFromObject requests the metadata for the provided object, as long as
