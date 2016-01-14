@@ -167,10 +167,10 @@ func (c *Client) DeleteFromObject(object RESTObject) DeserializedObject {
 
 // Get requests the metadata for the object at the provided path.
 func (c *Client) Get(path string) DeserializedObject {
-	completedRequest, err := c.verboseGet(path)
+	req, err := c.verboseGet(path)
 	check(err)
-	log.WithFields(completedRequest.Stats()).Info("Client.Get")
-	return Unmarshal(completedRequest.result.Payload)
+	log.WithFields(req.Stats()).Info("Client.Get")
+	return Unmarshal(req.result.Payload)
 }
 
 // GetFromObject requests the metadata for the provided object, as long as
@@ -179,26 +179,25 @@ func (c *Client) GetFromObject(object RESTObject) DeserializedObject {
 	return Unmarshal(c.get(object.Path()))
 }
 
-// GetWithMetadata uses the provided metadata to request an object from the API
+// VerboseGet uses the provided metadata to request an object from the API
 // and returns it along with metadata about the HTTP request, including
 // response time.
-func (c *Client) GetWithMetadata(object RESTObject) (DeserializedObject, *FulfilledRequest, error) {
-	completedRequest, err := c.verboseGet(object.Path())
+func (c *Client) VerboseGet(object RESTObject) (*FulfilledRequest, error) {
+	req, err := c.verboseGet(object.Path())
 	if err != nil {
-		log.Errorf("Client.GetWithMetadata: %v", err)
-		return DeserializedObject{}, &FulfilledRequest{}, err
+		log.Errorf("Client.VerboseGet: %v", err)
+		return &FulfilledRequest{}, err
 	}
-	deserializedObject := Unmarshal(completedRequest.result.Payload)
-	return deserializedObject, completedRequest, nil
+	return req, nil
 }
 
 func (c *Client) verboseGet(path string) (*FulfilledRequest, error) {
-	ack, err := c.performRequest(newRequest("GET", path, c.Token, nil))
+	req, err := c.performRequest(newRequest("GET", path, c.Token, nil))
 	if err != nil {
-		log.Errorf("Client.verboseGet: %s", err)
+		log.Errorf("Client.verboseGet: %v", err)
 		return &FulfilledRequest{}, err
 	}
-	return ack, nil
+	return req, nil
 }
 
 func (c *Client) get(path string) []byte {
