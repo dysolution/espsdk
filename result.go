@@ -37,7 +37,7 @@ func getResult(c *http.Client, req *http.Request) (*Result, error) {
 			"object":      "response",
 			"status_code": resp.StatusCode,
 			"status":      resp.Status,
-		}).Warn()
+		}).Debug("getResult")
 	}
 	return buildResult(resp, payload, duration, nil), nil
 }
