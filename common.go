@@ -18,23 +18,23 @@ type serializable interface {
 
 // A FulfilledRequest provides an overview of a completed API request and
 // its result, including timing and HTTP status codes.
-type FulfilledRequest struct {
+type Result struct {
 	*request
-	*Result
+	*VerboseResult
 }
 
 // Marshal serializes a FulfilledRequest into a byte stream.
-func (r *FulfilledRequest) Marshal() ([]byte, error) {
+func (r *Result) Marshal() ([]byte, error) {
 	return json.Marshal(r)
 }
 
 // MarshalIndent serializes a FulfilledRequest into indented JSON.
-func (r *FulfilledRequest) MarshalIndent() ([]byte, error) {
+func (r *Result) MarshalIndent() ([]byte, error) {
 	return json.MarshalIndent(r, "", "    ")
 }
 
 // Stats returns fields that logrus can parse.
-func (r *FulfilledRequest) Stats() log.Fields {
+func (r *Result) Stats() log.Fields {
 	return log.Fields{
 		"method":        r.Verb,
 		"path":          r.Path,

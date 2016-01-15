@@ -119,11 +119,11 @@ func (c *Client) Create(object RESTObject) DeserializedObject {
 // VerboseCreate uses the provided metadata to create and object
 // and returns it along with metadata about the HTTP request, including
 // response time.
-func (c *Client) VerboseCreate(object RESTObject) (*FulfilledRequest, error) {
+func (c *Client) VerboseCreate(object RESTObject) (*Result, error) {
 	req, err := c.verbosePost(object)
 	if err != nil {
 		log.Errorf("Client.VerboseCreate: %v", err)
-		return &FulfilledRequest{}, err
+		return &Result{}, err
 	}
 	return req, nil
 }
@@ -135,11 +135,11 @@ func (c *Client) Update(object RESTObject) DeserializedObject {
 
 // VerboseUpdate uses the provided metadata to update an object and returns
 // metadata about the HTTP request, including response time.
-func (c *Client) VerboseUpdate(object RESTObject) (*FulfilledRequest, error) {
+func (c *Client) VerboseUpdate(object RESTObject) (*Result, error) {
 	result, err := c.verbosePut(object)
 	if err != nil {
 		log.Errorf("Client.VerboseUpdate: %v", err)
-		return &FulfilledRequest{}, err
+		return &Result{}, err
 	}
 	return result, nil
 }
@@ -170,7 +170,7 @@ func (c *Client) Get(path string) DeserializedObject {
 	req, err := c.verboseGet(path)
 	check(err)
 	log.WithFields(req.Stats()).Info("Client.Get")
-	return Unmarshal(req.Result.Payload)
+	return Unmarshal(req.VerboseResult.Payload)
 }
 
 // GetFromObject requests the metadata for the provided object, as long as
@@ -182,20 +182,20 @@ func (c *Client) GetFromObject(object RESTObject) DeserializedObject {
 // VerboseGet uses the provided metadata to request an object from the API
 // and returns it along with metadata about the HTTP request, including
 // response time.
-func (c *Client) VerboseGet(object RESTObject) (*FulfilledRequest, error) {
+func (c *Client) VerboseGet(object RESTObject) (*Result, error) {
 	req, err := c.verboseGet(object.Path())
 	if err != nil {
 		log.Errorf("Client.VerboseGet: %v", err)
-		return &FulfilledRequest{}, err
+		return &Result{}, err
 	}
 	return req, nil
 }
 
-func (c *Client) verboseGet(path string) (*FulfilledRequest, error) {
+func (c *Client) verboseGet(path string) (*Result, error) {
 	req, err := c.performRequest(newRequest("GET", path, c.Token, nil))
 	if err != nil {
 		log.Errorf("Client.verboseGet: %v", err)
-		return &FulfilledRequest{}, err
+		return &Result{}, err
 	}
 	return req, nil
 }
@@ -211,17 +211,17 @@ func (c *Client) get(path string) []byte {
 	return result.Payload
 }
 
-func (c *Client) verbosePost(object RESTObject) (*FulfilledRequest, error) {
+func (c *Client) verbosePost(object RESTObject) (*Result, error) {
 	serializedObject, err := Marshal(object)
 	if err != nil {
 		log.Errorf("Client.verbosePost: %v", err)
-		return &FulfilledRequest{}, err
+		return &Result{}, err
 	}
 	request := newRequest("POST", object.Path(), c.Token, serializedObject)
 	result, err := c.performRequest(request)
 	if err != nil {
 		log.Errorf("Client.verbosePost: %v", err)
-		return &FulfilledRequest{}, err
+		return &Result{}, err
 	}
 	return result, nil
 }
@@ -259,17 +259,17 @@ func (c *Client) put(object RESTObject) []byte {
 	return result.Payload
 }
 
-func (c *Client) verbosePut(object RESTObject) (*FulfilledRequest, error) {
+func (c *Client) verbosePut(object RESTObject) (*Result, error) {
 	serializedObject, err := Marshal(object)
 	if err != nil {
 		log.Errorf("Client.verbosePut: %v", err)
-		return &FulfilledRequest{}, err
+		return &Result{}, err
 	}
 	request := newRequest("PUT", object.Path(), c.Token, serializedObject)
 	result, err := c.performRequest(request)
 	if err != nil {
 		log.Errorf("Client.verbosePut: %v", err)
-		return &FulfilledRequest{}, err
+		return &Result{}, err
 	}
 	return result, nil
 }
@@ -302,7 +302,7 @@ func insecureClient() *http.Client {
 // performRequest performs a request using the given parameters and
 // returns a struct that contains the HTTP status code and payload from
 // the server's response as well as metadata such as the response time.
-func (c Client) performRequest(p *request) (*FulfilledRequest, error) {
+func (c Client) performRequest(p *request) (*Result, error) {
 	uri := ESPAPIRoot + p.Path
 
 	if p.requiresAnObject() && p.Object != nil {
@@ -322,7 +322,7 @@ func (c Client) performRequest(p *request) (*FulfilledRequest, error) {
 		log.Error(err)
 		return nil, err
 	}
-	return &FulfilledRequest{p, result}, nil
+	return &Result{p, result}, nil
 }
 
 func tokenFrom(payload []byte) Token {
