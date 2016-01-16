@@ -30,7 +30,7 @@ type RESTObject interface {
 }
 
 // GetClient returns a Client that can be used to send requests to the ESP API.
-func GetClient(key, secret, username, password, uploadBucket string) Client {
+func GetClient(key, secret, username, password, uploadBucket string) *Client {
 	creds := credentials{
 		APIKey:      key,
 		APISecret:   secret,
@@ -38,7 +38,7 @@ func GetClient(key, secret, username, password, uploadBucket string) Client {
 		ESPPassword: password,
 	}
 	token := getToken(&creds)
-	return Client{creds, token, uploadBucket}
+	return &Client{creds, token, uploadBucket}
 }
 
 // A Client is able to request an access token and submit HTTP requests to
