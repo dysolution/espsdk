@@ -112,13 +112,13 @@ func (bl BatchList) Unmarshal(payload []byte) BatchList {
 	var dest BatchList
 	err := json.Unmarshal(payload, &dest)
 	if err != nil {
-		log.Error(err)
+		Log.Error(err)
 	}
 	return dest
 }
 
 // Last returns the most recently-created batch.
 func (bl BatchList) Last() Batch {
-	log.Debugf("getting last of %d batches", bl.Meta.TotalItems)
+	Log.Debugf("getting most recent of %d batches", bl.TotalItems)
 	return bl.Items[0]
 }

@@ -8,10 +8,10 @@ import (
 	prefixed "github.com/x-cray/logrus-prefixed-formatter"
 )
 
-var log = logrus.New()
+var Log = logrus.New()
 
 func init() {
-	log.Formatter = &prefixed.TextFormatter{TimestampFormat: time.RFC3339}
+	Log.Formatter = &prefixed.TextFormatter{TimestampFormat: time.RFC3339}
 }
 
 // A Token is a string representation of an OAuth2 token. It grants a user

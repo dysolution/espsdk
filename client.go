@@ -56,23 +56,23 @@ type Client struct {
 // ESP API.
 func getToken(credentials *credentials) Token {
 	if credentials.areInvalid() {
-		log.Fatal("Not all required credentials were supplied.")
+		Log.Fatal("Not all required credentials were supplied.")
 	}
 
 	uri := oauthEndpoint
-	log.Debugf("%s", uri)
+	Log.Debugf("%s", uri)
 	formValues := formValues(credentials)
-	log.Debugf("%s", formValues.Encode())
+	Log.Debugf("%s", formValues.Encode())
 
 	resp, err := http.PostForm(uri, formValues)
 	if err != nil {
-		log.Fatal(err)
+		Log.Fatal(err)
 	}
 	defer resp.Body.Close()
 
 	payload, err := ioutil.ReadAll(resp.Body)
-	log.Debugf("HTTP %d", resp.StatusCode)
-	log.Debugf("%s", payload)
+	Log.Debugf("HTTP %d", resp.StatusCode)
+	Log.Debugf("%s", payload)
 	return tokenFrom(payload)
 }
 
@@ -124,7 +124,7 @@ func (c *Client) Index(path string) *DeserializedObject {
 func (c *Client) VerboseCreate(object Findable) (Result, error) {
 	result, err := c.verbosePost(object)
 	if err != nil {
-		log.Errorf("Client.VerboseCreate: %v", err)
+		Log.Errorf("Client.VerboseCreate: %v", err)
 		return Result{}, err
 	}
 	return result, nil
@@ -140,7 +140,7 @@ func (c *Client) Update(object RESTObject) DeserializedObject {
 func (c *Client) VerboseUpdate(object Findable) (Result, error) {
 	result, err := c.verbosePut(object)
 	if err != nil {
-		log.Errorf("Client.VerboseUpdate: %v", err)
+		Log.Errorf("Client.VerboseUpdate: %v", err)
 		return Result{}, err
 	}
 	return result, nil
@@ -161,7 +161,7 @@ func (c *Client) Delete(path string) DeserializedObject {
 func (c *Client) VerboseDelete(object Findable) (Result, error) {
 	result, err := c.verboseDelete(object.Path())
 	if err != nil {
-		log.WithFields(logrus.Fields{
+		Log.WithFields(logrus.Fields{
 			"error": err,
 		}).Errorf("Client.VerboseDelete: %v", err)
 		return Result{}, err
@@ -199,7 +199,7 @@ func (c *Client) DeprecatedGet(path string) DeserializedObject {
 	if err != nil {
 		result.Log().Error("Client.Get")
 	}
-	log.WithFields(result.stats()).Info(logPrefix)
+	Log.WithFields(result.stats()).Info(logPrefix)
 	return Unmarshal(result.VerboseResult.Payload)
 }
 
@@ -215,7 +215,7 @@ func (c *Client) GetFromObject(object RESTObject) DeserializedObject {
 func (c *Client) VerboseGet(object Findable) (Result, error) {
 	result, err := c.verboseGet(object.Path())
 	if err != nil {
-		log.WithFields(logrus.Fields{
+		Log.WithFields(logrus.Fields{
 			"error": err,
 		}).Errorf("Client.VerboseGet: %v", err)
 		return Result{}, err
@@ -235,10 +235,10 @@ func (c *Client) get(path string) []byte {
 	request := newRequest("GET", path, c.Token, nil)
 	result, err := c.performRequest(request)
 	if err != nil {
-		log.Fatal(err)
+		Log.Fatal(err)
 	}
 	result.Log().Debug("Client.get")
-	log.Debugf("%s\n", result.Payload)
+	Log.Debugf("%s\n", result.Payload)
 	return result.Payload
 }
 
@@ -260,46 +260,46 @@ func (c *Client) verbosePost(object Findable) (Result, error) {
 func (c *Client) post(object RESTObject) []byte {
 	serializedObject, err := Marshal(object)
 	if err != nil {
-		log.Fatal(err)
+		Log.Fatal(err)
 	}
 	request := newRequest("POST", object.Path(), c.Token, serializedObject)
 	result, err := c.performRequest(request)
 	if err != nil {
-		log.Fatal(err)
+		Log.Fatal(err)
 	}
 
 	result.Log().Debug()
-	log.Debugf("%s\n", result.Payload)
+	Log.Debugf("%s\n", result.Payload)
 	return result.Payload
 }
 
 func (c *Client) put(object RESTObject) []byte {
 	serializedObject, err := object.Marshal()
 	if err != nil {
-		log.Fatal(err)
+		Log.Fatal(err)
 	}
 
 	request := newRequest("PUT", object.Path(), c.Token, serializedObject)
 	result, err := c.performRequest(request)
 	if err != nil {
-		log.Fatal(err)
+		Log.Fatal(err)
 	}
 
 	result.Log().Debug()
-	log.Debugf("%s\n", result.Payload)
+	Log.Debugf("%s\n", result.Payload)
 	return result.Payload
 }
 
 func (c *Client) verbosePut(object Findable) (Result, error) {
 	serializedObject, err := Marshal(object)
 	if err != nil {
-		log.Errorf("Client.verbosePut: %v", err)
+		Log.Errorf("Client.verbosePut: %v", err)
 		return Result{}, err
 	}
 	request := newRequest("PUT", object.Path(), c.Token, serializedObject)
 	result, err := c.performRequest(request)
 	if err != nil {
-		log.Errorf("Client.verbosePut: %v", err)
+		Log.Errorf("Client.verbosePut: %v", err)
 		return Result{}, err
 	}
 	return result, nil
@@ -309,7 +309,7 @@ func (c *Client) _delete(path string) []byte {
 	request := newRequest("DELETE", path, c.Token, nil)
 	result, err := c.performRequest(request)
 	if err != nil {
-		log.Fatal(err)
+		Log.Fatal(err)
 	}
 
 	result.Log().Debugf("response payload: %s\n", result.Payload)
@@ -337,11 +337,11 @@ func (c Client) performRequest(p request) (Result, error) {
 	uri := ESPAPIRoot + p.Path
 
 	if p.requiresAnObject() && p.Object != nil {
-		log.Debugf("Received serialized object: %s", p.Object)
+		Log.Debugf("Received serialized object: %s", p.Object)
 	}
 	req, err := http.NewRequest(p.Verb, uri, bytes.NewBuffer(p.Object))
 	if err != nil {
-		log.WithFields(logrus.Fields{
+		Log.WithFields(logrus.Fields{
 			"error": err,
 		}).Debug("Client.performRequest")
 		return Result{}, err
@@ -352,7 +352,7 @@ func (c Client) performRequest(p request) (Result, error) {
 
 	result, err := getResult(insecureClient(), req)
 	if err != nil {
-		log.Error(err)
+		Log.Error(err)
 		return Result{}, err
 	}
 	return Result{p, result}, nil

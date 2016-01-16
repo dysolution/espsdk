@@ -92,14 +92,14 @@ func (c Contribution) Index(client *Client, batchID int) ContributionList {
 	c.SubmissionBatchID = batchID
 	result, err := client.VerboseGet(c)
 	if err != nil {
-		log.WithFields(result.stats()).Error(desc)
+		Log.WithFields(result.stats()).Error(desc)
 		return ContributionList{}
 	}
 	if result.StatusCode == 404 {
-		log.WithFields(result.stats()).Error(desc)
+		Log.WithFields(result.stats()).Error(desc)
 		return ContributionList{}
 	}
-	log.WithFields(result.stats()).Info(desc)
+	Log.WithFields(result.stats()).Info(desc)
 	contributionList, _ := ContributionList{}.Unmarshal(result.Payload)
 	return contributionList
 }
@@ -153,7 +153,7 @@ func (cl ContributionList) Unmarshal(payload []byte) (ContributionList, error) {
 	if err := json.Unmarshal(payload, &contributionList); err != nil {
 		var errResponse interface{}
 		json.Unmarshal(payload, &errResponse)
-		log.WithFields(logrus.Fields{
+		Log.WithFields(logrus.Fields{
 			"error":   err,
 			"payload": errResponse,
 		}).Error("ContributionList.Unmarshal")

@@ -25,7 +25,7 @@ func (m TermList) Marshal() ([]byte, error) { return indentedJSON(m) }
 func (m TermList) Unmarshal(payload []byte) TermList {
 	var items TermList
 	if err := json.Unmarshal(payload, &items); err != nil {
-		log.Fatal(err)
+		Log.Fatal(err)
 	}
 	return items
 }

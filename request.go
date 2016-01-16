@@ -17,7 +17,7 @@ type request struct {
 func newRequest(verb string, path string, token Token, object []byte) request {
 	req, err := http.NewRequest(verb, path, bytes.NewBuffer(object))
 	if err != nil {
-		log.Fatal(err)
+		Log.Fatal(err)
 	}
 	return request{
 		Verb:        verb,

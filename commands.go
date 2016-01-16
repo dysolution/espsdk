@@ -19,7 +19,7 @@ type DeserializedObject struct {
 func Deserialize(payload []byte, dest *DeserializedObject) *DeserializedObject {
 	err := json.Unmarshal(payload, &dest)
 	if err != nil {
-		log.Error(err)
+		Log.Error(err)
 	}
 	return dest
 }
@@ -46,7 +46,7 @@ func Unmarshal(payload []byte) DeserializedObject {
 	var dest DeserializedObject
 	err := json.Unmarshal(payload, &dest)
 	if err != nil {
-		log.Error(err)
+		Log.Error(err)
 	}
 	return dest
 }

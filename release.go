@@ -86,7 +86,7 @@ func (rl ReleaseList) Unmarshal(payload []byte) (ReleaseList, error) {
 	if err := json.Unmarshal(payload, &releaseList); err != nil {
 		var errResponse interface{}
 		json.Unmarshal(payload, &errResponse)
-		log.WithFields(logrus.Fields{
+		Log.WithFields(logrus.Fields{
 			"error":   err,
 			"payload": errResponse,
 		}).Error("ReleaseList.Unmarshal")
