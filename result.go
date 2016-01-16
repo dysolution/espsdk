@@ -17,6 +17,10 @@ type VerboseResult struct {
 	Err      error         `json:"-"`
 }
 
+func (v *VerboseResult) GetStatusCode() int {
+	return v.Response.GetStatusCode()
+}
+
 func getResult(c *http.Client, req *http.Request) (*VerboseResult, error) {
 	start := time.Now()
 	resp, err := c.Do(req)

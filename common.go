@@ -44,6 +44,14 @@ func (r *Result) Stats() log.Fields {
 	}
 }
 
+func (r *Result) Log() *log.Entry {
+	return log.WithFields(r.Stats())
+}
+
+func (r *Result) GetStatusCode() int {
+	return r.VerboseResult.GetStatusCode()
+}
+
 // Private
 
 // A Response contains the HTTP status code and text that represent the API's
@@ -51,6 +59,10 @@ func (r *Result) Stats() log.Fields {
 type response struct {
 	StatusCode int    `json:"status_code"`
 	Status     string `json:"status"`
+}
+
+func (r *response) GetStatusCode() int {
+	return r.StatusCode
 }
 
 func indentedJSON(obj interface{}) ([]byte, error) {

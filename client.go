@@ -167,10 +167,12 @@ func (c *Client) DeleteFromObject(object RESTObject) DeserializedObject {
 
 // Get requests the metadata for the object at the provided path.
 func (c *Client) Get(path string) DeserializedObject {
-	req, err := c.verboseGet(path)
-	check(err)
-	log.WithFields(req.Stats()).Info("Client.Get")
-	return Unmarshal(req.VerboseResult.Payload)
+	result, err := c.verboseGet(path)
+	if err != nil {
+		result.Log().Error("Client.Get")
+	}
+	result.Log().Info("Client.Get")
+	return Unmarshal(result.VerboseResult.Payload)
 }
 
 // GetFromObject requests the metadata for the provided object, as long as
@@ -206,7 +208,7 @@ func (c *Client) get(path string) []byte {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.WithFields(result.Stats()).Info()
+	result.Log().Debug("Client.get")
 	log.Debugf("%s\n", result.Payload)
 	return result.Payload
 }
@@ -214,15 +216,15 @@ func (c *Client) get(path string) []byte {
 func (c *Client) verbosePost(object RESTObject) (*Result, error) {
 	serializedObject, err := Marshal(object)
 	if err != nil {
-		log.Errorf("Client.verbosePost: %v", err)
 		return &Result{}, err
 	}
+
 	request := newRequest("POST", object.Path(), c.Token, serializedObject)
 	result, err := c.performRequest(request)
 	if err != nil {
-		log.Errorf("Client.verbosePost: %v", err)
 		return &Result{}, err
 	}
+	result.Log().Debug("Client.verbosePost")
 	return result, nil
 }
 
@@ -237,7 +239,7 @@ func (c *Client) post(object RESTObject) []byte {
 		log.Fatal(err)
 	}
 
-	log.WithFields(result.Stats()).Info()
+	result.Log().Debug()
 	log.Debugf("%s\n", result.Payload)
 	return result.Payload
 }
@@ -254,7 +256,7 @@ func (c *Client) put(object RESTObject) []byte {
 		log.Fatal(err)
 	}
 
-	log.WithFields(result.Stats()).Info()
+	result.Log().Debug()
 	log.Debugf("%s\n", result.Payload)
 	return result.Payload
 }
@@ -281,7 +283,7 @@ func (c *Client) _delete(path string) []byte {
 		log.Fatal(err)
 	}
 
-	log.WithFields(result.Stats()).Info()
+	result.Log().Debug()
 	log.Debugf("response payload: %s\n", result.Payload)
 	return result.Payload
 }
