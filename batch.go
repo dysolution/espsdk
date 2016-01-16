@@ -120,5 +120,5 @@ func (bl BatchList) Unmarshal(payload []byte) BatchList {
 // Last returns the most recently-created batch.
 func (bl BatchList) Last() Batch {
 	log.Debugf("getting last of %d batches", bl.Meta.TotalItems)
-	return bl.Items[len(bl.Items)-1]
+	return bl.Items[0]
 }
