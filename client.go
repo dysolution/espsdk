@@ -312,12 +312,13 @@ func (c *Client) _delete(path string) []byte {
 // insecureClient returns an HTTP client that will not verify the validity
 // of an SSL certificate when performing a request.
 func insecureClient() *http.Client {
-	pool = x509.NewCertPool()
-	pool.AppendCertsFromPEM(pemCerts)
+	// pool = x509.NewCertPool()
+	// pool.AppendCertsFromPEM(pemCerts)
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{
 			InsecureSkipVerify: true,
-			RootCAs:            pool},
+		},
+		// RootCAs:            pool},
 	}
 	return &http.Client{Transport: tr}
 }
