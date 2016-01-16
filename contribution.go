@@ -95,7 +95,7 @@ func (c Contribution) Index(client *Client, batchID int) ContributionList {
 		log.WithFields(result.Stats()).Error(desc)
 		return ContributionList{}
 	}
-	if result.GetStatusCode() == 404 {
+	if result.StatusCode == 404 {
 		log.WithFields(result.Stats()).Error(desc)
 		return ContributionList{}
 	}

@@ -46,34 +46,20 @@ func (r *Result) Log() *log.Entry {
 	})
 }
 
-func (r *Result) GetStatusCode() int {
-	return r.VerboseResult.GetStatusCode()
-}
-
-// Private
-
 // A Response contains the HTTP status code and text that represent the API's
 // response to a request.
-type response struct {
+type Response struct {
 	StatusCode int    `json:"status_code"`
 	Status     string `json:"status"`
-}
-
-func (r *response) GetStatusCode() int {
-	return r.StatusCode
 }
 
 // A VerboseResult contains information relative to a completed request,
 // including the time elapsed to fulfill the request and any errors.
 type VerboseResult struct {
-	Response *response     `json:"response"`
-	Payload  []byte        `json:"-"`
-	Duration time.Duration `json:"response_time"`
-	Err      error         `json:"-"`
-}
-
-func (v *VerboseResult) GetStatusCode() int {
-	return v.Response.GetStatusCode()
+	*Response `json:"response"`
+	Payload   []byte        `json:"-"`
+	Duration  time.Duration `json:"response_time"`
+	Err       error         `json:"-"`
 }
 
 func getResult(c *http.Client, req *http.Request) (*VerboseResult, error) {
@@ -103,7 +89,7 @@ func getResult(c *http.Client, req *http.Request) (*VerboseResult, error) {
 
 func buildResult(resp *http.Response, payload []byte, duration time.Duration, err error) *VerboseResult {
 	return &VerboseResult{
-		&response{
+		&Response{
 			resp.StatusCode,
 			resp.Status,
 		},

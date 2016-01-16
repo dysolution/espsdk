@@ -33,7 +33,7 @@ func (r Release) Index(client *Client, batchID int) ReleaseList {
 		result.Log().Error(desc)
 		return ReleaseList{}
 	}
-	if result.GetStatusCode() == 404 {
+	if result.StatusCode == 404 {
 		result.Log().Error(desc)
 		return ReleaseList{}
 	}
