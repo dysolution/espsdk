@@ -189,7 +189,7 @@ func (c *Client) DeleteFromObject(object RESTObject) DeserializedObject {
 }
 
 // Get requests the metadata for the object at the provided path.
-func (c *Client) Get(path string) DeserializedObject {
+func (c *Client) DeprecatedGet(path string) DeserializedObject {
 	pc, _, _, _ := runtime.Caller(0)
 	callerPC, _, _, _ := runtime.Caller(1)
 	caller := runtime.FuncForPC(callerPC).Name()
