@@ -313,7 +313,9 @@ func (c Client) performRequest(p *request) (*Result, error) {
 	}
 	req, err := http.NewRequest(p.Verb, uri, bytes.NewBuffer(p.Object))
 	if err != nil {
-		log.Error(err)
+		log.WithFields(log.Fields{
+			"error": err,
+		}).Debug("Client.performRequest")
 		return nil, err
 	}
 	p.httpRequest = req

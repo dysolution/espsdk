@@ -148,10 +148,16 @@ type ContributionList []Contribution
 // Unmarshal attempts to deserialize the provided JSON payload
 // into the complete metadata returned by a request to the Index (GET all)
 // API endpoint.
-func (cl ContributionList) Unmarshal(payload []byte) ContributionList {
+func (cl ContributionList) Unmarshal(payload []byte) (ContributionList, error) {
 	var contributionList ContributionList
 	if err := json.Unmarshal(payload, &contributionList); err != nil {
-		log.Fatal(err)
+		var errResponse interface{}
+		json.Unmarshal(payload, &errResponse)
+		log.WithFields(log.Fields{
+			"error":   err,
+			"payload": errResponse,
+		}).Error("ContributionList.Unmarshal")
+		return ContributionList{}, err
 	}
-	return contributionList
+	return contributionList, nil
 }

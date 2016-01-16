@@ -80,10 +80,16 @@ func (rl ReleaseList) Marshal() ([]byte, error) { return indentedJSON(rl) }
 // Unmarshal attempts to deserialize the provided JSON payload
 // into the complete metadata returned by a request to the Index (GET all)
 // API endpoint.
-func (rl ReleaseList) Unmarshal(payload []byte) ReleaseList {
+func (rl ReleaseList) Unmarshal(payload []byte) (ReleaseList, error) {
 	var releaseList ReleaseList
 	if err := json.Unmarshal(payload, &releaseList); err != nil {
-		log.Fatal(err)
+		var errResponse interface{}
+		json.Unmarshal(payload, &errResponse)
+		log.WithFields(log.Fields{
+			"error":   err,
+			"payload": errResponse,
+		}).Error("ReleaseList.Unmarshal")
+		return ReleaseList{}, err
 	}
-	return releaseList
+	return releaseList, nil
 }
