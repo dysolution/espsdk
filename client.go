@@ -111,23 +111,16 @@ func (c *Client) Index(path string) *DeserializedObject {
 	return Deserialize(c.get(path), obj)
 }
 
-// Create uses the provided path and data to ask the API to create a new
-// object and returns the deserialized response.
-func (c *Client) Create(object RESTObject) DeserializedObject {
-	marshaledObject := c.post(object)
-	return Unmarshal(marshaledObject)
-}
-
 // VerboseCreate uses the provided metadata to create and object
 // and returns it along with metadata about the HTTP request, including
 // response time.
-func (c *Client) VerboseCreate(object RESTObject) (*Result, error) {
-	req, err := c.verbosePost(object)
+func (c *Client) VerboseCreate(object Findable) (*Result, error) {
+	result, err := c.verbosePost(object)
 	if err != nil {
 		log.Errorf("Client.VerboseCreate: %v", err)
 		return &Result{}, err
 	}
-	return req, nil
+	return result, nil
 }
 
 // Update changes metadata for an existing Batch.
@@ -137,7 +130,7 @@ func (c *Client) Update(object RESTObject) DeserializedObject {
 
 // VerboseUpdate uses the provided metadata to update an object and returns
 // metadata about the HTTP request, including response time.
-func (c *Client) VerboseUpdate(object RESTObject) (*Result, error) {
+func (c *Client) VerboseUpdate(object Findable) (*Result, error) {
 	result, err := c.verbosePut(object)
 	if err != nil {
 		log.Errorf("Client.VerboseUpdate: %v", err)
@@ -154,6 +147,27 @@ func (c *Client) Delete(path string) DeserializedObject {
 	}
 	// successful deletion usually returns a 204 without a payload/body
 	return DeserializedObject{}
+}
+
+// VerboseDelete destroys the object described by the provided object,
+// as long as enough data is provided to unambiguously identify it to the API.
+func (c *Client) VerboseDelete(object Findable) (*Result, error) {
+	result, err := c.verboseDelete(object.Path())
+	if err != nil {
+		log.WithFields(log.Fields{
+			"error": err,
+		}).Errorf("Client.VerboseDelete: %v", err)
+		return &Result{}, err
+	}
+	return result, nil
+}
+
+func (c *Client) verboseDelete(path string) (*Result, error) {
+	result, err := c.performRequest(newRequest("DELETE", path, c.Token, nil))
+	if err != nil {
+		return &Result{}, err
+	}
+	return result, nil
 }
 
 // DeleteFromObject destroys the object described by the provided object,
@@ -221,7 +235,7 @@ func (c *Client) get(path string) []byte {
 	return result.Payload
 }
 
-func (c *Client) verbosePost(object RESTObject) (*Result, error) {
+func (c *Client) verbosePost(object Findable) (*Result, error) {
 	serializedObject, err := Marshal(object)
 	if err != nil {
 		return &Result{}, err
@@ -269,7 +283,7 @@ func (c *Client) put(object RESTObject) []byte {
 	return result.Payload
 }
 
-func (c *Client) verbosePut(object RESTObject) (*Result, error) {
+func (c *Client) verbosePut(object Findable) (*Result, error) {
 	serializedObject, err := Marshal(object)
 	if err != nil {
 		log.Errorf("Client.verbosePut: %v", err)
