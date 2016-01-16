@@ -68,6 +68,16 @@ func (b Batch) Path() string {
 // Marshal serializes the Batch into a byte slice.
 func (b Batch) Marshal() ([]byte, error) { return indentedJSON(b) }
 
+// Unmarshal serializes the Batch into a byte slice.
+func (b Batch) Unmarshal(payload []byte) (*Batch, error) {
+	var batch *Batch
+	err := json.Unmarshal(payload, &batch)
+	if err != nil {
+		return batch, err
+	}
+	return batch, nil
+}
+
 // A BatchUpdate contains a Batch. This matches the
 // structure of the JSON payload the API expects during a PUT.
 type BatchUpdate struct {

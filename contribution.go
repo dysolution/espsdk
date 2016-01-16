@@ -106,6 +106,18 @@ func (c Contribution) Path() string {
 // Marshal serializes the Contribution into a byte slice.
 func (c Contribution) Marshal() ([]byte, error) { return indentedJSON(c) }
 
+// Unmarshal attempts to deserialize the provided JSON payload into a
+// Contribution object.
+func (r Contribution) Unmarshal(payload []byte) (*Contribution, error) {
+	var contribution *Contribution
+	err := json.Unmarshal(payload, &contribution)
+	if err != nil {
+		return contribution, err
+	}
+	return contribution, nil
+
+}
+
 // A ContributionUpdate contains a Contribution. This matches the
 // structure of the JSON payload the API expects during a PUT.
 type ContributionUpdate struct {

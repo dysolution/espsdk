@@ -41,20 +41,22 @@ func (r Release) Path() string {
 	return fmt.Sprintf("%s/%d/releases/%d", Batches, bid, r.ID)
 }
 
-// Marshal serializes the Release into a byte slice.
-func (r Release) Marshal() ([]byte, error) { return indentedJSON(r) }
-
 // ValidTypes are the Release types supported by ESP.
 func (r Release) ValidTypes() []string { return []string{"Model", "Property"} }
 
+// Marshal serializes the Release into a byte slice.
+func (r Release) Marshal() ([]byte, error) { return indentedJSON(r) }
+
 // Unmarshal attempts to deserialize the provided JSON payload into a
 // Release object.
-func (r Release) Unmarshal(payload []byte) Release {
-	var release Release
-	if err := json.Unmarshal(payload, &release); err != nil {
-		log.Fatal(err)
+func (r Release) Unmarshal(payload []byte) (*Release, error) {
+	var release *Release
+	err := json.Unmarshal(payload, &release)
+	if err != nil {
+		return release, err
 	}
-	return release
+	return release, nil
+
 }
 
 // A ReleaseList is a slice of zero or more Releases.
