@@ -37,6 +37,8 @@ func (r *Result) Stats() log.Fields {
 	}
 }
 
+// Log provides a convenient way to output the most important information
+// about an HTTP request: its status code and its response time.
 func (r *Result) Log() *log.Entry {
 	return log.WithFields(log.Fields{
 		"response_time": r.Duration * time.Millisecond,

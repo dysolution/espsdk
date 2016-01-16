@@ -305,8 +305,7 @@ func (c *Client) _delete(path string) []byte {
 		log.Fatal(err)
 	}
 
-	result.Log().Debug()
-	log.Debugf("response payload: %s\n", result.Payload)
+	result.Log().Debugf("response payload: %s\n", result.Payload)
 	return result.Payload
 }
 
