@@ -26,8 +26,20 @@ type Release struct {
 // Index requests a list of all Releases associated with the specified
 // Submission Batch.
 func (r Release) Index(client *Client, batchID int) ReleaseList {
+	desc := "Release.Index"
 	r.SubmissionBatchID = batchID
-	return ReleaseList{}.Unmarshal(client.get(r.Path()))
+	result, err := client.VerboseGet(r)
+	if err != nil {
+		result.Log().Error(desc)
+		return ReleaseList{}
+	}
+	if result.GetStatusCode() == 404 {
+		result.Log().Error(desc)
+		return ReleaseList{}
+	}
+	result.Log().Info(desc)
+	releaseList, _ := ReleaseList{}.Unmarshal(result.Payload)
+	return releaseList
 }
 
 // Path returns the path for the contribution.

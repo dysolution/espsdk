@@ -88,8 +88,20 @@ type Contribution struct {
 // Index requests a list of all Contributions associated with the specified
 // Submission Batch.
 func (c Contribution) Index(client *Client, batchID int) ContributionList {
+	desc := "Contribution.Index"
 	c.SubmissionBatchID = batchID
-	return ContributionList{}.Unmarshal(client.get(c.Path()))
+	result, err := client.VerboseGet(c)
+	if err != nil {
+		log.WithFields(result.Stats()).Error(desc)
+		return ContributionList{}
+	}
+	if result.GetStatusCode() == 404 {
+		log.WithFields(result.Stats()).Error(desc)
+		return ContributionList{}
+	}
+	log.WithFields(result.Stats()).Info(desc)
+	contributionList, _ := ContributionList{}.Unmarshal(result.Payload)
+	return contributionList
 }
 
 // Path returns the path for the contribution.
