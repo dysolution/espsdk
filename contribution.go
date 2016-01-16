@@ -92,14 +92,14 @@ func (c Contribution) Index(client *Client, batchID int) ContributionList {
 	c.SubmissionBatchID = batchID
 	result, err := client.VerboseGet(c)
 	if err != nil {
-		log.WithFields(result.Stats()).Error(desc)
+		log.WithFields(result.stats()).Error(desc)
 		return ContributionList{}
 	}
 	if result.StatusCode == 404 {
-		log.WithFields(result.Stats()).Error(desc)
+		log.WithFields(result.stats()).Error(desc)
 		return ContributionList{}
 	}
-	log.WithFields(result.Stats()).Info(desc)
+	log.WithFields(result.stats()).Info(desc)
 	contributionList, _ := ContributionList{}.Unmarshal(result.Payload)
 	return contributionList
 }

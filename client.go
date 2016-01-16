@@ -199,7 +199,7 @@ func (c *Client) DeprecatedGet(path string) DeserializedObject {
 	if err != nil {
 		result.Log().Error("Client.Get")
 	}
-	log.WithFields(result.Stats()).Info(logPrefix)
+	log.WithFields(result.stats()).Info(logPrefix)
 	return Unmarshal(result.VerboseResult.Payload)
 }
 

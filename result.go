@@ -27,19 +27,23 @@ func (r *Result) MarshalIndent() ([]byte, error) {
 }
 
 // Stats returns fields that logrus can parse.
-func (r *Result) Stats() logrus.Fields {
+func (r *Result) stats() logrus.Fields {
 	return logrus.Fields{
 		"method":        r.Verb,
 		"path":          r.Path,
 		"response_time": r.Duration * time.Millisecond,
-		"status":        r.Response.Status,
 		"status_code":   r.Response.StatusCode,
 	}
 }
 
-// Log provides a convenient way to output the most important information
-// about an HTTP request: its status code and its response time.
+// Log provides a convenient way to output information about an HTTP request
+// the user is likely to want.
 func (r *Result) Log() *logrus.Entry {
+	return log.WithFields(r.stats())
+}
+
+// LogBrief logs only an HTTP request's status code and response time.
+func (r *Result) LogBrief() *logrus.Entry {
 	return log.WithFields(logrus.Fields{
 		"response_time": r.Duration * time.Millisecond,
 		"status_code":   r.Response.StatusCode,
