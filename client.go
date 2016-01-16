@@ -337,7 +337,7 @@ func (c Client) performRequest(p *request) (*Result, error) {
 		log.WithFields(log.Fields{
 			"error": err,
 		}).Debug("Client.performRequest")
-		return nil, err
+		return &Result{}, err
 	}
 	p.httpRequest = req
 
@@ -346,7 +346,7 @@ func (c Client) performRequest(p *request) (*Result, error) {
 	result, err := getResult(insecureClient(), req)
 	if err != nil {
 		log.Error(err)
-		return nil, err
+		return &Result{}, err
 	}
 	return &Result{p, result}, nil
 }
