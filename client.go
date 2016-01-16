@@ -5,8 +5,10 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
+	"runtime"
 
 	log "github.com/Sirupsen/logrus"
 )
@@ -167,11 +169,16 @@ func (c *Client) DeleteFromObject(object RESTObject) DeserializedObject {
 
 // Get requests the metadata for the object at the provided path.
 func (c *Client) Get(path string) DeserializedObject {
+	pc, _, _, _ := runtime.Caller(0)
+	callerPC, _, _, _ := runtime.Caller(1)
+	caller := runtime.FuncForPC(callerPC).Name()
+	myself := runtime.FuncForPC(pc).Name()
+	logPrefix := fmt.Sprintf("%v %v)", caller, myself)
 	result, err := c.verboseGet(path)
 	if err != nil {
 		result.Log().Error("Client.Get")
 	}
-	result.Log().Info("Client.Get")
+	log.WithFields(result.Stats()).Info(logPrefix)
 	return Unmarshal(result.VerboseResult.Payload)
 }
 
