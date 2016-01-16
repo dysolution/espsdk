@@ -120,7 +120,7 @@ func (c Contribution) Marshal() ([]byte, error) { return indentedJSON(c) }
 
 // Unmarshal attempts to deserialize the provided JSON payload into a
 // Contribution object.
-func (r Contribution) Unmarshal(payload []byte) (*Contribution, error) {
+func (c Contribution) Unmarshal(payload []byte) (*Contribution, error) {
 	var contribution *Contribution
 	err := json.Unmarshal(payload, &contribution)
 	if err != nil {
