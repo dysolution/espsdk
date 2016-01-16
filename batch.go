@@ -113,7 +113,9 @@ type BatchList struct {
 func (bl BatchList) Unmarshal(payload []byte) BatchList {
 	var dest BatchList
 	err := json.Unmarshal(payload, &dest)
-	check(err)
+	if err != nil {
+		log.Error(err)
+	}
 	return dest
 }
 
@@ -121,10 +123,4 @@ func (bl BatchList) Unmarshal(payload []byte) BatchList {
 func (bl BatchList) Last() Batch {
 	log.Debugf("getting last of %d batches", bl.Meta.TotalItems)
 	return bl.Items[len(bl.Items)-1]
-}
-
-func check(err error) {
-	if err != nil {
-		log.Fatal(err)
-	}
 }

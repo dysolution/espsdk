@@ -1,6 +1,10 @@
 package espsdk
 
-import "encoding/json"
+import (
+	"encoding/json"
+
+	log "github.com/Sirupsen/logrus"
+)
 
 // A DeserializedObject contains JSON struct tags that map object properties
 // to JSON fields.
@@ -16,7 +20,9 @@ type DeserializedObject struct {
 // into an object.
 func Deserialize(payload []byte, dest *DeserializedObject) *DeserializedObject {
 	err := json.Unmarshal(payload, &dest)
-	check(err)
+	if err != nil {
+		log.Error(err)
+	}
 	return dest
 }
 
@@ -41,6 +47,8 @@ func Marshal(object interface{}) ([]byte, error) { return indentedJSON(object) }
 func Unmarshal(payload []byte) DeserializedObject {
 	var dest DeserializedObject
 	err := json.Unmarshal(payload, &dest)
-	check(err)
+	if err != nil {
+		log.Error(err)
+	}
 	return dest
 }
