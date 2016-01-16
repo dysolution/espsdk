@@ -99,10 +99,12 @@ var batchTypeIsValid = map[string]bool{
 // A BatchList matches the structure of the JSON payload returned
 // by the GET (all) Batches API endpoint.
 type BatchList struct {
-	Items []Batch `json:"items,omitempty"`
-	Meta  struct {
-		TotalItems int `json:"total_items,omitempty"`
-	} `json:"meta,omitempty"`
+	Items             []Batch `json:"items,omitempty"`
+	batchListMetadata `json:"meta,omitempty"`
+}
+
+type batchListMetadata struct {
+	TotalItems int `json:"total_items,omitempty"`
 }
 
 // Unmarshal attempts to deserialize the provided JSON payload
