@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"time"
-
-	log "github.com/Sirupsen/logrus"
 )
 
 // A Batch is a container for Contributions of the same type and

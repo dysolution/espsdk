@@ -2,7 +2,6 @@ package espsdk
 
 import (
 	"encoding/json"
-	"log"
 )
 
 // A TermItem is an expression of a concept that has a canonical string to

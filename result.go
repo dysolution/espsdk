@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	log "github.com/Sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
 )
 
 // A Result provides an overview of a completed API request and
@@ -27,8 +27,8 @@ func (r *Result) MarshalIndent() ([]byte, error) {
 }
 
 // Stats returns fields that logrus can parse.
-func (r *Result) Stats() log.Fields {
-	return log.Fields{
+func (r *Result) Stats() logrus.Fields {
+	return logrus.Fields{
 		"method":        r.Verb,
 		"path":          r.Path,
 		"response_time": r.Duration * time.Millisecond,
@@ -39,8 +39,8 @@ func (r *Result) Stats() log.Fields {
 
 // Log provides a convenient way to output the most important information
 // about an HTTP request: its status code and its response time.
-func (r *Result) Log() *log.Entry {
-	return log.WithFields(log.Fields{
+func (r *Result) Log() *logrus.Entry {
+	return log.WithFields(logrus.Fields{
 		"response_time": r.Duration * time.Millisecond,
 		"status_code":   r.Response.StatusCode,
 	})
@@ -78,7 +78,7 @@ func getResult(c *http.Client, req *http.Request) (*VerboseResult, error) {
 		return buildResult(resp, payload, duration, err), nil
 	}
 	if resp.StatusCode < 200 || resp.StatusCode > 299 {
-		log.WithFields(log.Fields{
+		log.WithFields(logrus.Fields{
 			"object":      "response",
 			"status_code": resp.StatusCode,
 			"status":      resp.Status,

@@ -2,8 +2,6 @@ package espsdk
 
 import (
 	"encoding/json"
-
-	log "github.com/Sirupsen/logrus"
 )
 
 // A DeserializedObject contains JSON struct tags that map object properties

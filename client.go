@@ -10,7 +10,7 @@ import (
 	"net/http"
 	"runtime"
 
-	log "github.com/Sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
 )
 
 var pool *x509.CertPool
@@ -334,7 +334,7 @@ func (c Client) performRequest(p *request) (*Result, error) {
 	}
 	req, err := http.NewRequest(p.Verb, uri, bytes.NewBuffer(p.Object))
 	if err != nil {
-		log.WithFields(log.Fields{
+		log.WithFields(logrus.Fields{
 			"error": err,
 		}).Debug("Client.performRequest")
 		return &Result{}, err

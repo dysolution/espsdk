@@ -2,7 +2,6 @@ package espsdk
 
 import (
 	"bytes"
-	log "github.com/Sirupsen/logrus"
 	"net/http"
 )
 

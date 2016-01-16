@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	log "github.com/Sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
 )
 
 // A Contribution is the metadata that represents a media asset from
@@ -153,7 +153,7 @@ func (cl ContributionList) Unmarshal(payload []byte) (ContributionList, error) {
 	if err := json.Unmarshal(payload, &contributionList); err != nil {
 		var errResponse interface{}
 		json.Unmarshal(payload, &errResponse)
-		log.WithFields(log.Fields{
+		log.WithFields(logrus.Fields{
 			"error":   err,
 			"payload": errResponse,
 		}).Error("ContributionList.Unmarshal")

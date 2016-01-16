@@ -3,7 +3,8 @@ package espsdk
 import (
 	"encoding/json"
 	"fmt"
-	log "github.com/Sirupsen/logrus"
+
+	"github.com/Sirupsen/logrus"
 )
 
 // A Release is the metadata that represents a legal agreement for
@@ -85,7 +86,7 @@ func (rl ReleaseList) Unmarshal(payload []byte) (ReleaseList, error) {
 	if err := json.Unmarshal(payload, &releaseList); err != nil {
 		var errResponse interface{}
 		json.Unmarshal(payload, &errResponse)
-		log.WithFields(log.Fields{
+		log.WithFields(logrus.Fields{
 			"error":   err,
 			"payload": errResponse,
 		}).Error("ReleaseList.Unmarshal")
