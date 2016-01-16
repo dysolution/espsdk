@@ -118,29 +118,24 @@ func (c *Client) Index(path string) *DeserializedObject {
 	return Deserialize(c.get(path), obj)
 }
 
-// VerboseCreate uses the provided metadata to create and object
+// Create uses the provided metadata to create and object
 // and returns it along with metadata about the HTTP request, including
 // response time.
 func (c *Client) Create(object Findable) (Result, error) {
 	result, err := c.verbosePost(object)
 	if err != nil {
-		Log.Errorf("Client.VerboseCreate: %v", err)
+		Log.Errorf("Client.Create: %v", err)
 		return Result{}, err
 	}
 	return result, nil
 }
 
-// Update changes metadata for an existing Batch.
-func (c *Client) Update(object RESTObject) DeserializedObject {
-	return Unmarshal(c.put(object))
-}
-
-// VerboseUpdate uses the provided metadata to update an object and returns
+// Update uses the provided metadata to update an object and returns
 // metadata about the HTTP request, including response time.
-func (c *Client) VerboseUpdate(object Findable) (Result, error) {
+func (c *Client) Update(object Findable) (Result, error) {
 	result, err := c.verbosePut(object)
 	if err != nil {
-		Log.Errorf("Client.VerboseUpdate: %v", err)
+		Log.Errorf("Client.Update: %v", err)
 		return Result{}, err
 	}
 	return result, nil
@@ -188,7 +183,7 @@ func (c *Client) DeleteFromObject(object RESTObject) DeserializedObject {
 	return DeserializedObject{}
 }
 
-// Get requests the metadata for the object at the provided path.
+// DeprecatedGet requests the metadata for the object at the provided path.
 func (c *Client) DeprecatedGet(path string) DeserializedObject {
 	pc, _, _, _ := runtime.Caller(0)
 	callerPC, _, _, _ := runtime.Caller(1)
