@@ -121,7 +121,7 @@ func (c *Client) Index(path string) *DeserializedObject {
 // VerboseCreate uses the provided metadata to create and object
 // and returns it along with metadata about the HTTP request, including
 // response time.
-func (c *Client) VerboseCreate(object Findable) (Result, error) {
+func (c *Client) Create(object Findable) (Result, error) {
 	result, err := c.verbosePost(object)
 	if err != nil {
 		Log.Errorf("Client.VerboseCreate: %v", err)
