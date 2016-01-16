@@ -184,22 +184,23 @@ func (c *Client) GetFromObject(object RESTObject) DeserializedObject {
 // VerboseGet uses the provided metadata to request an object from the API
 // and returns it along with metadata about the HTTP request, including
 // response time.
-func (c *Client) VerboseGet(object RESTObject) (*Result, error) {
-	req, err := c.verboseGet(object.Path())
+func (c *Client) VerboseGet(object Findable) (*Result, error) {
+	result, err := c.verboseGet(object.Path())
 	if err != nil {
-		log.Errorf("Client.VerboseGet: %v", err)
+		log.WithFields(log.Fields{
+			"error": err,
+		}).Errorf("Client.VerboseGet: %v", err)
 		return &Result{}, err
 	}
-	return req, nil
+	return result, nil
 }
 
 func (c *Client) verboseGet(path string) (*Result, error) {
-	req, err := c.performRequest(newRequest("GET", path, c.Token, nil))
+	result, err := c.performRequest(newRequest("GET", path, c.Token, nil))
 	if err != nil {
-		log.Errorf("Client.verboseGet: %v", err)
 		return &Result{}, err
 	}
-	return req, nil
+	return result, nil
 }
 
 func (c *Client) get(path string) []byte {
