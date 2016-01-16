@@ -14,18 +14,18 @@ type request struct {
 	httpRequest *http.Request
 }
 
-func newRequest(verb string, path string, token Token, object []byte) *request {
+func newRequest(verb string, path string, token Token, object []byte) request {
 	req, err := http.NewRequest(verb, path, bytes.NewBuffer(object))
 	if err != nil {
 		log.Fatal(err)
 	}
-	r := new(request)
-	r.Verb = verb
-	r.Path = path
-	r.Token = token
-	r.Object = object
-	r.httpRequest = req
-	return r
+	return request{
+		Verb:        verb,
+		Path:        path,
+		Token:       token,
+		Object:      object,
+		httpRequest: req,
+	}
 }
 
 func (p *request) requiresAnObject() bool {

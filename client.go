@@ -114,11 +114,11 @@ func (c *Client) Index(path string) *DeserializedObject {
 // VerboseCreate uses the provided metadata to create and object
 // and returns it along with metadata about the HTTP request, including
 // response time.
-func (c *Client) VerboseCreate(object Findable) (*Result, error) {
+func (c *Client) VerboseCreate(object Findable) (Result, error) {
 	result, err := c.verbosePost(object)
 	if err != nil {
 		log.Errorf("Client.VerboseCreate: %v", err)
-		return &Result{}, err
+		return Result{}, err
 	}
 	return result, nil
 }
@@ -130,11 +130,11 @@ func (c *Client) Update(object RESTObject) DeserializedObject {
 
 // VerboseUpdate uses the provided metadata to update an object and returns
 // metadata about the HTTP request, including response time.
-func (c *Client) VerboseUpdate(object Findable) (*Result, error) {
+func (c *Client) VerboseUpdate(object Findable) (Result, error) {
 	result, err := c.verbosePut(object)
 	if err != nil {
 		log.Errorf("Client.VerboseUpdate: %v", err)
-		return &Result{}, err
+		return Result{}, err
 	}
 	return result, nil
 }
@@ -151,21 +151,21 @@ func (c *Client) Delete(path string) DeserializedObject {
 
 // VerboseDelete destroys the object described by the provided object,
 // as long as enough data is provided to unambiguously identify it to the API.
-func (c *Client) VerboseDelete(object Findable) (*Result, error) {
+func (c *Client) VerboseDelete(object Findable) (Result, error) {
 	result, err := c.verboseDelete(object.Path())
 	if err != nil {
-		log.WithFields(log.Fields{
+		log.WithFields(logrus.Fields{
 			"error": err,
 		}).Errorf("Client.VerboseDelete: %v", err)
-		return &Result{}, err
+		return Result{}, err
 	}
 	return result, nil
 }
 
-func (c *Client) verboseDelete(path string) (*Result, error) {
+func (c *Client) verboseDelete(path string) (Result, error) {
 	result, err := c.performRequest(newRequest("DELETE", path, c.Token, nil))
 	if err != nil {
-		return &Result{}, err
+		return Result{}, err
 	}
 	return result, nil
 }
@@ -205,21 +205,21 @@ func (c *Client) GetFromObject(object RESTObject) DeserializedObject {
 // VerboseGet uses the provided metadata to request an object from the API
 // and returns it along with metadata about the HTTP request, including
 // response time.
-func (c *Client) VerboseGet(object Findable) (*Result, error) {
+func (c *Client) VerboseGet(object Findable) (Result, error) {
 	result, err := c.verboseGet(object.Path())
 	if err != nil {
-		log.WithFields(log.Fields{
+		log.WithFields(logrus.Fields{
 			"error": err,
 		}).Errorf("Client.VerboseGet: %v", err)
-		return &Result{}, err
+		return Result{}, err
 	}
 	return result, nil
 }
 
-func (c *Client) verboseGet(path string) (*Result, error) {
+func (c *Client) verboseGet(path string) (Result, error) {
 	result, err := c.performRequest(newRequest("GET", path, c.Token, nil))
 	if err != nil {
-		return &Result{}, err
+		return Result{}, err
 	}
 	return result, nil
 }
@@ -235,16 +235,16 @@ func (c *Client) get(path string) []byte {
 	return result.Payload
 }
 
-func (c *Client) verbosePost(object Findable) (*Result, error) {
+func (c *Client) verbosePost(object Findable) (Result, error) {
 	serializedObject, err := Marshal(object)
 	if err != nil {
-		return &Result{}, err
+		return Result{}, err
 	}
 
 	request := newRequest("POST", object.Path(), c.Token, serializedObject)
 	result, err := c.performRequest(request)
 	if err != nil {
-		return &Result{}, err
+		return Result{}, err
 	}
 	result.Log().Debug("Client.verbosePost")
 	return result, nil
@@ -283,17 +283,17 @@ func (c *Client) put(object RESTObject) []byte {
 	return result.Payload
 }
 
-func (c *Client) verbosePut(object Findable) (*Result, error) {
+func (c *Client) verbosePut(object Findable) (Result, error) {
 	serializedObject, err := Marshal(object)
 	if err != nil {
 		log.Errorf("Client.verbosePut: %v", err)
-		return &Result{}, err
+		return Result{}, err
 	}
 	request := newRequest("PUT", object.Path(), c.Token, serializedObject)
 	result, err := c.performRequest(request)
 	if err != nil {
 		log.Errorf("Client.verbosePut: %v", err)
-		return &Result{}, err
+		return Result{}, err
 	}
 	return result, nil
 }
@@ -326,7 +326,7 @@ func insecureClient() *http.Client {
 // performRequest performs a request using the given parameters and
 // returns a struct that contains the HTTP status code and payload from
 // the server's response as well as metadata such as the response time.
-func (c Client) performRequest(p *request) (*Result, error) {
+func (c Client) performRequest(p request) (Result, error) {
 	uri := ESPAPIRoot + p.Path
 
 	if p.requiresAnObject() && p.Object != nil {
@@ -337,7 +337,7 @@ func (c Client) performRequest(p *request) (*Result, error) {
 		log.WithFields(logrus.Fields{
 			"error": err,
 		}).Debug("Client.performRequest")
-		return &Result{}, err
+		return Result{}, err
 	}
 	p.httpRequest = req
 
@@ -346,9 +346,9 @@ func (c Client) performRequest(p *request) (*Result, error) {
 	result, err := getResult(insecureClient(), req)
 	if err != nil {
 		log.Error(err)
-		return &Result{}, err
+		return Result{}, err
 	}
-	return &Result{p, result}, nil
+	return Result{p, result}, nil
 }
 
 func tokenFrom(payload []byte) Token {
