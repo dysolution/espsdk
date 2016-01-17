@@ -160,6 +160,7 @@ func (c *Client) Get(object Findable) (Result, error) {
 }
 
 func (c *Client) post(object Findable) (Result, error) {
+	desc := "Client.post"
 	serializedObject, err := Marshal(object)
 	if err != nil {
 		return Result{}, err
@@ -170,36 +171,41 @@ func (c *Client) post(object Findable) (Result, error) {
 	if err != nil {
 		return Result{}, err
 	}
-	result.Log().Debug("Client.verbosePost")
+	result.Log().Debug(desc)
 	return result, nil
 }
 
 func (c *Client) put(object Findable) (Result, error) {
+	desc = "Client.put"
 	serializedObject, err := Marshal(object)
 	if err != nil {
-		Log.Errorf("Client.verbosePut: %v", err)
+		Log.Errorf(desc+": %v", err)
 		return Result{}, err
 	}
 	request := newRequest("PUT", object.Path(), c.Token, serializedObject)
 	result, err := c.performRequest(request)
 	if err != nil {
-		Log.Errorf("Client.verbosePut: %v", err)
+		Log.Errorf(desc+": %v", err)
 		return Result{}, err
 	}
 	return result, nil
 }
 
 func (c *Client) _delete(path string) (Result, error) {
+	desc = "Client._delete"
 	result, err := c.performRequest(newRequest("DELETE", path, c.Token, nil))
 	if err != nil {
+		Log.Errorf(desc+": %v", err)
 		return Result{}, err
 	}
 	return result, nil
 }
 
 func (c *Client) get(path string) (Result, error) {
+	desc = "Client.get"
 	result, err := c.performRequest(newRequest("GET", path, c.Token, nil))
 	if err != nil {
+		Log.Errorf(desc+": %v", err)
 		return Result{}, err
 	}
 	return result, nil
