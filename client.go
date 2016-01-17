@@ -141,19 +141,9 @@ func (c *Client) Update(object Findable) (Result, error) {
 	return result, nil
 }
 
-// Delete destroys the object at the provided path.
-func (c *Client) Delete(path string) DeserializedObject {
-	bytes := c._delete(path)
-	if len(bytes) > 0 {
-		return Unmarshal(bytes)
-	}
-	// successful deletion usually returns a 204 without a payload/body
-	return DeserializedObject{}
-}
-
 // VerboseDelete destroys the object described by the provided object,
 // as long as enough data is provided to unambiguously identify it to the API.
-func (c *Client) VerboseDelete(object Findable) (Result, error) {
+func (c *Client) Delete(object Findable) (Result, error) {
 	result, err := c.verboseDelete(object.Path())
 	if err != nil {
 		Log.WithFields(logrus.Fields{
