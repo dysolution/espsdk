@@ -107,7 +107,6 @@ func (c *Client) GetTermList(endpoint string) TermList {
 func (c *Client) DeleteLastBatch() (Result, error) {
 	lastBatch := Batch{}.Index(c).Last()
 	return c._delete(lastBatch.Path())
-
 }
 
 // Create uses the provided metadata to create and object
@@ -146,14 +145,6 @@ func (c *Client) Delete(object Findable) (Result, error) {
 	return result, nil
 }
 
-func (c *Client) _delete(path string) (Result, error) {
-	result, err := c.performRequest(newRequest("DELETE", path, c.Token, nil))
-	if err != nil {
-		return Result{}, err
-	}
-	return result, nil
-}
-
 // Get uses the provided metadata to request an object from the API
 // and returns it along with metadata about the HTTP request, including
 // response time.
@@ -166,25 +157,6 @@ func (c *Client) Get(object Findable) (Result, error) {
 		return Result{}, err
 	}
 	return result, nil
-}
-
-func (c *Client) get(path string) (Result, error) {
-	result, err := c.performRequest(newRequest("GET", path, c.Token, nil))
-	if err != nil {
-		return Result{}, err
-	}
-	return result, nil
-}
-
-func (c *Client) deprecatedGet(path string) []byte {
-	request := newRequest("GET", path, c.Token, nil)
-	result, err := c.performRequest(request)
-	if err != nil {
-		Log.Fatal(err)
-	}
-	result.Log().Debug("Client.get")
-	Log.Debugf("%s\n", result.Payload)
-	return result.Payload
 }
 
 func (c *Client) post(object Findable) (Result, error) {
@@ -202,39 +174,6 @@ func (c *Client) post(object Findable) (Result, error) {
 	return result, nil
 }
 
-func (c *Client) deprecatedPost(object RESTObject) []byte {
-	serializedObject, err := Marshal(object)
-	if err != nil {
-		Log.Fatal(err)
-	}
-	request := newRequest("POST", object.Path(), c.Token, serializedObject)
-	result, err := c.performRequest(request)
-	if err != nil {
-		Log.Fatal(err)
-	}
-
-	result.Log().Debug()
-	Log.Debugf("%s\n", result.Payload)
-	return result.Payload
-}
-
-func (c *Client) deprecatedPut(object RESTObject) []byte {
-	serializedObject, err := object.Marshal()
-	if err != nil {
-		Log.Fatal(err)
-	}
-
-	request := newRequest("PUT", object.Path(), c.Token, serializedObject)
-	result, err := c.performRequest(request)
-	if err != nil {
-		Log.Fatal(err)
-	}
-
-	result.Log().Debug()
-	Log.Debugf("%s\n", result.Payload)
-	return result.Payload
-}
-
 func (c *Client) put(object Findable) (Result, error) {
 	serializedObject, err := Marshal(object)
 	if err != nil {
@@ -250,15 +189,20 @@ func (c *Client) put(object Findable) (Result, error) {
 	return result, nil
 }
 
-func (c *Client) deprecatedDelete(path string) []byte {
-	request := newRequest("DELETE", path, c.Token, nil)
-	result, err := c.performRequest(request)
+func (c *Client) _delete(path string) (Result, error) {
+	result, err := c.performRequest(newRequest("DELETE", path, c.Token, nil))
 	if err != nil {
-		Log.Fatal(err)
+		return Result{}, err
 	}
+	return result, nil
+}
 
-	result.Log().Debugf("response payload: %s\n", result.Payload)
-	return result.Payload
+func (c *Client) get(path string) (Result, error) {
+	result, err := c.performRequest(newRequest("GET", path, c.Token, nil))
+	if err != nil {
+		return Result{}, err
+	}
+	return result, nil
 }
 
 // insecureClient returns an HTTP client that will not verify the validity
@@ -307,4 +251,33 @@ func tokenFrom(payload []byte) Token {
 	var response map[string]string
 	json.Unmarshal(payload, &response)
 	return Token(response["access_token"])
+}
+
+// deprecated
+
+func (c *Client) deprecatedGet(path string) []byte {
+	request := newRequest("GET", path, c.Token, nil)
+	result, err := c.performRequest(request)
+	if err != nil {
+		Log.Fatal(err)
+	}
+	result.Log().Debug("Client.get")
+	Log.Debugf("%s\n", result.Payload)
+	return result.Payload
+}
+
+func (c *Client) deprecatedPost(object RESTObject) []byte {
+	serializedObject, err := Marshal(object)
+	if err != nil {
+		Log.Fatal(err)
+	}
+	request := newRequest("POST", object.Path(), c.Token, serializedObject)
+	result, err := c.performRequest(request)
+	if err != nil {
+		Log.Fatal(err)
+	}
+
+	result.Log().Debug()
+	Log.Debugf("%s\n", result.Payload)
+	return result.Payload
 }
