@@ -29,7 +29,7 @@ type Release struct {
 func (r Release) Index(client *Client, batchID int) ReleaseList {
 	desc := "Release.Index"
 	r.SubmissionBatchID = batchID
-	result, err := client.VerboseGet(r)
+	result, err := client.Get(r)
 	if err != nil {
 		result.Log().Error(desc)
 		return ReleaseList{}

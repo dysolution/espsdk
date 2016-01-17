@@ -90,7 +90,7 @@ type Contribution struct {
 func (c Contribution) Index(client *Client, batchID int) ContributionList {
 	desc := "Contribution.Index"
 	c.SubmissionBatchID = batchID
-	result, err := client.VerboseGet(c)
+	result, err := client.Get(c)
 	if err != nil {
 		Log.WithFields(result.stats()).Error(desc)
 		return ContributionList{}

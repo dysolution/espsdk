@@ -194,10 +194,10 @@ func (c *Client) GetFromObject(object RESTObject) DeserializedObject {
 	return Unmarshal(c.get(object.Path()))
 }
 
-// VerboseGet uses the provided metadata to request an object from the API
+// Get uses the provided metadata to request an object from the API
 // and returns it along with metadata about the HTTP request, including
 // response time.
-func (c *Client) VerboseGet(object Findable) (Result, error) {
+func (c *Client) Get(object Findable) (Result, error) {
 	result, err := c.verboseGet(object.Path())
 	if err != nil {
 		Log.WithFields(logrus.Fields{
