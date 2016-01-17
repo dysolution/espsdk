@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"time"
+
+	"github.com/Sirupsen/logrus"
 )
 
 // A Batch is a container for Contributions of the same type and
@@ -35,6 +37,23 @@ type Batch struct {
 	SubmittedContributionsCount      int        `json:"submitted_contributions_count,omitempty"`
 	UpdatedAt                        *time.Time `json:"updated_at,omitempty"`
 	UserID                           string     `json:"user_id,omitempty"`
+}
+
+// Index requests a list of all Batches for the account.
+func (b Batch) Index(client *Client) BatchList {
+	desc := "Batch.Index"
+	result, err := client.Get(b)
+	if err != nil {
+		Log.WithFields(result.stats()).Error(desc)
+		return BatchList{}
+	}
+	if result.StatusCode == 404 {
+		Log.WithFields(result.stats()).Error(desc)
+		return BatchList{}
+	}
+	Log.WithFields(result.stats()).Info(desc)
+	batchList, _ := BatchList{}.Unmarshal(result.Payload)
+	return batchList
 }
 
 // NameIsValid provides validation for a proposed SubmissionName.
@@ -110,13 +129,18 @@ type batchListMetadata struct {
 // Unmarshal attempts to deserialize the provided JSON payload
 // into the complete metadata returned by a request to the Index (GET all)
 // API endpoint.
-func (bl BatchList) Unmarshal(payload []byte) BatchList {
-	var dest BatchList
-	err := json.Unmarshal(payload, &dest)
-	if err != nil {
-		Log.Error(err)
+func (bl BatchList) Unmarshal(payload []byte) (BatchList, error) {
+	var batchList BatchList
+	if err := json.Unmarshal(payload, &batchList); err != nil {
+		var errResponse interface{}
+		json.Unmarshal(payload, &errResponse)
+		Log.WithFields(logrus.Fields{
+			"error":   err,
+			"payload": errResponse,
+		}).Error("BatchList.Unmarshal")
+		return BatchList{}, err
 	}
-	return dest
+	return batchList, nil
 }
 
 // Last returns the most recently-created batch.

@@ -107,15 +107,9 @@ func (c *Client) GetTermList(endpoint string) TermList {
 
 // DeleteLastBatch looks up the newest Batch and deletes it.
 func (c *Client) DeleteLastBatch() (Result, error) {
-	lastBatch := c.Index(Batches).Last()
+	lastBatch := Batch{}.Index(c).Last()
 	return c.verboseDelete(lastBatch.Path())
 
-}
-
-// Index requests a list of all Batches owned by the user.
-func (c *Client) Index(path string) *DeserializedObject {
-	var obj *DeserializedObject
-	return Deserialize(c.get(path), obj)
 }
 
 // Create uses the provided metadata to create and object
