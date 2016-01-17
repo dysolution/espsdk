@@ -148,7 +148,7 @@ func (c *Client) Delete(object Findable) (Result, error) {
 	if err != nil {
 		Log.WithFields(logrus.Fields{
 			"error": err,
-		}).Errorf("Client.VerboseDelete: %v", err)
+		}).Errorf("Client.Delete: %v", err)
 		return Result{}, err
 	}
 	return result, nil
@@ -202,7 +202,7 @@ func (c *Client) Get(object Findable) (Result, error) {
 	if err != nil {
 		Log.WithFields(logrus.Fields{
 			"error": err,
-		}).Errorf("Client.VerboseGet: %v", err)
+		}).Errorf("Client.Get: %v", err)
 		return Result{}, err
 	}
 	return result, nil
