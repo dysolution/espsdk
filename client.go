@@ -5,10 +5,8 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
-	"runtime"
 
 	"github.com/Sirupsen/logrus"
 )
@@ -80,35 +78,35 @@ func getToken(credentials *credentials) Token {
 // for the keywords provided.
 //
 // TODO: not implemented (keywords and personalities need a new struct type)
-func (c *Client) GetKeywords() []byte { return c.get(Keywords) }
+func (c *Client) GetKeywords() []byte { return c.deprecatedGet(Keywords) }
 
 // GetPersonalities requests suggestions from the Getty controlled vocabulary
 // for the famous personalities provided.
 //
 // TODO: not implemented (keywords and personalities need a new struct type)
-func (c *Client) GetPersonalities() []byte { return c.get(Personalities) }
+func (c *Client) GetPersonalities() []byte { return c.deprecatedGet(Personalities) }
 
 // GetControlledValues returns complete lists of values and descriptions for
 // fields with controlled vocabularies, grouped by submission type.
 //
 // TODO: not implemented (needs new struct type)
-func (c *Client) GetControlledValues() []byte { return c.get(ControlledValues) }
+func (c *Client) GetControlledValues() []byte { return c.deprecatedGet(ControlledValues) }
 
 // GetTranscoderMappings lists acceptable transcoder mapping values
 // for Getty and iStock video.
 func (c *Client) GetTranscoderMappings() TranscoderMappingList {
-	return TranscoderMappingList{}.Unmarshal(c.get(TranscoderMappings))
+	return TranscoderMappingList{}.Unmarshal(c.deprecatedGet(TranscoderMappings))
 }
 
 // GetTermList lists all possible values for the given controlled vocabulary.
 func (c *Client) GetTermList(endpoint string) TermList {
-	return TermList{}.Unmarshal(c.get(endpoint))
+	return TermList{}.Unmarshal(c.deprecatedGet(endpoint))
 }
 
 // DeleteLastBatch looks up the newest Batch and deletes it.
 func (c *Client) DeleteLastBatch() (Result, error) {
 	lastBatch := Batch{}.Index(c).Last()
-	return c.verboseDelete(lastBatch.Path())
+	return c._delete(lastBatch.Path())
 
 }
 
@@ -116,7 +114,7 @@ func (c *Client) DeleteLastBatch() (Result, error) {
 // and returns it along with metadata about the HTTP request, including
 // response time.
 func (c *Client) Create(object Findable) (Result, error) {
-	result, err := c.verbosePost(object)
+	result, err := c.post(object)
 	if err != nil {
 		Log.Errorf("Client.Create: %v", err)
 		return Result{}, err
@@ -127,7 +125,7 @@ func (c *Client) Create(object Findable) (Result, error) {
 // Update uses the provided metadata to update an object and returns
 // metadata about the HTTP request, including response time.
 func (c *Client) Update(object Findable) (Result, error) {
-	result, err := c.verbosePut(object)
+	result, err := c.put(object)
 	if err != nil {
 		Log.Errorf("Client.Update: %v", err)
 		return Result{}, err
@@ -138,7 +136,7 @@ func (c *Client) Update(object Findable) (Result, error) {
 // VerboseDelete destroys the object described by the provided object,
 // as long as enough data is provided to unambiguously identify it to the API.
 func (c *Client) Delete(object Findable) (Result, error) {
-	result, err := c.verboseDelete(object.Path())
+	result, err := c._delete(object.Path())
 	if err != nil {
 		Log.WithFields(logrus.Fields{
 			"error": err,
@@ -148,7 +146,7 @@ func (c *Client) Delete(object Findable) (Result, error) {
 	return result, nil
 }
 
-func (c *Client) verboseDelete(path string) (Result, error) {
+func (c *Client) _delete(path string) (Result, error) {
 	result, err := c.performRequest(newRequest("DELETE", path, c.Token, nil))
 	if err != nil {
 		return Result{}, err
@@ -156,43 +154,11 @@ func (c *Client) verboseDelete(path string) (Result, error) {
 	return result, nil
 }
 
-// DeleteFromObject destroys the object described by the provided object,
-// as long as enough data is provided to unambiguously identify it to the API.
-func (c *Client) DeleteFromObject(object RESTObject) DeserializedObject {
-	bytes := c._delete(object.Path())
-	if len(bytes) > 0 {
-		return Unmarshal(bytes)
-	}
-	// successful deletion usually returns a 204 without a payload/body
-	return DeserializedObject{}
-}
-
-// DeprecatedGet requests the metadata for the object at the provided path.
-func (c *Client) DeprecatedGet(path string) DeserializedObject {
-	pc, _, _, _ := runtime.Caller(0)
-	callerPC, _, _, _ := runtime.Caller(1)
-	caller := runtime.FuncForPC(callerPC).Name()
-	myself := runtime.FuncForPC(pc).Name()
-	logPrefix := fmt.Sprintf("%v %v)", caller, myself)
-	result, err := c.verboseGet(path)
-	if err != nil {
-		result.Log().Error("Client.Get")
-	}
-	Log.WithFields(result.stats()).Info(logPrefix)
-	return Unmarshal(result.VerboseResult.Payload)
-}
-
-// GetFromObject requests the metadata for the provided object, as long as
-// enough data is provided to unambiguously identify it to the API.
-func (c *Client) GetFromObject(object RESTObject) DeserializedObject {
-	return Unmarshal(c.get(object.Path()))
-}
-
 // Get uses the provided metadata to request an object from the API
 // and returns it along with metadata about the HTTP request, including
 // response time.
 func (c *Client) Get(object Findable) (Result, error) {
-	result, err := c.verboseGet(object.Path())
+	result, err := c.get(object.Path())
 	if err != nil {
 		Log.WithFields(logrus.Fields{
 			"error": err,
@@ -202,7 +168,7 @@ func (c *Client) Get(object Findable) (Result, error) {
 	return result, nil
 }
 
-func (c *Client) verboseGet(path string) (Result, error) {
+func (c *Client) get(path string) (Result, error) {
 	result, err := c.performRequest(newRequest("GET", path, c.Token, nil))
 	if err != nil {
 		return Result{}, err
@@ -210,7 +176,7 @@ func (c *Client) verboseGet(path string) (Result, error) {
 	return result, nil
 }
 
-func (c *Client) get(path string) []byte {
+func (c *Client) deprecatedGet(path string) []byte {
 	request := newRequest("GET", path, c.Token, nil)
 	result, err := c.performRequest(request)
 	if err != nil {
@@ -221,7 +187,7 @@ func (c *Client) get(path string) []byte {
 	return result.Payload
 }
 
-func (c *Client) verbosePost(object Findable) (Result, error) {
+func (c *Client) post(object Findable) (Result, error) {
 	serializedObject, err := Marshal(object)
 	if err != nil {
 		return Result{}, err
@@ -236,7 +202,7 @@ func (c *Client) verbosePost(object Findable) (Result, error) {
 	return result, nil
 }
 
-func (c *Client) post(object RESTObject) []byte {
+func (c *Client) deprecatedPost(object RESTObject) []byte {
 	serializedObject, err := Marshal(object)
 	if err != nil {
 		Log.Fatal(err)
@@ -252,7 +218,7 @@ func (c *Client) post(object RESTObject) []byte {
 	return result.Payload
 }
 
-func (c *Client) put(object RESTObject) []byte {
+func (c *Client) deprecatedPut(object RESTObject) []byte {
 	serializedObject, err := object.Marshal()
 	if err != nil {
 		Log.Fatal(err)
@@ -269,7 +235,7 @@ func (c *Client) put(object RESTObject) []byte {
 	return result.Payload
 }
 
-func (c *Client) verbosePut(object Findable) (Result, error) {
+func (c *Client) put(object Findable) (Result, error) {
 	serializedObject, err := Marshal(object)
 	if err != nil {
 		Log.Errorf("Client.verbosePut: %v", err)
@@ -284,7 +250,7 @@ func (c *Client) verbosePut(object Findable) (Result, error) {
 	return result, nil
 }
 
-func (c *Client) _delete(path string) []byte {
+func (c *Client) deprecatedDelete(path string) []byte {
 	request := newRequest("DELETE", path, c.Token, nil)
 	result, err := c.performRequest(request)
 	if err != nil {
