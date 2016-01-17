@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/Sirupsen/logrus"
+	"github.com/dysolution/sleepwalker"
 )
 
 // A Contribution is the metadata that represents a media asset from
@@ -87,19 +88,19 @@ type Contribution struct {
 
 // Index requests a list of all Contributions associated with the specified
 // Submission Batch.
-func (c Contribution) Index(client *Client, batchID int) ContributionList {
+func (c Contribution) Index(client sleepwalker.RESTClient, batchID int) ContributionList {
 	desc := "Contribution.Index"
 	c.SubmissionBatchID = batchID
 	result, err := client.Get(c)
 	if err != nil {
-		Log.WithFields(result.stats()).Error(desc)
+		Log.Error(desc)
 		return ContributionList{}
 	}
 	if result.StatusCode == 404 {
-		Log.WithFields(result.stats()).Error(desc)
+		Log.Error(desc)
 		return ContributionList{}
 	}
-	Log.WithFields(result.stats()).Info(desc)
+	Log.Info(desc)
 	contributionList, _ := ContributionList{}.Unmarshal(result.Payload)
 	return contributionList
 }
@@ -116,7 +117,7 @@ func (c Contribution) Path() string {
 }
 
 // Marshal serializes the Contribution into a byte slice.
-func (c Contribution) Marshal() ([]byte, error) { return indentedJSON(c) }
+func (c Contribution) Marshal() ([]byte, error) { return sleepwalker.IndentedJSON(c) }
 
 // Unmarshal attempts to deserialize the provided JSON payload into a
 // Contribution object.
@@ -137,7 +138,7 @@ type ContributionUpdate struct {
 }
 
 // Marshal serializes a ContributionUpdate into a byte slice.
-func (c ContributionUpdate) Marshal() ([]byte, error) { return indentedJSON(c) }
+func (c ContributionUpdate) Marshal() ([]byte, error) { return sleepwalker.IndentedJSON(c) }
 
 // Path returns the path of the contribution being updated.
 func (c ContributionUpdate) Path() string { return c.Contribution.Path() }

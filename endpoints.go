@@ -14,7 +14,7 @@ const (
 	Compositions       = "/submission/v1/people_metadata/compositions"
 	Expressions        = "/submission/v1/people_metadata/expressions"
 	NumberOfPeople     = "/submission/v1/people_metadata/number_of_people"
-	oauthEndpoint      = "https://api.gettyimages.com/oauth2/token"
+	OAuthEndpoint      = "https://api.gettyimages.com/oauth2/token"
 )
 
 // BatchPath returns the canonical path for a(ll) Submission Batch(es).

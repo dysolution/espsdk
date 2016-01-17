@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/Sirupsen/logrus"
+	"github.com/dysolution/sleepwalker"
 )
 
 // A Release is the metadata that represents a legal agreement for
@@ -26,7 +27,7 @@ type Release struct {
 
 // Index requests a list of all Releases associated with the specified
 // Submission Batch.
-func (r Release) Index(client *Client, batchID int) ReleaseList {
+func (r Release) Index(client sleepwalker.RESTClient, batchID int) ReleaseList {
 	desc := "Release.Index"
 	r.SubmissionBatchID = batchID
 	result, err := client.Get(r)
@@ -58,7 +59,7 @@ func (r Release) Path() string {
 func (r Release) ValidTypes() []string { return []string{"Model", "Property"} }
 
 // Marshal serializes the Release into a byte slice.
-func (r Release) Marshal() ([]byte, error) { return indentedJSON(r) }
+func (r Release) Marshal() ([]byte, error) { return sleepwalker.IndentedJSON(r) }
 
 // Unmarshal attempts to deserialize the provided JSON payload into a
 // Release object.
@@ -76,7 +77,7 @@ func (r Release) Unmarshal(payload []byte) (*Release, error) {
 type ReleaseList []Release
 
 // Marshal serializes a ReleaseList into a byte slice.
-func (rl ReleaseList) Marshal() ([]byte, error) { return indentedJSON(rl) }
+func (rl ReleaseList) Marshal() ([]byte, error) { return sleepwalker.IndentedJSON(rl) }
 
 // Unmarshal attempts to deserialize the provided JSON payload
 // into the complete metadata returned by a request to the Index (GET all)

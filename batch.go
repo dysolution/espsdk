@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/Sirupsen/logrus"
+	"github.com/dysolution/sleepwalker"
 )
 
 // A Batch is a container for Contributions of the same type and
@@ -40,18 +41,18 @@ type Batch struct {
 }
 
 // Index requests a list of all Batches for the account.
-func (b Batch) Index(client *Client) BatchList {
+func (b Batch) Index(client sleepwalker.RESTClient) BatchList {
 	desc := "Batch.Index"
 	result, err := client.Get(b)
 	if err != nil {
-		Log.WithFields(result.stats()).Error(desc)
+		Log.Error(desc)
 		return BatchList{}
 	}
 	if result.StatusCode == 404 {
-		Log.WithFields(result.stats()).Error(desc)
+		Log.Error(desc)
 		return BatchList{}
 	}
-	Log.WithFields(result.stats()).Info(desc)
+	Log.Info(desc)
 	batchList, _ := BatchList{}.Unmarshal(result.Payload)
 	return batchList
 }
@@ -83,7 +84,7 @@ func (b Batch) Path() string {
 }
 
 // Marshal serializes the Batch into a byte slice.
-func (b Batch) Marshal() ([]byte, error) { return indentedJSON(b) }
+func (b Batch) Marshal() ([]byte, error) { return sleepwalker.IndentedJSON(b) }
 
 // Unmarshal serializes the Batch into a byte slice.
 func (b Batch) Unmarshal(payload []byte) (*Batch, error) {
@@ -105,7 +106,7 @@ type BatchUpdate struct {
 func (bu BatchUpdate) Path() string { return bu.Batch.Path() }
 
 // Marshal serializes a BatchUpdate into a byte slice.
-func (bu BatchUpdate) Marshal() ([]byte, error) { return indentedJSON(bu) }
+func (bu BatchUpdate) Marshal() ([]byte, error) { return sleepwalker.IndentedJSON(bu) }
 
 var batchTypeIsValid = map[string]bool{
 	"getty_creative_video":  true,
