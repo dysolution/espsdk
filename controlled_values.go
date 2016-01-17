@@ -2,6 +2,8 @@ package espsdk
 
 import (
 	"encoding/json"
+
+	"github.com/dysolution/sleepwalker"
 )
 
 // A TermItem is an expression of a concept that has a canonical string to
@@ -18,7 +20,7 @@ type TermItem struct {
 type TermList []TermItem
 
 // Marshal serializes a TermList into a byte slice of indented JSON.
-func (m TermList) Marshal() ([]byte, error) { return indentedJSON(m) }
+func (m TermList) Marshal() ([]byte, error) { return sleepwalker.IndentedJSON(m) }
 
 // Unmarshal attempts to deserialize the provided JSON payload into a
 // representation of people metadata.
