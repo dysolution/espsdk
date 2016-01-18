@@ -84,7 +84,9 @@ func (b Batch) Path() string {
 }
 
 // Marshal serializes the Batch into a byte slice.
-func (b Batch) Marshal() ([]byte, error) { return sleepwalker.IndentedJSON(b) }
+func (b Batch) Marshal() ([]byte, error) {
+	return sleepwalker.Marshal(b)
+}
 
 // Unmarshal serializes the Batch into a byte slice.
 func (b Batch) Unmarshal(payload []byte) (*Batch, error) {
@@ -106,7 +108,9 @@ type BatchUpdate struct {
 func (bu BatchUpdate) Path() string { return bu.Batch.Path() }
 
 // Marshal serializes a BatchUpdate into a byte slice.
-func (bu BatchUpdate) Marshal() ([]byte, error) { return sleepwalker.IndentedJSON(bu) }
+func (bu BatchUpdate) Marshal() ([]byte, error) {
+	return sleepwalker.Marshal(bu)
+}
 
 var batchTypeIsValid = map[string]bool{
 	"getty_creative_video":  true,

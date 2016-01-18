@@ -59,7 +59,7 @@ func (r Release) Path() string {
 func (r Release) ValidTypes() []string { return []string{"Model", "Property"} }
 
 // Marshal serializes the Release into a byte slice.
-func (r Release) Marshal() ([]byte, error) { return sleepwalker.IndentedJSON(r) }
+func (r Release) Marshal() ([]byte, error) { return sleepwalker.Marshal(r) }
 
 // Unmarshal attempts to deserialize the provided JSON payload into a
 // Release object.
@@ -77,7 +77,9 @@ func (r Release) Unmarshal(payload []byte) (*Release, error) {
 type ReleaseList []Release
 
 // Marshal serializes a ReleaseList into a byte slice.
-func (rl ReleaseList) Marshal() ([]byte, error) { return sleepwalker.IndentedJSON(rl) }
+func (rl ReleaseList) Marshal() ([]byte, error) {
+	return sleepwalker.Marshal(rl)
+}
 
 // Unmarshal attempts to deserialize the provided JSON payload
 // into the complete metadata returned by a request to the Index (GET all)

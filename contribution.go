@@ -117,7 +117,9 @@ func (c Contribution) Path() string {
 }
 
 // Marshal serializes the Contribution into a byte slice.
-func (c Contribution) Marshal() ([]byte, error) { return sleepwalker.IndentedJSON(c) }
+func (c Contribution) Marshal() ([]byte, error) {
+	return sleepwalker.Marshal(c)
+}
 
 // Unmarshal attempts to deserialize the provided JSON payload into a
 // Contribution object.
@@ -138,7 +140,9 @@ type ContributionUpdate struct {
 }
 
 // Marshal serializes a ContributionUpdate into a byte slice.
-func (c ContributionUpdate) Marshal() ([]byte, error) { return sleepwalker.IndentedJSON(c) }
+func (c ContributionUpdate) Marshal() ([]byte, error) {
+	return sleepwalker.Marshal(c)
+}
 
 // Path returns the path of the contribution being updated.
 func (c ContributionUpdate) Path() string { return c.Contribution.Path() }

@@ -21,8 +21,10 @@ type TermItem struct {
 // A TermList is an array (slice) of terms (TermItems).
 type TermList []TermItem
 
-// Marshal serializes a TermList into a byte slice of indented JSON.
-func (m TermList) Marshal() ([]byte, error) { return sleepwalker.IndentedJSON(m) }
+// Marshal serializes a TermList into readable JSON.
+func (m TermList) Marshal() ([]byte, error) {
+	return sleepwalker.Marshal(m)
+}
 
 // Unmarshal attempts to deserialize the provided JSON payload into a
 // representation of people metadata.
