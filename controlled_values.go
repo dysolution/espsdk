@@ -2,7 +2,9 @@ package espsdk
 
 import (
 	"encoding/json"
+	"fmt"
 
+	"github.com/Sirupsen/logrus"
 	"github.com/dysolution/sleepwalker"
 )
 
@@ -27,7 +29,9 @@ func (m TermList) Marshal() ([]byte, error) { return sleepwalker.IndentedJSON(m)
 func (m TermList) Unmarshal(payload []byte) TermList {
 	var items TermList
 	if err := json.Unmarshal(payload, &items); err != nil {
-		Log.Fatal(err)
+		Log.WithFields(logrus.Fields{
+			"items": fmt.Sprintf("%v", items),
+		}).Error(err)
 	}
 	return items
 }

@@ -51,7 +51,7 @@ func (c Client) GetTranscoderMappings() TranscoderMappingList {
 
 // GetTermList lists all possible values for the given controlled vocabulary.
 func (c Client) GetTermList(endpoint string) TermList {
-	return TermList{}.Unmarshal([]byte("not implemented"))
+	return TermList{}
 }
 
 // DeleteLastBatch looks up the newest Batch and deletes it.

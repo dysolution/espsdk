@@ -23,7 +23,7 @@ type TranscoderMappingList struct {
 func (tml TranscoderMappingList) Unmarshal(payload []byte) TranscoderMappingList {
 	var dest TranscoderMappingList
 	if err := json.Unmarshal(payload, &dest); err != nil {
-		panic(err)
+		Log.Error(err)
 	}
 	return dest
 }
