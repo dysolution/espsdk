@@ -1,6 +1,10 @@
 package espsdk
 
-import "github.com/dysolution/sleepwalker"
+import (
+	"errors"
+
+	"github.com/dysolution/sleepwalker"
+)
 
 type Client struct {
 	sleepwalker.Client
@@ -8,6 +12,10 @@ type Client struct {
 
 type Result struct {
 	sleepwalker.Result
+}
+
+func getClient(key, secret, username, password string) Client {
+	return Client{sleepwalker.GetClient(key, secret, username, password, OAuthEndpoint, ESPAPIRoot, Log)}
 }
 
 // GetKeywords requests suggestions from the Getty controlled vocabulary
@@ -26,7 +34,14 @@ func (c Client) GetPersonalities() []byte { return []byte("not implemented") }
 // fields with controlled vocabularies, grouped by submission type.
 //
 // TODO: not implemented (needs new struct type)
-func (c Client) GetControlledValues() []byte { return []byte("not implemented") }
+func (c Client) GetControlledValues() ([]byte, error) {
+	Log.Info("GetControlledValues")
+	result, err := c.GetPath(ControlledValues)
+	if err != nil {
+		return []byte{}, errors.New("unable to get controlled values")
+	}
+	return result.Payload, nil
+}
 
 // GetTranscoderMappings lists acceptable transcoder mapping values
 // for Getty and iStock video.
