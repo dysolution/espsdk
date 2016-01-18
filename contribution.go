@@ -93,14 +93,14 @@ func (c Contribution) Index(client sleepwalker.RESTClient, batchID int) Contribu
 	c.SubmissionBatchID = batchID
 	result, err := client.Get(c)
 	if err != nil {
-		Log.Error(desc)
+		result.Log().Error(desc)
 		return ContributionList{}
 	}
 	if result.StatusCode == 404 {
-		Log.Error(desc)
+		result.Log().Error(desc)
 		return ContributionList{}
 	}
-	Log.Info(desc)
+	result.Log().Info(desc)
 	contributionList, _ := ContributionList{}.Unmarshal(result.Payload)
 	return contributionList
 }

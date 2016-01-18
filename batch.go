@@ -45,14 +45,14 @@ func (b Batch) Index(client sleepwalker.RESTClient) BatchList {
 	desc := "Batch.Index"
 	result, err := client.Get(b)
 	if err != nil {
-		Log.Error(desc)
+		result.Log().Error(desc)
 		return BatchList{}
 	}
 	if result.StatusCode == 404 {
-		Log.Error(desc)
+		result.Log().Error(desc)
 		return BatchList{}
 	}
-	Log.Info(desc)
+	result.Log().Info(desc)
 	batchList, _ := BatchList{}.Unmarshal(result.Payload)
 	return batchList
 }
