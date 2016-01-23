@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/dysolution/sleepwalker"
 )
 
@@ -31,7 +30,7 @@ func (m TermList) Marshal() ([]byte, error) {
 func (m TermList) Unmarshal(payload []byte) TermList {
 	var items TermList
 	if err := json.Unmarshal(payload, &items); err != nil {
-		Log.WithFields(logrus.Fields{
+		Log.WithFields(map[string]interface{}{
 			"items": fmt.Sprintf("%v", items),
 		}).Error(err)
 	}

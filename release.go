@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/dysolution/sleepwalker"
 )
 
@@ -89,7 +88,7 @@ func (rl ReleaseList) Unmarshal(payload []byte) (ReleaseList, error) {
 	if err := json.Unmarshal(payload, &releaseList); err != nil {
 		var errResponse interface{}
 		json.Unmarshal(payload, &errResponse)
-		Log.WithFields(logrus.Fields{
+		Log.WithFields(map[string]interface{}{
 			"error":   err,
 			"payload": errResponse,
 		}).Error("ReleaseList.Unmarshal")

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/dysolution/sleepwalker"
 )
 
@@ -158,7 +157,7 @@ func (cl ContributionList) Unmarshal(payload []byte) (ContributionList, error) {
 	if err := json.Unmarshal(payload, &contributionList); err != nil {
 		var errResponse interface{}
 		json.Unmarshal(payload, &errResponse)
-		Log.WithFields(logrus.Fields{
+		Log.WithFields(map[string]interface{}{
 			"error":   err,
 			"payload": errResponse,
 		}).Error("ContributionList.Unmarshal")
