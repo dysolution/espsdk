@@ -7,7 +7,7 @@ import (
 )
 
 type Client struct {
-	sleepwalker.Client
+	*sleepwalker.Client
 }
 
 type Result struct {
