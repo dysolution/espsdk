@@ -11,78 +11,95 @@ import (
 // A Contribution is the metadata that represents a media asset from
 // a contributor.
 type Contribution struct {
-	AdditionalFacialExpressions string            `json:"additional_facial_expressions,omitempty"`
-	AlternateID                 string            `json:"alternate_id,omitempty"`
-	CallForImage                bool              `json:"call_for_image,omitempty"`
-	CameraShotDate              string            `json:"camera_shot_date,omitempty"`
-	Caption                     string            `json:"caption,omitempty"`
-	City                        string            `json:"city,omitempty"`
-	CollectionCode              string            `json:"collection_code,omitempty"`
-	ContentProviderName         string            `json:"content_provider_name,omitempty"`
-	ContentProviderTitle        string            `json:"content_provider_title,omitempty"`
-	ContentWarnings             string            `json:"content_warnings,omitempty"`
-	Copyright                   string            `json:"copyright,omitempty"`
-	CountryOfShoot              string            `json:"country_of_shoot,omitempty"`
-	CreatedAt                   *time.Time        `json:"created_at,omitempty"`
-	CreatedDate                 *time.Time        `json:"created_date,omitempty"`
-	CreditLine                  string            `json:"credit_line,omitempty"`
-	Errors                      map[string]string `json:"errors,omitempty"`
-	EventID                     string            `json:"event_id,omitempty"`
-	ExclusionRoutes             string            `json:"exclusion_routes,omitempty"`
-	ExclusiveCoverage           bool              `json:"exclusive_coverage,omitempty"`
-	ExternalFileLocation        string            `json:"external_file_location,omitempty"`
-	ExtractedMetadataPresent    bool              `json:"extracted_metadata_present,omitempty"`
-	FacialExpressions           string            `json:"facial_expressions,omitempty"`
-	FileName                    string            `json:"file_name,omitempty"`
-	FilePath                    string            `json:"file_path,omitempty"`
-	FileUploaded                bool              `json:"file_uploaded,omitempty"`
-	FinalBucket                 string            `json:"final_bucket,omitempty"`
-	Headline                    string            `json:"headline,omitempty"`
-	ID                          int               `json:"id,omitempty"`
-	ImageHeight                 int               `json:"image_height,omitempty"`
-	ImageWidth                  int               `json:"image_width,omitempty"`
-	InactiveDate                string            `json:"inactive_date,omitempty"`
-	InclusionRoutes             string            `json:"inclusion_routes,omitempty"`
-	IPTCCaptionWriter           string            `json:"iptc_caption_writer,omitempty"`
-	IPTCCategory                string            `json:"iptc_category,omitempty"`
-	IPTCSubjects                []string          `json:"iptc_subjects,omitempty"`
-	Keywords                    []string          `json:"keywords,omitempty"`
-	MasterID                    string            `json:"master_id,omitempty"`
-	MediaType                   string            `json:"media_type,omitempty"`
-	MetadataExtractionStartedAt *time.Time        `json:"metadata_extraction_started_at,omitempty"`
-	MetadataExtractionTimeout   bool              `json:"metadata_extraction_timeout,omitempty"`
-	MimeType                    string            `json:"mime_type,omitempty"`
-	NumberOfPeople              string            `json:"string,omitempty"`
-	PaidAssignment              bool              `json:"paid_assignment,omitempty"`
-	PaidAssignmentID            string            `json:"paid_assignment_id,omitempty"`
-	ParentSource                string            `json:"parent_source,omitempty"`
-	PersonCompositions          string            `json:"person_compositions,omitempty"`
-	Personalities               []string          `json:"personalities,omitempty"`
-	PicscoutSuggestions         string            `json:"picscout_suggestions,omitempty"`
-	ProvinceState               string            `json:"province_state,omitempty"`
-	PublicistApprovalRequired   bool              `json:"publicist_approval_required,omitempty"`
-	PublishedAt                 *time.Time        `json:"published_at,omitempty"`
-	PulledReason                string            `json:"pulled_reason,omitempty"`
-	Rank                        int               `json:"rank,omitempty"`
-	ReadyForSale                bool              `json:"ready_for_sale,omitempty"`
-	RecordedDate                string            `json:"recorded_date,omitempty"`
-	RiskCategory                string            `json:"risk_category,omitempty"`
-	ShotSpeed                   string            `json:"shot_speed,omitempty"`
-	SiteDestination             []string          `json:"site_destination,omitempty"`
-	Source                      string            `json:"source,omitempty"`
-	SpecialInstructions         string            `json:"special_instructions,omitempty"`
-	Status                      string            `json:"status,omitempty"`
-	StorageURL                  string            `json:"storage_url,omitempty"`
-	SubmissionBatchID           int               `json:"submission_batch_id,omitempty"`
-	Submittable                 bool              `json:"submittable,omitempty"`
-	SubmittedAt                 *time.Time        `json:"submitted_at,omitempty"`
-	SubmittedToReviewAt         string            `json:"submitted_to_review_at,omitempty"`
-	ThumbnailURL                string            `json:"thumbnail_url,omitempty"`
-	UpdatedAt                   *time.Time        `json:"updated_at,omitempty"`
-	UploadBucket                string            `json:"upload_bucket,omitempty"`
-	UploadID                    string            `json:"upload_id,omitempty"`
-	UserMetadataValid           bool              `json:"user_metadata_valid,omitempty"`
-	VisualColor                 string            `json:"visual_color,omitempty"`
+	AdditionalFacialExpressions []map[string]interface{} `json:"additional_facial_expressions,omitempty"`
+	SubmissionBatchID           int                      `json:"submission_batch_id,omitempty"`
+	ID                          int                      `json:"id,omitempty"`
+	AlternateID                 string                   `json:"alternate_id,omitempty"`
+	CallForImage                bool                     `json:"call_for_image,omitempty"`
+	CameraShotDate              string                   `json:"camera_shot_date,omitempty"`
+	Caption                     string                   `json:"caption,omitempty"`
+	City                        string                   `json:"city,omitempty"`
+	CollectionCode              string                   `json:"collection_code,omitempty"`
+	ContentProviderName         string                   `json:"content_provider_name,omitempty"`
+	ContentProviderTitle        string                   `json:"content_provider_title,omitempty"`
+	ContentWarnings             string                   `json:"content_warnings,omitempty"`
+	Copyright                   string                   `json:"copyright,omitempty"`
+	CountryOfShoot              string                   `json:"country_of_shoot,omitempty"`
+	CreatedAt                   *time.Time               `json:"created_at,omitempty"`
+	CreatedDate                 *time.Time               `json:"created_date,omitempty"`
+	CreditLine                  string                   `json:"credit_line,omitempty"`
+	// Errors                      []FieldError             `json:"errors,omitempty"`
+	EventID                     string              `json:"event_id,omitempty"`
+	ExclusionRoutes             string              `json:"exclusion_routes,omitempty"`
+	ExclusiveCoverage           bool                `json:"exclusive_coverage,omitempty"`
+	ExternalFileLocation        string              `json:"external_file_location,omitempty"`
+	ExtractedMetadataPresent    bool                `json:"extracted_metadata_present,omitempty"`
+	FacialExpressions           string              `json:"facial_expressions,omitempty"`
+	FileName                    string              `json:"file_name,omitempty"`
+	FilePath                    string              `json:"file_path,omitempty"`
+	FileUploaded                bool                `json:"file_uploaded,omitempty"`
+	FinalBucket                 string              `json:"final_bucket,omitempty"`
+	Headline                    string              `json:"headline,omitempty"`
+	ImageHeight                 int                 `json:"image_height,omitempty"`
+	ImageWidth                  int                 `json:"image_width,omitempty"`
+	InactiveDate                string              `json:"inactive_date,omitempty"`
+	InclusionRoutes             string              `json:"inclusion_routes,omitempty"`
+	IPTCCaptionWriter           string              `json:"iptc_caption_writer,omitempty"`
+	IPTCCategory                string              `json:"iptc_category,omitempty"`
+	IPTCSubjects                []string            `json:"iptc_subjects,omitempty"`
+	Keywords                    []string            `json:"keywords,omitempty"`
+	MasterID                    string              `json:"master_id,omitempty"`
+	MediaType                   string              `json:"media_type,omitempty"`
+	MetadataExtractionStartedAt *time.Time          `json:"metadata_extraction_started_at,omitempty"`
+	MetadataExtractionTimeout   bool                `json:"metadata_extraction_timeout,omitempty"`
+	MimeType                    string              `json:"mime_type,omitempty"`
+	NumberOfPeople              []map[string]string `json:"string,omitempty"`
+	PaidAssignment              bool                `json:"paid_assignment,omitempty"`
+	PaidAssignmentID            string              `json:"paid_assignment_id,omitempty"`
+	ParentSource                string              `json:"parent_source,omitempty"`
+	PersonCompositions          []string            `json:"person_compositions,omitempty"`
+	Personalities               []string            `json:"personalities,omitempty"`
+	// PicscoutSuggestions         []interface{}            `json:"picscout_suggestions,omitempty"`
+	ProvinceState             string     `json:"province_state,omitempty"`
+	PublicistApprovalRequired bool       `json:"publicist_approval_required,omitempty"`
+	PublishedAt               *time.Time `json:"published_at,omitempty"`
+	PulledReason              string     `json:"pulled_reason,omitempty"`
+	Rank                      int        `json:"rank,omitempty"`
+	ReadyForSale              bool       `json:"ready_for_sale,omitempty"`
+	RecordedDate              string     `json:"recorded_date,omitempty"`
+	RiskCategory              string     `json:"risk_category,omitempty"`
+	ShotSpeed                 string     `json:"shot_speed,omitempty"`
+	SiteDestination           []string   `json:"site_destination,omitempty"`
+	Source                    string     `json:"source,omitempty"`
+	SpecialInstructions       string     `json:"special_instructions,omitempty"`
+	Status                    string     `json:"status,omitempty"`
+	StorageURL                string     `json:"storage_url,omitempty"`
+	Submittable               bool       `json:"submittable,omitempty"`
+	SubmittedAt               *time.Time `json:"submitted_at,omitempty"`
+	SubmittedToReviewAt       string     `json:"submitted_to_review_at,omitempty"`
+	ThumbnailURL              string     `json:"thumbnail_url,omitempty"`
+	UpdatedAt                 *time.Time `json:"updated_at,omitempty"`
+	UploadBucket              string     `json:"upload_bucket,omitempty"`
+	UploadID                  string     `json:"upload_id,omitempty"`
+	UserMetadataValid         bool       `json:"user_metadata_valid,omitempty"`
+	VisualColor               string     `json:"visual_color,omitempty"`
+}
+
+// Submit requests that the contribution be submitted for review and
+// publication.
+func (c Contribution) Submit(client sleepwalker.RESTClient) (sleepwalker.Result, error) {
+	desc := "Contribution.Submit"
+	result, err := client.Put(c, c.Path()+"/submit")
+	if err != nil {
+		result.Log().Error(desc)
+		return result, err
+	}
+	if result.StatusCode == 404 {
+		result.Log().Error(desc)
+		return result, err
+	}
+	result.Log().Info(desc)
+	return result, nil
 }
 
 // Index requests a list of all Contributions associated with the specified
@@ -157,9 +174,10 @@ func (cl ContributionList) Unmarshal(payload []byte) (ContributionList, error) {
 	if err := json.Unmarshal(payload, &contributionList); err != nil {
 		var errResponse interface{}
 		json.Unmarshal(payload, &errResponse)
+		output, _ := json.MarshalIndent(errResponse, "", "    ")
 		Log.WithFields(map[string]interface{}{
 			"error":   err,
-			"payload": errResponse,
+			"payload": string(output),
 		}).Error("ContributionList.Unmarshal")
 		return ContributionList{}, err
 	}
