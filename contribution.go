@@ -12,8 +12,6 @@ import (
 // a contributor.
 type Contribution struct {
 	AdditionalFacialExpressions []map[string]interface{} `json:"additional_facial_expressions,omitempty"`
-	SubmissionBatchID           int                      `json:"submission_batch_id,omitempty"`
-	ID                          int                      `json:"id,omitempty"`
 	AlternateID                 string                   `json:"alternate_id,omitempty"`
 	CallForImage                bool                     `json:"call_for_image,omitempty"`
 	CameraShotDate              string                   `json:"camera_shot_date,omitempty"`
@@ -28,61 +26,63 @@ type Contribution struct {
 	CreatedAt                   *time.Time               `json:"created_at,omitempty"`
 	CreatedDate                 *time.Time               `json:"created_date,omitempty"`
 	CreditLine                  string                   `json:"credit_line,omitempty"`
-	// Errors                      []FieldError             `json:"errors,omitempty"`
-	EventID                     string              `json:"event_id,omitempty"`
-	ExclusionRoutes             string              `json:"exclusion_routes,omitempty"`
-	ExclusiveCoverage           bool                `json:"exclusive_coverage,omitempty"`
-	ExternalFileLocation        string              `json:"external_file_location,omitempty"`
-	ExtractedMetadataPresent    bool                `json:"extracted_metadata_present,omitempty"`
-	FacialExpressions           string              `json:"facial_expressions,omitempty"`
-	FileName                    string              `json:"file_name,omitempty"`
-	FilePath                    string              `json:"file_path,omitempty"`
-	FileUploaded                bool                `json:"file_uploaded,omitempty"`
-	FinalBucket                 string              `json:"final_bucket,omitempty"`
-	Headline                    string              `json:"headline,omitempty"`
-	ImageHeight                 int                 `json:"image_height,omitempty"`
-	ImageWidth                  int                 `json:"image_width,omitempty"`
-	InactiveDate                string              `json:"inactive_date,omitempty"`
-	InclusionRoutes             string              `json:"inclusion_routes,omitempty"`
-	IPTCCaptionWriter           string              `json:"iptc_caption_writer,omitempty"`
-	IPTCCategory                string              `json:"iptc_category,omitempty"`
-	IPTCSubjects                []string            `json:"iptc_subjects,omitempty"`
-	Keywords                    []string            `json:"keywords,omitempty"`
-	MasterID                    string              `json:"master_id,omitempty"`
-	MediaType                   string              `json:"media_type,omitempty"`
-	MetadataExtractionStartedAt *time.Time          `json:"metadata_extraction_started_at,omitempty"`
-	MetadataExtractionTimeout   bool                `json:"metadata_extraction_timeout,omitempty"`
-	MimeType                    string              `json:"mime_type,omitempty"`
-	NumberOfPeople              []map[string]string `json:"string,omitempty"`
-	PaidAssignment              bool                `json:"paid_assignment,omitempty"`
-	PaidAssignmentID            string              `json:"paid_assignment_id,omitempty"`
-	ParentSource                string              `json:"parent_source,omitempty"`
-	PersonCompositions          []string            `json:"person_compositions,omitempty"`
-	Personalities               []string            `json:"personalities,omitempty"`
-	// PicscoutSuggestions         []interface{}            `json:"picscout_suggestions,omitempty"`
-	ProvinceState             string     `json:"province_state,omitempty"`
-	PublicistApprovalRequired bool       `json:"publicist_approval_required,omitempty"`
-	PublishedAt               *time.Time `json:"published_at,omitempty"`
-	PulledReason              string     `json:"pulled_reason,omitempty"`
-	Rank                      int        `json:"rank,omitempty"`
-	ReadyForSale              bool       `json:"ready_for_sale,omitempty"`
-	RecordedDate              string     `json:"recorded_date,omitempty"`
-	RiskCategory              string     `json:"risk_category,omitempty"`
-	ShotSpeed                 string     `json:"shot_speed,omitempty"`
-	SiteDestination           []string   `json:"site_destination,omitempty"`
-	Source                    string     `json:"source,omitempty"`
-	SpecialInstructions       string     `json:"special_instructions,omitempty"`
-	Status                    string     `json:"status,omitempty"`
-	StorageURL                string     `json:"storage_url,omitempty"`
-	Submittable               bool       `json:"submittable,omitempty"`
-	SubmittedAt               *time.Time `json:"submitted_at,omitempty"`
-	SubmittedToReviewAt       string     `json:"submitted_to_review_at,omitempty"`
-	ThumbnailURL              string     `json:"thumbnail_url,omitempty"`
-	UpdatedAt                 *time.Time `json:"updated_at,omitempty"`
-	UploadBucket              string     `json:"upload_bucket,omitempty"`
-	UploadID                  string     `json:"upload_id,omitempty"`
-	UserMetadataValid         bool       `json:"user_metadata_valid,omitempty"`
-	VisualColor               string     `json:"visual_color,omitempty"`
+	Errors                      interface{}              `json:"errors,omitempty"`
+	EventID                     string                   `json:"event_id,omitempty"`
+	ExclusionRoutes             string                   `json:"exclusion_routes,omitempty"`
+	ExclusiveCoverage           bool                     `json:"exclusive_coverage,omitempty"`
+	ExternalFileLocation        string                   `json:"external_file_location,omitempty"`
+	ExtractedMetadataPresent    bool                     `json:"extracted_metadata_present,omitempty"`
+	FacialExpressions           string                   `json:"facial_expressions,omitempty"`
+	FileName                    string                   `json:"file_name,omitempty"`
+	FilePath                    string                   `json:"file_path,omitempty"`
+	FileUploaded                bool                     `json:"file_uploaded,omitempty"`
+	FinalBucket                 string                   `json:"final_bucket,omitempty"`
+	Headline                    string                   `json:"headline,omitempty"`
+	ID                          int                      `json:"id,omitempty"`
+	IPTCCaptionWriter           string                   `json:"iptc_caption_writer,omitempty"`
+	IPTCCategory                string                   `json:"iptc_category,omitempty"`
+	IPTCSubjects                []string                 `json:"iptc_subjects,omitempty"`
+	ImageHeight                 int                      `json:"image_height,omitempty"`
+	ImageWidth                  int                      `json:"image_width,omitempty"`
+	InactiveDate                string                   `json:"inactive_date,omitempty"`
+	InclusionRoutes             string                   `json:"inclusion_routes,omitempty"`
+	Keywords                    []string                 `json:"keywords,omitempty"`
+	MasterID                    string                   `json:"master_id,omitempty"`
+	MediaType                   string                   `json:"media_type,omitempty"`
+	MetadataExtractionStartedAt *time.Time               `json:"metadata_extraction_started_at,omitempty"`
+	MetadataExtractionTimeout   bool                     `json:"metadata_extraction_timeout,omitempty"`
+	MimeType                    string                   `json:"mime_type,omitempty"`
+	NumberOfPeople              []map[string]string      `json:"string,omitempty"`
+	PaidAssignment              bool                     `json:"paid_assignment,omitempty"`
+	PaidAssignmentID            string                   `json:"paid_assignment_id,omitempty"`
+	ParentSource                string                   `json:"parent_source,omitempty"`
+	PersonCompositions          []string                 `json:"person_compositions,omitempty"`
+	Personalities               []string                 `json:"personalities,omitempty"`
+	PicscoutSuggestions         interface{}              `json:"picscout_suggestions,omitempty"`
+	ProvinceState               string                   `json:"province_state,omitempty"`
+	PublicistApprovalRequired   bool                     `json:"publicist_approval_required,omitempty"`
+	PublishedAt                 *time.Time               `json:"published_at,omitempty"`
+	PulledReason                string                   `json:"pulled_reason,omitempty"`
+	Rank                        int                      `json:"rank,omitempty"`
+	ReadyForSale                bool                     `json:"ready_for_sale,omitempty"`
+	RecordedDate                string                   `json:"recorded_date,omitempty"`
+	RiskCategory                string                   `json:"risk_category,omitempty"`
+	ShotSpeed                   string                   `json:"shot_speed,omitempty"`
+	SiteDestination             []string                 `json:"site_destination,omitempty"`
+	Source                      string                   `json:"source,omitempty"`
+	SpecialInstructions         string                   `json:"special_instructions,omitempty"`
+	Status                      string                   `json:"status,omitempty"`
+	StorageURL                  string                   `json:"storage_url,omitempty"`
+	SubmissionBatchID           int                      `json:"submission_batch_id,omitempty"`
+	Submittable                 bool                     `json:"submittable,omitempty"`
+	SubmittedAt                 *time.Time               `json:"submitted_at,omitempty"`
+	SubmittedToReviewAt         string                   `json:"submitted_to_review_at,omitempty"`
+	ThumbnailURL                string                   `json:"thumbnail_url,omitempty"`
+	UpdatedAt                   *time.Time               `json:"updated_at,omitempty"`
+	UploadBucket                string                   `json:"upload_bucket,omitempty"`
+	UploadID                    string                   `json:"upload_id,omitempty"`
+	UserMetadataValid           bool                     `json:"user_metadata_valid,omitempty"`
+	VisualColor                 string                   `json:"visual_color,omitempty"`
 }
 
 // Submit requests that the contribution be submitted for review and
