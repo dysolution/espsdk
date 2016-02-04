@@ -20,14 +20,14 @@ type Batch struct {
 	CreatedBy                        string     `json:"created_by,omitempty"`
 	CreatorIstockUsername            string     `json:"creator_istock_username,omitempty"`
 	EventID                          string     `json:"event_id,omitempty"`
-	ID                               int        `json:"id,omitempty"`
+	ID                               string     `json:"id,omitempty"`
 	IsGetty                          bool       `json:"is_getty,omitempty"`
 	IsIstock                         bool       `json:"is_istock,omitempty"`
 	IstockExclusive                  bool       `json:"istock_exclusive,omitempty"`
 	LastContributionSubmittedAt      *time.Time `json:"last_contribution_submitted_at,omitempty"`
 	LastSubmittedAt                  *time.Time `json:"last_submitted_at,omitempty"`
 	Note                             string     `json:"note,omitempty"`
-	ProfileID                        int        `json:"profile_id,omitempty"`
+	ProfileID                        string     `json:"profile_id,omitempty"`
 	ReviewedContributionsCount       int        `json:"reviewed_contributions_count,omitempty"`
 	RevisableContributionsCount      int        `json:"revisable_contributions_count,omitempty"`
 	SaveExtractedMetadata            bool       `json:"save_extracted_metadata,omitempty"`
@@ -76,10 +76,10 @@ func (b Batch) ValidTypes() []string {
 // Path returns the path for the Batch. If the Batch has no ID, Path returns
 // the root for all Batches (the Batch Index).
 func (b Batch) Path() string {
-	if b.ID == 0 {
+	if b.ID == "" {
 		return Batches
 	}
-	return fmt.Sprintf("%s/%d", Batches, b.ID)
+	return fmt.Sprintf("%s/%s", Batches, b.ID)
 }
 
 // Marshal serializes the Batch into a byte slice.

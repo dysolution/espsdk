@@ -38,7 +38,7 @@ type Contribution struct {
 	FileUploaded                bool                     `json:"file_uploaded,omitempty"`
 	FinalBucket                 string                   `json:"final_bucket,omitempty"`
 	Headline                    string                   `json:"headline,omitempty"`
-	ID                          int                      `json:"id,omitempty"`
+	ID                          string                   `json:"id,omitempty"`
 	IPTCCaptionWriter           string                   `json:"iptc_caption_writer,omitempty"`
 	IPTCCategory                string                   `json:"iptc_category,omitempty"`
 	IPTCSubjects                []string                 `json:"iptc_subjects,omitempty"`
@@ -73,7 +73,7 @@ type Contribution struct {
 	SpecialInstructions         string                   `json:"special_instructions,omitempty"`
 	Status                      string                   `json:"status,omitempty"`
 	StorageURL                  string                   `json:"storage_url,omitempty"`
-	SubmissionBatchID           int                      `json:"submission_batch_id,omitempty"`
+	SubmissionBatchID           string                   `json:"submission_batch_id,omitempty"`
 	Submittable                 bool                     `json:"submittable,omitempty"`
 	SubmittedAt                 *time.Time               `json:"submitted_at,omitempty"`
 	SubmittedToReviewAt         string                   `json:"submitted_to_review_at,omitempty"`
@@ -102,9 +102,29 @@ func (c Contribution) Submit(client sleepwalker.RESTClient) (sleepwalker.Result,
 	return result, nil
 }
 
+func (c Contribution) CreateAndSubmit(client sleepwalker.RESTClient) (sleepwalker.Result, error) {
+	desc := "Contribution.CreateAndSubmit"
+	result, err := client.Create(c)
+	if err != nil {
+		result.Log().Error(desc)
+		return result, err
+	}
+	result.Log().Debug(desc)
+
+	var savedContribution Contribution
+	json.Unmarshal(result.Payload, &savedContribution)
+	result, err = client.Put(savedContribution, savedContribution.Path()+"/submit")
+	if err != nil {
+		result.Log().Error(desc)
+		return result, err
+	}
+	result.Log().Info(desc)
+	return result, nil
+}
+
 // Index requests a list of all Contributions associated with the specified
 // Submission Batch.
-func (c Contribution) Index(client sleepwalker.RESTClient, batchID int) ContributionList {
+func (c Contribution) Index(client sleepwalker.RESTClient, batchID string) ContributionList {
 	desc := "Contribution.Index"
 	c.SubmissionBatchID = batchID
 	result, err := client.Get(c)
@@ -126,10 +146,10 @@ func (c Contribution) Index(client sleepwalker.RESTClient, batchID int) Contribu
 // contributions for the Batch (the Contribution Index).
 func (c Contribution) Path() string {
 	bid := c.SubmissionBatchID
-	if c.ID == 0 {
-		return fmt.Sprintf("%s/%d/contributions", Batches, bid)
+	if c.ID == "" {
+		return fmt.Sprintf("%s/%s/contributions", Batches, bid)
 	}
-	return fmt.Sprintf("%s/%d/contributions/%d", Batches, bid, c.ID)
+	return fmt.Sprintf("%s/%s/contributions/%s", Batches, bid, c.ID)
 }
 
 // Marshal serializes the Contribution into a byte slice.

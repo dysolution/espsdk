@@ -21,8 +21,8 @@ const (
 
 // BatchPath returns the canonical path for a(ll) Submission Batch(es).
 func BatchPath(b *Batch) string {
-	if b.ID == 0 {
+	if b.ID == "" {
 		return Batches
 	}
-	return fmt.Sprintf("%s/%d", Batches, b.ID)
+	return fmt.Sprintf("%s/%s", Batches, b.ID)
 }

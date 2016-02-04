@@ -13,20 +13,20 @@ type Release struct {
 	ExternalFileLocation string   `json:"external_file_location,omitempty"`
 	FileName             string   `json:"file_name,omitempty"`
 	FilePath             string   `json:"file_path,omitempty"`
-	ID                   int      `json:"id,omitempty"`
+	ID                   string   `json:"id,omitempty"`
 	MimeType             string   `json:"mime_type,omitempty"`
 	ModelDateOfBirth     string   `json:"model_date_of_birth,omitempty"`
 	ModelEthnicities     []string `json:"model_ethnicities,omitempty"`
 	ModelGender          string   `json:"model_gender,omitempty"`
 	ReleaseType          string   `json:"release_type,omitempty"`
 	StorageURL           string   `json:"storage_url,omitempty"`
-	SubmissionBatchID    int      `json:"submission_batch_id,omitempty"`
+	SubmissionBatchID    string   `json:"submission_batch_id,omitempty"`
 	UploadID             int      `json:"upload_id,omitempty"`
 }
 
 // Index requests a list of all Releases associated with the specified
 // Submission Batch.
-func (r Release) Index(client sleepwalker.RESTClient, batchID int) ReleaseList {
+func (r Release) Index(client sleepwalker.RESTClient, batchID string) ReleaseList {
 	desc := "Release.Index"
 	r.SubmissionBatchID = batchID
 	result, err := client.Get(r)
@@ -48,10 +48,10 @@ func (r Release) Index(client sleepwalker.RESTClient, batchID int) ReleaseList {
 // contributions for the Batch (the Contribution Index).
 func (r Release) Path() string {
 	bid := r.SubmissionBatchID
-	if r.ID == 0 {
-		return fmt.Sprintf("%s/%d/releases", Batches, bid)
+	if r.ID == "" {
+		return fmt.Sprintf("%s/%s/releases", Batches, bid)
 	}
-	return fmt.Sprintf("%s/%d/releases/%d", Batches, bid, r.ID)
+	return fmt.Sprintf("%s/%s/releases/%s", Batches, bid, r.ID)
 }
 
 // ValidTypes are the Release types supported by ESP.
