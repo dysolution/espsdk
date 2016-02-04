@@ -2,6 +2,7 @@ package espsdk
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"time"
 
@@ -202,4 +203,17 @@ func (cl ContributionList) Unmarshal(payload []byte) (ContributionList, error) {
 		return ContributionList{}, err
 	}
 	return contributionList, nil
+}
+
+// Last returns the most recently-created Contribution.
+func (cl ContributionList) Last() (Contribution, error) {
+	desc := "ContributionList.Last"
+	Log.WithFields(map[string]interface{}{
+		"count":  len(cl),
+		"object": "contribution",
+	}).Debugf(desc)
+	if len(cl) == 0 {
+		return Contribution{}, errors.New("no contributions")
+	}
+	return cl[0], nil
 }

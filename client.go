@@ -59,3 +59,15 @@ func DeleteLastBatch(c sleepwalker.RESTClient) (sleepwalker.Result, error) {
 	lastBatch := Batch{}.Index(c).Last()
 	return c.Delete(lastBatch)
 }
+
+// SubmitLastPhoto subtmits the newest Contribution for review and publication.
+func SubmitLastPhoto(c sleepwalker.RESTClient) (sleepwalker.Result, error) {
+	newestBatch := Batch{}.Index(c).Last()
+	newestContribution, err := Contribution{
+		SubmissionBatchID: newestBatch.ID,
+	}.Index(c, newestBatch.ID).Last()
+	if err != nil {
+		return sleepwalker.Result{}, err
+	}
+	return c.Put(newestContribution, newestContribution.Path()+"/submit")
+}
