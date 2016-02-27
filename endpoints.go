@@ -1,7 +1,5 @@
 package espsdk
 
-import "fmt"
-
 // These constants represent the root path of the ESP API and the
 // relative paths for various endpoints.
 const (
@@ -24,5 +22,5 @@ func BatchPath(b *Batch) string {
 	if b.ID == "" {
 		return Batches
 	}
-	return fmt.Sprintf("%s/%s", Batches, b.ID)
+	return Batches + "/" + b.ID
 }
