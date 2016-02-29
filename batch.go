@@ -77,9 +77,9 @@ func (b Batch) ValidTypes() []string {
 // the root for all Batches (the Batch Index).
 func (b Batch) Path() string {
 	if b.ID == "" {
-		return Batches
+		return BatchesEndpoint
 	}
-	return fmt.Sprintf("%s/%s", Batches, b.ID)
+	return fmt.Sprintf("%s/%s", BatchesEndpoint, b.ID)
 }
 
 // Marshal serializes the Batch into a byte slice.

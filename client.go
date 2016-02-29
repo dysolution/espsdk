@@ -48,7 +48,7 @@ func (c Client) GetControlledValues() ControlledValues {
 // for Getty and iStock video.
 func (c Client) GetTranscoderMappings() *TranscoderMappingList {
 	desc := "Client.GetTranscoderMappings"
-	result, err := c.GetPath(TranscoderMappings)
+	result, err := c.GetPath(TranscoderMappingsEndpoint)
 	if err != nil {
 		return &TranscoderMappingList{}
 	}

@@ -49,9 +49,9 @@ func (r Release) Index(client sleepwalker.RESTClient, batchID string) ReleaseLis
 func (r Release) Path() string {
 	bid := r.SubmissionBatchID
 	if r.ID == "" {
-		return fmt.Sprintf("%s/%s/releases", Batches, bid)
+		return fmt.Sprintf("%s/%s/releases", BatchesEndpoint, bid)
 	}
-	return fmt.Sprintf("%s/%s/releases/%s", Batches, bid, r.ID)
+	return fmt.Sprintf("%s/%s/releases/%s", BatchesEndpoint, bid, r.ID)
 }
 
 // ValidTypes are the Release types supported by ESP.
