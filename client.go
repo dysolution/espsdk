@@ -3,6 +3,7 @@ package espsdk
 import (
 	"errors"
 
+	"github.com/Sirupsen/logrus"
 	"github.com/dysolution/sleepwalker"
 )
 
@@ -17,8 +18,8 @@ type Result struct {
 }
 
 // GetClient provides a client for communicating with the ESP REST API.
-func GetClient(key, secret, username, password string) Client {
-	return Client{sleepwalker.GetClient(key, secret, username, password, OAuthEndpoint, ESPAPIRoot, Log)}
+func GetClient(key, secret, username, password string, log *logrus.Logger) Client {
+	return Client{sleepwalker.GetClient(key, secret, username, password, OAuthEndpoint, ESPAPIRoot, log)}
 }
 
 // GetKeywords requests suggestions from the Getty controlled vocabulary
