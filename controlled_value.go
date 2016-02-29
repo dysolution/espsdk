@@ -27,33 +27,33 @@ type cv struct {
 // Releases, are represented as the top-level map keys within ControlledFields.
 //
 // Example: (the "controlled fields" key is added by the SDK and is not present
-//           in the raw JSON, which puts the asset types at the same level as
-//           the "batch types" key)
-// {
-//         "batch_types": [
-//                 "getty_creative_still",
-//                 "getty_creative_video",
-//                 "getty_editorial_still",
-//                 "getty_editorial_video",
-//                 "istock_creative_video"
-//         ],
-//         "controlled_fields": {
-//                 "getty_creative_still": {
-//                         "collection_code": [
-//                                 {
-//                                         "description": "AbleStock.com",
-//                                         "value": "ABL"
-//                                 },
-//                                 ...
-//                         ],
-//                         ...
+// in the raw JSON, which puts the asset types at the same level as the
+// "batch types" key)
+//     {
+//             "batch_types": [
+//                     "getty_creative_still",
+//                     "getty_creative_video",
+//                     "getty_editorial_still",
+//                     "getty_editorial_video",
+//                     "istock_creative_video"
+//             ],
+//             "controlled_fields": {
+//                     "getty_creative_still": {
+//                             "collection_code": [
+//                                     {
+//                                             "description": "AbleStock.com",
+//                                             "value": "ABL"
+//                                     },
+//                                     ...
+//                             ],
+//                             ...
 //                 },
-//                 "istock_creative_video": {
-//                         ...
-//                 },
-//                 ...
-//         }
-// }
+//                     "istock_creative_video": {
+//                             ...
+//                     },
+//                     ...
+//             },
+//     }
 //
 // Example access:
 // fmt.Println(allCV.ControlledFields["releases"]["model_ethnicities"])
