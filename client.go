@@ -1,8 +1,6 @@
 package espsdk
 
 import (
-	"errors"
-
 	"github.com/Sirupsen/logrus"
 	"github.com/dysolution/sleepwalker"
 )
@@ -36,15 +34,14 @@ func (c Client) GetPersonalities() []byte { return []byte("not implemented") }
 
 // GetControlledValues returns complete lists of values and descriptions for
 // fields with controlled vocabularies, grouped by submission type.
-//
-// TODO: not implemented (needs new struct type)
-func (c Client) GetControlledValues() ([]byte, error) {
-	Log.Info("GetControlledValues")
-	result, err := c.GetPath(ControlledValues)
+func (c Client) GetControlledValues() ControlledValues {
+	desc := "Client.GetControlledValues"
+	result, err := c.GetPath(ControlledValuesEndpoint)
 	if err != nil {
-		return []byte{}, errors.New("unable to get controlled values")
+		return ControlledValues{}
 	}
-	return result.Payload, nil
+	result.Log().Info(desc)
+	return parseCV(result)
 }
 
 // GetTranscoderMappings lists acceptable transcoder mapping values

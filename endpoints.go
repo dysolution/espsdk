@@ -6,15 +6,15 @@ const (
 	ESPAPIRoot    = "https://esp-sandbox.api.gettyimages.com/esp"
 	OAuthEndpoint = "https://api.gettyimages.com/oauth2/token"
 
-	APIInvariant       = "/submission/v1"
-	Batches            = APIInvariant + "/submission_batches"
-	Compositions       = APIInvariant + "/people_metadata/compositions"
-	ControlledValues   = APIInvariant + "/controlled_values/index"
-	Expressions        = APIInvariant + "/people_metadata/expressions"
-	Keywords           = APIInvariant + "/keywords/getty"
-	NumberOfPeople     = APIInvariant + "/people_metadata/number_of_people"
-	Personalities      = APIInvariant + "/personalities"
-	TranscoderMappings = APIInvariant + "/video_transcoder_mapping_values"
+	APIInvariant             = "/submission/v1"
+	Batches                  = APIInvariant + "/submission_batches"
+	Compositions             = APIInvariant + "/people_metadata/compositions"
+	ControlledValuesEndpoint = APIInvariant + "/controlled_values/index"
+	Expressions              = APIInvariant + "/people_metadata/expressions"
+	Keywords                 = APIInvariant + "/keywords/getty"
+	NumberOfPeople           = APIInvariant + "/people_metadata/number_of_people"
+	Personalities            = APIInvariant + "/personalities"
+	TranscoderMappings       = APIInvariant + "/video_transcoder_mapping_values"
 )
 
 // BatchPath returns the canonical path for a(ll) Submission Batch(es).
