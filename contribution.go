@@ -27,6 +27,7 @@ type Contribution struct {
 	CreatedAt                   *time.Time               `json:"created_at,omitempty"`
 	CreatedDate                 *time.Time               `json:"created_date,omitempty"`
 	CreditLine                  string                   `json:"credit_line,omitempty"`
+	DSAAlternateIds             map[string]string        `json:"dsa_alternate_ids,omitempty"`
 	Errors                      interface{}              `json:"errors,omitempty"`
 	EventID                     string                   `json:"event_id,omitempty"`
 	ExclusionRoutes             string                   `json:"exclusion_routes,omitempty"`
