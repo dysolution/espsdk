@@ -104,6 +104,7 @@ func (c Contribution) Submit(client sleepwalker.RESTClient) (sleepwalker.Result,
 	return result, nil
 }
 
+// CreateAndSubmit creates a Contribution and submits it for review/publication.
 func (c Contribution) CreateAndSubmit(client sleepwalker.RESTClient) (sleepwalker.Result, error) {
 	desc := "Contribution.CreateAndSubmit"
 	result, err := client.Create(c)

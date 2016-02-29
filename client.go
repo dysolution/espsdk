@@ -6,10 +6,12 @@ import (
 	"github.com/dysolution/sleepwalker"
 )
 
+// A Client communicates with the ESP REST API.
 type Client struct {
 	*sleepwalker.Client
 }
 
+// A Result provides information about the response from the ESP REST API.
 type Result struct {
 	sleepwalker.Result
 }
