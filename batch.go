@@ -51,7 +51,7 @@ func (b Batch) Index(client sleepwalker.RESTClient) BatchList {
 		result.Log().Error(desc)
 		return BatchList{}
 	}
-	result.Log().Debug(desc)
+	result.Log().Info(desc)
 	batchList, _ := BatchList{}.Unmarshal(result.Payload)
 	return batchList
 }
