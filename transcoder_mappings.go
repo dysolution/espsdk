@@ -1,9 +1,6 @@
 package espsdk
 
-import (
-	"encoding/json"
-	"fmt"
-)
+import "encoding/json"
 
 // A TranscoderMapping is a set of parameters that represent a video
 // encoding that can be accepted by ESP.
@@ -24,15 +21,9 @@ type TranscoderMappingList struct {
 // Unmarshal attempts to deserialize the provided JSON payload
 // into an object.
 func (tml TranscoderMappingList) Unmarshal(payload []byte) *TranscoderMappingList {
-	fmt.Printf("%s\n", payload)
 	dest := new(TranscoderMappingList)
 	if err := json.Unmarshal(payload, dest); err != nil {
 		Log.Error(err)
-	}
-	if dest == nil {
-		var d interface{}
-		json.Unmarshal(payload, &d)
-		Log.Error(d)
 	}
 	return dest
 }

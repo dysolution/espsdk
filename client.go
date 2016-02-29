@@ -16,7 +16,8 @@ type Result struct {
 	sleepwalker.Result
 }
 
-func getClient(key, secret, username, password string) Client {
+// GetClient provides a client for communicating with the ESP REST API.
+func GetClient(key, secret, username, password string) Client {
 	return Client{sleepwalker.GetClient(key, secret, username, password, OAuthEndpoint, ESPAPIRoot, Log)}
 }
 
@@ -47,14 +48,16 @@ func (c Client) GetControlledValues() ([]byte, error) {
 
 // GetTranscoderMappings lists acceptable transcoder mapping values
 // for Getty and iStock video.
-func GetTranscoderMappings(c Client) *TranscoderMappingList {
-	result, err := c.GetPath(ESPAPIRoot + TranscoderMappings)
+func (c Client) GetTranscoderMappings() *TranscoderMappingList {
+	desc := "Client.GetTranscoderMappings"
+	result, err := c.GetPath(TranscoderMappings)
 	if err != nil {
 		return &TranscoderMappingList{}
 	}
 	if result.Payload == nil {
 		return &TranscoderMappingList{}
 	}
+	result.Log().Info(desc)
 	return TranscoderMappingList{}.Unmarshal(result.Payload)
 }
 
