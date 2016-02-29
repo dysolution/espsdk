@@ -45,8 +45,15 @@ func (c Client) GetControlledValues() ([]byte, error) {
 
 // GetTranscoderMappings lists acceptable transcoder mapping values
 // for Getty and iStock video.
-func (c Client) GetTranscoderMappings() TranscoderMappingList {
-	return TranscoderMappingList{}.Unmarshal([]byte("not implemented"))
+func GetTranscoderMappings(c Client) *TranscoderMappingList {
+	result, err := c.GetPath(ESPAPIRoot + TranscoderMappings)
+	if err != nil {
+		return &TranscoderMappingList{}
+	}
+	if result.Payload == nil {
+		return &TranscoderMappingList{}
+	}
+	return TranscoderMappingList{}.Unmarshal(result.Payload)
 }
 
 // GetTermList lists all possible values for the given controlled vocabulary.
