@@ -34,7 +34,7 @@ type Contribution struct {
 	ExclusiveCoverage           bool                     `json:"exclusive_coverage,omitempty"`
 	ExternalFileLocation        string                   `json:"external_file_location,omitempty"`
 	ExtractedMetadataPresent    bool                     `json:"extracted_metadata_present,omitempty"`
-	FacialExpressions           string                   `json:"facial_expressions,omitempty"`
+	FacialExpressions           []TermItem               `json:"facial_expressions,omitempty"`
 	FileName                    string                   `json:"file_name,omitempty"`
 	FilePath                    string                   `json:"file_path,omitempty"`
 	FileUploaded                bool                     `json:"file_uploaded,omitempty"`
@@ -46,20 +46,20 @@ type Contribution struct {
 	IPTCSubjects                []string                 `json:"iptc_subjects,omitempty"`
 	ImageHeight                 int                      `json:"image_height,omitempty"`
 	ImageWidth                  int                      `json:"image_width,omitempty"`
-	InactiveDate                string                   `json:"inactive_date,omitempty"`
-	InclusionRoutes             string                   `json:"inclusion_routes,omitempty"`
-	Keywords                    []string                 `json:"keywords,omitempty"`
+	InactiveDate                *time.Time               `json:"inactive_date,omitempty"`
+	InclusionRoutes             interface{}              `json:"inclusion_routes,omitempty"`
+	Keywords                    []Keyword                `json:"keywords,omitempty"`
 	MasterID                    string                   `json:"master_id,omitempty"`
 	MediaType                   string                   `json:"media_type,omitempty"`
 	MetadataExtractionStartedAt *time.Time               `json:"metadata_extraction_started_at,omitempty"`
 	MetadataExtractionTimeout   bool                     `json:"metadata_extraction_timeout,omitempty"`
 	MimeType                    string                   `json:"mime_type,omitempty"`
-	NumberOfPeople              []map[string]string      `json:"string,omitempty"`
+	NumberOfPeople              TermItem                 `json:"number_of_people,omitempty"`
 	PaidAssignment              bool                     `json:"paid_assignment,omitempty"`
 	PaidAssignmentID            string                   `json:"paid_assignment_id,omitempty"`
 	ParentSource                string                   `json:"parent_source,omitempty"`
-	PersonCompositions          []string                 `json:"person_compositions,omitempty"`
-	Personalities               []string                 `json:"personalities,omitempty"`
+	PersonCompositions          []TermItem               `json:"person_compositions,omitempty"`
+	Personalities               []Keyword                `json:"personalities,omitempty"`
 	PicscoutSuggestions         interface{}              `json:"picscout_suggestions,omitempty"`
 	ProvinceState               string                   `json:"province_state,omitempty"`
 	PublicistApprovalRequired   bool                     `json:"publicist_approval_required,omitempty"`

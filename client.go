@@ -1,6 +1,8 @@
 package espsdk
 
 import (
+	"encoding/json"
+
 	"github.com/Sirupsen/logrus"
 	"github.com/dysolution/sleepwalker"
 )
@@ -31,17 +33,41 @@ func GetClient(key, secret, username, password, apiRoot string, log *logrus.Logg
 	return Client{sleepwalker.GetClient(config)}
 }
 
-// GetKeywords requests suggestions from the Getty controlled vocabulary
-// for the keywords provided.
-//
-// TODO: not implemented (keywords and personalities need a new struct type)
-func (c Client) GetKeywords() []byte { return []byte("not implemented") }
+// ValidateKeywords queries the ESP keywords endpoint and reports whether each
+// provided keyword is valid.
+func (c Client) ValidateKeywords(keywords []string, mediaType string) []Keyword {
+	reqPayload := struct {
+		Keywords  []string `json:"keywords"`
+		MediaType string   `json:"media_type"`
+	}{
+		Keywords:  keywords,
+		MediaType: mediaType,
+	}
 
-// GetPersonalities requests suggestions from the Getty controlled vocabulary
-// for the famous personalities provided.
-//
-// TODO: not implemented (keywords and personalities need a new struct type)
-func (c Client) GetPersonalities() []byte { return []byte("not implemented") }
+	bytes, _ := json.Marshal(reqPayload)
+	result, _ := c.GetWithPayload(KeywordsEndpoint, bytes)
+	var payload map[string]map[string][]interface{}
+	if err := json.Unmarshal(result.Payload, &payload); err != nil {
+		Log.Error(err)
+	}
+
+	out, _ := json.MarshalIndent(payload, "", "  ")
+	Log.WithFields(map[string]interface{}{
+		"keyword_response": out,
+	}).Debugf("%s", out)
+
+	var outKW []Keyword
+	for inKW, matches := range payload["keywords"] {
+		Log.Debugf("checking keyword: %v", inKW)
+		if len(matches) == 1 {
+			outKW = append(outKW, Keyword{Term: inKW, Valid: true})
+		} else {
+			// no matches, or further disambiguation is required (TODO)
+			outKW = append(outKW, Keyword{Term: inKW, Valid: false})
+		}
+	}
+	return outKW
+}
 
 // GetControlledValues returns complete lists of values and descriptions for
 // fields with controlled vocabularies, grouped by submission type.
