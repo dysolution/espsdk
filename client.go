@@ -16,8 +16,19 @@ type Result struct {
 }
 
 // GetClient provides a client for communicating with the ESP REST API.
-func GetClient(key, secret, username, password string, log *logrus.Logger) Client {
-	return Client{sleepwalker.GetClient(key, secret, username, password, OAuthEndpoint, ESPAPIRoot, log)}
+func GetClient(key, secret, username, password, apiRoot string, log *logrus.Logger) Client {
+	config := &sleepwalker.Config{
+		Credentials: &sleepwalker.Credentials{
+			APIKey:    key,
+			APISecret: secret,
+			Username:  username,
+			Password:  password,
+		},
+		OAuthEndpoint: OAuthEndpoint,
+		APIRoot:       apiRoot,
+		Logger:        log,
+	}
+	return Client{sleepwalker.GetClient(config)}
 }
 
 // GetKeywords requests suggestions from the Getty controlled vocabulary
