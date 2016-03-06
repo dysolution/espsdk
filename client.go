@@ -60,8 +60,17 @@ func (c Client) GetTranscoderMappings() *TranscoderMappingList {
 }
 
 // GetTermList lists all possible values for the given controlled vocabulary.
-func (c Client) GetTermList(endpoint string) TermList {
-	return TermList{}
+func (c Client) GetTermList(endpoint string) *TermList {
+	desc := "Client.GetTermList"
+	result, err := c.GetPath(endpoint)
+	if err != nil {
+		return &TermList{}
+	}
+	if result.Payload == nil {
+		return &TermList{}
+	}
+	result.Log().Info(desc)
+	return TermList{}.Unmarshal(result.Payload)
 }
 
 // DeleteLastBatch looks up the newest Batch and deletes it.

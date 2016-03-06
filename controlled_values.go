@@ -12,9 +12,9 @@ import (
 // base unit of Keywords, Personalities, Facial Expressions, and others.
 type TermItem struct {
 	Term     string `json:"term,omitempty"`
-	TermID   int    `json:"term_id,omitempty"`
-	ImageURI string `json:"image_uri,omitempty"`
+	TermID   string `json:"term_id,omitempty"`
 	HelpText string `json:"help_text,omitempty"`
+	ImageURI string `json:"image_uri,omitempty"`
 }
 
 // A TermList is an array (slice) of terms (TermItems).
@@ -27,12 +27,13 @@ func (m TermList) Marshal() ([]byte, error) {
 
 // Unmarshal attempts to deserialize the provided JSON payload into a
 // representation of people metadata.
-func (m TermList) Unmarshal(payload []byte) TermList {
+func (m TermList) Unmarshal(payload []byte) *TermList {
 	var items TermList
-	if err := json.Unmarshal(payload, &items); err != nil {
+	err := json.Unmarshal(payload, &items)
+	if err != nil {
 		Log.WithFields(map[string]interface{}{
 			"items": fmt.Sprintf("%v", items),
 		}).Error(err)
 	}
-	return items
+	return &items
 }
