@@ -110,6 +110,20 @@ func (c Client) GetTermList(endpoint string) *TermList {
 	return TermList{}.Unmarshal(result.Payload)
 }
 
+// GetTermIntList lists all possible values for the given controlled vocabulary.
+func (c Client) GetTermIntList(endpoint string) *TermIntList {
+	desc := "Client.GetTermListInt"
+	result, err := c.GetPath(endpoint)
+	if err != nil {
+		return &TermIntList{}
+	}
+	if result.Payload == nil {
+		return &TermIntList{}
+	}
+	result.Log().Info(desc)
+	return TermIntList{}.Unmarshal(result.Payload)
+}
+
 // DeleteLastBatch looks up the newest Batch and deletes it.
 func DeleteLastBatch(c sleepwalker.RESTClient) (sleepwalker.Result, error) {
 	lastBatch := Batch{}.Index(c).Last()

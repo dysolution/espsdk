@@ -65,3 +65,52 @@ func (m TermList) Unmarshal(payload []byte) *TermList {
 	}
 	return &items
 }
+
+// A TermItemInt is a TermItem that uses an int instead of a string for its
+// TermID.
+type TermItemInt struct {
+	Term     string `json:"term,omitempty"`
+	TermID   int    `json:"term_id,omitempty"`
+	HelpText string `json:"help_text,omitempty"`
+	ImageURI string `json:"image_uri,omitempty"`
+}
+
+func (ti TermItemInt) Validate(input int, corpus TermIntList) TermItemInt {
+	Log.Debugf("checking ID: %v", input)
+	for _, validTermItem := range corpus {
+		if validTermItem.TermID == input {
+			Log.Debugf("match: %v == %v", input, validTermItem)
+			return validTermItem
+		}
+	}
+	return TermItemInt{}
+}
+
+func (ti TermItemInt) ValidateList(input []int, corpus TermIntList) []TermItemInt {
+	var validatedItems []TermItemInt
+	for _, candidateID := range input {
+		validatedItems = append(validatedItems, ti.Validate(candidateID, corpus))
+	}
+	return validatedItems
+}
+
+// A TermList is an array (slice) of terms (TermItems).
+type TermIntList []TermItemInt
+
+// Marshal serializes a TermList into readable JSON.
+func (m TermIntList) Marshal() ([]byte, error) {
+	return sleepwalker.Marshal(m)
+}
+
+// Unmarshal attempts to deserialize the provided JSON payload into a
+// representation of people metadata.
+func (m TermIntList) Unmarshal(payload []byte) *TermIntList {
+	var items TermIntList
+	err := json.Unmarshal(payload, &items)
+	if err != nil {
+		Log.WithFields(map[string]interface{}{
+			"items": fmt.Sprintf("%v", items),
+		}).Error(err)
+	}
+	return &items
+}

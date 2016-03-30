@@ -54,37 +54,37 @@ type Contribution struct {
 	MetadataExtractionStartedAt *time.Time               `json:"metadata_extraction_started_at,omitempty"`
 	MetadataExtractionTimeout   bool                     `json:"metadata_extraction_timeout,omitempty"`
 	MimeType                    string                   `json:"mime_type,omitempty"`
-	NumberOfPeople              TermItem                 `json:"number_of_people,omitempty"`
-	PaidAssignment              bool                     `json:"paid_assignment,omitempty"`
-	PaidAssignmentID            string                   `json:"paid_assignment_id,omitempty"`
-	ParentSource                string                   `json:"parent_source,omitempty"`
-	PersonCompositions          []TermItem               `json:"person_compositions,omitempty"`
-	Personalities               []Keyword                `json:"personalities,omitempty"`
-	PicscoutSuggestions         interface{}              `json:"picscout_suggestions,omitempty"`
-	ProvinceState               string                   `json:"province_state,omitempty"`
-	PublicistApprovalRequired   bool                     `json:"publicist_approval_required,omitempty"`
-	PublishedAt                 *time.Time               `json:"published_at,omitempty"`
-	PulledReason                string                   `json:"pulled_reason,omitempty"`
-	Rank                        int                      `json:"rank,omitempty"`
-	ReadyForSale                bool                     `json:"ready_for_sale,omitempty"`
-	RecordedDate                string                   `json:"recorded_date,omitempty"`
-	RiskCategory                string                   `json:"risk_category,omitempty"`
-	ShotSpeed                   string                   `json:"shot_speed,omitempty"`
-	SiteDestination             []string                 `json:"site_destination,omitempty"`
-	Source                      string                   `json:"source,omitempty"`
-	SpecialInstructions         string                   `json:"special_instructions,omitempty"`
-	Status                      string                   `json:"status,omitempty"`
-	StorageURL                  string                   `json:"storage_url,omitempty"`
-	SubmissionBatchID           string                   `json:"submission_batch_id,omitempty"`
-	Submittable                 bool                     `json:"submittable,omitempty"`
-	SubmittedAt                 *time.Time               `json:"submitted_at,omitempty"`
-	SubmittedToReviewAt         string                   `json:"submitted_to_review_at,omitempty"`
-	ThumbnailURL                string                   `json:"thumbnail_url,omitempty"`
-	UpdatedAt                   *time.Time               `json:"updated_at,omitempty"`
-	UploadBucket                string                   `json:"upload_bucket,omitempty"`
-	UploadID                    string                   `json:"upload_id,omitempty"`
-	UserMetadataValid           bool                     `json:"user_metadata_valid,omitempty"`
-	VisualColor                 string                   `json:"visual_color,omitempty"`
+	// NumberOfPeople              TermItemInt              `json:"number_of_people,omitempty"`
+	PaidAssignment            bool        `json:"paid_assignment,omitempty"`
+	PaidAssignmentID          string      `json:"paid_assignment_id,omitempty"`
+	ParentSource              string      `json:"parent_source,omitempty"`
+	PersonCompositions        []TermItem  `json:"person_compositions,omitempty"`
+	Personalities             []Keyword   `json:"personalities,omitempty"`
+	PicscoutSuggestions       interface{} `json:"picscout_suggestions,omitempty"`
+	ProvinceState             string      `json:"province_state,omitempty"`
+	PublicistApprovalRequired bool        `json:"publicist_approval_required,omitempty"`
+	PublishedAt               *time.Time  `json:"published_at,omitempty"`
+	PulledReason              string      `json:"pulled_reason,omitempty"`
+	Rank                      int         `json:"rank,omitempty"`
+	ReadyForSale              bool        `json:"ready_for_sale,omitempty"`
+	RecordedDate              string      `json:"recorded_date,omitempty"`
+	RiskCategory              string      `json:"risk_category,omitempty"`
+	ShotSpeed                 string      `json:"shot_speed,omitempty"`
+	SiteDestination           []string    `json:"site_destination,omitempty"`
+	Source                    string      `json:"source,omitempty"`
+	SpecialInstructions       string      `json:"special_instructions,omitempty"`
+	Status                    string      `json:"status,omitempty"`
+	StorageURL                string      `json:"storage_url,omitempty"`
+	SubmissionBatchID         string      `json:"submission_batch_id,omitempty"`
+	Submittable               bool        `json:"submittable,omitempty"`
+	SubmittedAt               *time.Time  `json:"submitted_at,omitempty"`
+	SubmittedToReviewAt       string      `json:"submitted_to_review_at,omitempty"`
+	ThumbnailURL              string      `json:"thumbnail_url,omitempty"`
+	UpdatedAt                 *time.Time  `json:"updated_at,omitempty"`
+	UploadBucket              string      `json:"upload_bucket,omitempty"`
+	UploadID                  string      `json:"upload_id,omitempty"`
+	UserMetadataValid         bool        `json:"user_metadata_valid,omitempty"`
+	VisualColor               string      `json:"visual_color,omitempty"`
 }
 
 // Submit requests that the contribution be submitted for review and
@@ -217,5 +217,6 @@ func (cl ContributionList) Last() (Contribution, error) {
 	if len(cl) == 0 {
 		return Contribution{}, errors.New("no contributions")
 	}
-	return cl[0], nil
+	return cl[len(cl)-1], nil
+	// return cl[0], nil
 }

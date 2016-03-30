@@ -3,9 +3,10 @@ package espsdk
 // These constants represent the root path of the ESP API and the
 // relative paths for various endpoints.
 const (
-	ProdAPI       = "https://api.gettyimages.com/esp"
-	SandboxAPI    = "https://esp-sandbox.api.gettyimages.com/esp"
 	OAuthEndpoint = "https://api.gettyimages.com/oauth2/token"
+
+	ProdAPI    = "https://api.gettyimages.com/esp"
+	SandboxAPI = "https://esp-sandbox.api.gettyimages.com/esp"
 
 	APIInvariant               = "/submission/v1"
 	BatchesEndpoint            = APIInvariant + "/submission_batches"
