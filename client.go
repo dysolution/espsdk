@@ -2,6 +2,7 @@ package espsdk
 
 import (
 	"encoding/json"
+	"errors"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/dysolution/sleepwalker"
@@ -94,6 +95,21 @@ func (c Client) GetTranscoderMappings() *TranscoderMappingList {
 	}
 	result.Log().Info(desc)
 	return TranscoderMappingList{}.Unmarshal(result.Payload)
+}
+
+// GetEvents returns a list of events that match the provided criteria.
+func (c Client) GetEvents(params EventQuery) (*EventResponse, error) {
+	desc := "Client.GetEvents"
+	bytes, _ := json.Marshal(params)
+	result, err := c.GetWithPayload(EventsEndpoint, bytes)
+	if err != nil {
+		return &EventResponse{}, err
+	}
+	if result.Payload == nil {
+		return &EventResponse{}, errors.New("empty payload")
+	}
+	result.Log().Info(desc)
+	return Event{}.Unmarshal(result.Payload), nil
 }
 
 // GetTermList lists all possible values for the given controlled vocabulary.

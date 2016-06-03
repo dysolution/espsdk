@@ -12,6 +12,7 @@ const (
 	BatchesEndpoint            = APIInvariant + "/submission_batches"
 	CompositionsEndpoint       = APIInvariant + "/people_metadata/compositions"
 	ControlledValuesEndpoint   = APIInvariant + "/controlled_values/index"
+	EventsEndpoint             = APIInvariant + "/events"
 	ExpressionsEndpoint        = APIInvariant + "/people_metadata/expressions"
 	KeywordsEndpoint           = APIInvariant + "/keywords/getty"
 	NumberOfPeopleEndpoint     = APIInvariant + "/people_metadata/number_of_people"
