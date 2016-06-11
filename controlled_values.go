@@ -7,7 +7,7 @@ import (
 	"github.com/dysolution/sleepwalker"
 )
 
-// Each Keyword is validated against a controlled vocabulary and thus can
+// A Keyword is validated against a controlled vocabulary and thus can
 // be valid or invalid. This structure is also used for Personalities, which
 // allows recognizable people to have a canonical representation of their name
 // across all Getty systems.
@@ -26,6 +26,7 @@ type TermItem struct {
 	ImageURI string `json:"image_uri,omitempty"`
 }
 
+// Validate ensures the given string appears in the corpus.
 func (ti TermItem) Validate(input string, corpus TermList) TermItem {
 	Log.Debugf("checking ID: %v", input)
 	for _, validTermItem := range corpus {
@@ -37,6 +38,7 @@ func (ti TermItem) Validate(input string, corpus TermList) TermItem {
 	return TermItem{}
 }
 
+// ValidateList performs validation against a string slice.
 func (ti TermItem) ValidateList(input []string, corpus TermList) []TermItem {
 	var validatedItems []TermItem
 	for _, candidateID := range input {
@@ -75,6 +77,7 @@ type TermItemInt struct {
 	ImageURI string `json:"image_uri,omitempty"`
 }
 
+// Validate ensures the given string appears in the corpus.
 func (ti TermItemInt) Validate(input int, corpus TermIntList) TermItemInt {
 	Log.Debugf("checking ID: %v", input)
 	for _, validTermItem := range corpus {
@@ -86,6 +89,7 @@ func (ti TermItemInt) Validate(input int, corpus TermIntList) TermItemInt {
 	return TermItemInt{}
 }
 
+// ValidateList performs validation against a string slice.
 func (ti TermItemInt) ValidateList(input []int, corpus TermIntList) []TermItemInt {
 	var validatedItems []TermItemInt
 	for _, candidateID := range input {
@@ -94,7 +98,7 @@ func (ti TermItemInt) ValidateList(input []int, corpus TermIntList) []TermItemIn
 	return validatedItems
 }
 
-// A TermList is an array (slice) of terms (TermItems).
+// A TermIntList is an array (slice) of terms (TermItemInts).
 type TermIntList []TermItemInt
 
 // Marshal serializes a TermList into readable JSON.

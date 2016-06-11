@@ -21,6 +21,7 @@ func (e Event) Unmarshal(payload []byte) *EventResponse {
 	return dest
 }
 
+// An EventQuery is sent to the ESP API with optional criteria.
 type EventQuery struct {
 	DateFrom         string `json:"date_from,omitempty"`
 	DateTo           string `json:"date_to,omitempty"`
@@ -29,6 +30,8 @@ type EventQuery struct {
 	PhotographerName string `json:"photographer_name,omitempty"`
 }
 
+// An EventResponse is sent by the ESP API to the client in response to an
+// EventQuery.
 type EventResponse struct {
 	Events            []Event                `json:"events"`
 	SearchInformation map[string]interface{} `json:"search_information"`
