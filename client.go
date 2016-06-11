@@ -112,6 +112,22 @@ func (c Client) GetEvents(params EventQuery) (*EventResponse, error) {
 	return Event{}.Unmarshal(result.Payload), nil
 }
 
+// GetFieldRestrictions returns a list of field restrictions that match the
+// provided criteria.
+func (c Client) GetFieldRestrictions(params FieldRestrictionQuery) (*FieldRestrictionResponse, error) {
+	desc := "Client.GetFieldRestrictions"
+	bytes, _ := json.Marshal(params)
+	result, err := c.GetWithPayload(Endpoints.FieldRestrictions, bytes)
+	if err != nil {
+		return &FieldRestrictionResponse{}, err
+	}
+	if result.Payload == nil {
+		return &FieldRestrictionResponse{}, errors.New("empty payload")
+	}
+	result.Log().Info(desc)
+	return FieldRestriction{}.Unmarshal(result.Payload), nil
+}
+
 // GetTermList lists all possible values for the given controlled vocabulary.
 func (c Client) GetTermList(endpoint string) *TermList {
 	desc := "Client.GetTermList"
