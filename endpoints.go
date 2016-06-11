@@ -7,23 +7,38 @@ const (
 
 	ProdAPI    = "https://api.gettyimages.com/esp"
 	SandboxAPI = "https://esp-sandbox.api.gettyimages.com/esp"
-
-	APIInvariant               = "/submission/v1"
-	BatchesEndpoint            = APIInvariant + "/submission_batches"
-	CompositionsEndpoint       = APIInvariant + "/people_metadata/compositions"
-	ControlledValuesEndpoint   = APIInvariant + "/controlled_values/index"
-	EventsEndpoint             = APIInvariant + "/events"
-	ExpressionsEndpoint        = APIInvariant + "/people_metadata/expressions"
-	KeywordsEndpoint           = APIInvariant + "/keywords/getty"
-	NumberOfPeopleEndpoint     = APIInvariant + "/people_metadata/number_of_people"
-	PersonalitiesEndpoint      = APIInvariant + "/personalities"
-	TranscoderMappingsEndpoint = APIInvariant + "/video_transcoder_mapping_values"
 )
+
+// Endpoints are the relative paths for the ESP API.
+var Endpoints = struct {
+	Batches            string
+	Compositions       string
+	ControlledValues   string
+	Events             string
+	Expressions        string
+	FieldRestrictions  string
+	Keywords           string
+	NumberOfPeople     string
+	Personalities      string
+	TranscoderMappings string
+}{
+	"/submission/v1/submission_batches",
+	"/submission/v1/people_metadata/compositions",
+	"/submission/v1/controlled_values/index",
+	"/submission/v1/events",
+	"/submission/v1/people_metadata/expressions",
+	"/account/v1/field_restrictions",
+	"/submission/v1/keywords/getty",
+	"/submission/v1/people_metadata/number_of_people",
+	"/submission/v1/personalities",
+	"/submission/v1/video_transcoder_mapping_values",
+}
 
 // BatchPath returns the canonical path for a(ll) Submission Batch(es).
 func BatchPath(b *Batch) string {
+	p := Endpoints.Batches
 	if b.ID == "" {
-		return BatchesEndpoint
+		return p
 	}
-	return BatchesEndpoint + "/" + b.ID
+	return p + "/" + b.ID
 }

@@ -46,12 +46,13 @@ func (r Release) Index(client sleepwalker.RESTClient, batchID string) ReleaseLis
 // Path returns the path for the contribution.
 // If the Contribution has no ID, Path returns the root for all
 // contributions for the Batch (the Contribution Index).
-func (r Release) Path() string {
+func (r Release) Path() (p string) {
 	bid := r.SubmissionBatchID
-	if r.ID == "" {
-		return fmt.Sprintf("%s/%s/releases", BatchesEndpoint, bid)
+	p = fmt.Sprintf("%s/%s/releases", Endpoints.Batches, bid)
+	if r.ID != "" {
+		p = p + "/" + r.ID
 	}
-	return fmt.Sprintf("%s/%s/releases/%s", BatchesEndpoint, bid, r.ID)
+	return
 }
 
 // ValidTypes are the Release types supported by ESP.

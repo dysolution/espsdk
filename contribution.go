@@ -149,10 +149,11 @@ func (c Contribution) Index(client sleepwalker.RESTClient, batchID string) Contr
 // contributions for the Batch (the Contribution Index).
 func (c Contribution) Path() string {
 	bid := c.SubmissionBatchID
+	p := Endpoints.Batches
 	if c.ID == "" {
-		return fmt.Sprintf("%s/%s/contributions", BatchesEndpoint, bid)
+		return fmt.Sprintf("%s/%s/contributions", p, bid)
 	}
-	return fmt.Sprintf("%s/%s/contributions/%s", BatchesEndpoint, bid, c.ID)
+	return fmt.Sprintf("%s/%s/contributions/%s", p, bid, c.ID)
 }
 
 // Marshal serializes the Contribution into a byte slice.

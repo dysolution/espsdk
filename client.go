@@ -46,7 +46,7 @@ func (c Client) ValidateKeywords(keywords []string, mediaType string) []Keyword 
 	}
 
 	bytes, _ := json.Marshal(reqPayload)
-	result, _ := c.GetWithPayload(KeywordsEndpoint, bytes)
+	result, _ := c.GetWithPayload(Endpoints.Keywords, bytes)
 	var payload map[string]map[string][]interface{}
 	if err := json.Unmarshal(result.Payload, &payload); err != nil {
 		Log.Error(err)
@@ -74,7 +74,7 @@ func (c Client) ValidateKeywords(keywords []string, mediaType string) []Keyword 
 // fields with controlled vocabularies, grouped by submission type.
 func (c Client) GetControlledValues() ControlledValues {
 	desc := "Client.GetControlledValues"
-	result, err := c.GetPath(ControlledValuesEndpoint)
+	result, err := c.GetPath(Endpoints.ControlledValues)
 	if err != nil {
 		return ControlledValues{}
 	}
@@ -86,7 +86,7 @@ func (c Client) GetControlledValues() ControlledValues {
 // for Getty and iStock video.
 func (c Client) GetTranscoderMappings() *TranscoderMappingList {
 	desc := "Client.GetTranscoderMappings"
-	result, err := c.GetPath(TranscoderMappingsEndpoint)
+	result, err := c.GetPath(Endpoints.TranscoderMappings)
 	if err != nil {
 		return &TranscoderMappingList{}
 	}
@@ -101,7 +101,7 @@ func (c Client) GetTranscoderMappings() *TranscoderMappingList {
 func (c Client) GetEvents(params EventQuery) (*EventResponse, error) {
 	desc := "Client.GetEvents"
 	bytes, _ := json.Marshal(params)
-	result, err := c.GetWithPayload(EventsEndpoint, bytes)
+	result, err := c.GetWithPayload(Endpoints.Events, bytes)
 	if err != nil {
 		return &EventResponse{}, err
 	}
